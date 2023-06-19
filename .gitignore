@@ -1,3 +1,6 @@
+###> Phpstorm ###
+.idea
+###< Phpstorm ###
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -18,3 +21,9 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+
+###> TestController ###
+src/Controller/TestContoller.php
+templates/test/index.html.twig
+###< TestController ###
