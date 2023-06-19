@@ -1,0 +1,54 @@
+[
+  {
+    "name": "auto-publish-videos",
+    "value": "1"
+  },
+  {
+    "name": "allow-video-uploads",
+    "value": "1"
+  },
+  {
+    "name": "allow-user-signup",
+    "value": "1"
+  },
+  {
+    "name": "allow-video-comments",
+    "value": "1"
+  },
+  {
+    "name": "max-frames",
+    "value": "10"
+  },
+  {
+    "name": "autoplay-videos",
+    "value": "0"
+  },
+  {
+    "name": "max-categories-in-sidebar",
+    "value": "10"
+  },
+  {
+    "name": "max-recent-videos",
+    "value": "3"
+  },
+  {
+    "name": "max-videos-from-subscriptions",
+    "value": "5"
+  },
+  {
+    "name": "videos-per-page",
+    "value": "16"
+  },
+  {
+    "name": "tags-per-page",
+    "value": "60"
+  },
+  {
+    "name": "yin",
+    "value": "yang"
+  },
+  {
+    "name": "ping",
+    "value": "pong"
+  }
+]
