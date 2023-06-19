@@ -3,6 +3,7 @@
 ###< Phpstorm ###
 
 ###> symfony/framework-bundle ###
+/.env
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -24,6 +25,6 @@
 
 
 ###> TestController ###
-src/Controller/TestContoller.php
+src/Controller/TestController.php
 templates/test/index.html.twig
 ###< TestController ###
