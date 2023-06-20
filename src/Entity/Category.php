@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use App\Util\Slugger;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -31,6 +33,15 @@ class Category
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     private string $slug;
+
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Video::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
+    private Collection $videos;
+
+    public function __construct()
+    {
+        $this->videos = new ArrayCollection();
+    }
 
     /**
      * @return int|null
@@ -75,5 +86,43 @@ class Category
     public function setSlug(): void
     {
         $this->slug = Slugger::slugify($this->name);
+    }
+
+    /**
+     * @return Collection<int, Video>
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    /**
+     * @param Video $video
+     * @return $this
+     */
+    public function addVideo(Video $video): static
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos->add($video);
+            $video->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Video $video
+     * @return $this
+     */
+    public function removeVideo(Video $video): static
+    {
+        if ($this->videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getCategory() === $this) {
+                $video->setCategory(null);
+            }
+        }
+
+        return $this;
     }
 }
