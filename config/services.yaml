@@ -4,7 +4,31 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.name: 'SFTube'
+    app.locale: 'en-US'
+    app.lang: 'en'
+
     app.fixtures.datapath: '%kernel.project_dir%/src/DataFixtures/data'
+
+    app.filesystem.videos.upload.path: '%kernel.project_dir%/uploads'
+
+    app.filesystem.videos.public.path: '%kernel.project_dir%/public/assets/videos'
+    app.filesystem.videos.previews.path: '%app.filesystem.videos.public.path%/previews'
+
+    app.images.path: '%kernel.project_dir%/public/assets/images'
+
+    app.filesystem.images.videos.path: '%app.images.path%/videos'
+    app.filesystem.images.videos.thumbnails.path: '%app.filesystem.images.videos.path%/thumbnails'
+    app.filesystem.images.videos.frames.path: '%app.filesystem.images.videos.path%/frames'
+
+    app.filesystem.images.users.path: '%app.images.path%/users'
+    app.filesystem.images.users.avatars.path: '%app.filesystem.images.users.path%/avatars'
+
+    web.videos.url_segment: 'assets/videos/'
+    web.images.videos.thumbnails.url_segment: 'assets/images/videos/thumbnails/'
+    web.images.videos.frames.url_segment: 'assets/images/videos/frames/'
+    web.videos.previews.url_segment: 'assets/videos/previews/'
+    web.images.users.avatars.url_segment: 'assets/images/users/avatars/'
 
 services:
     # default configuration for services in *this* file

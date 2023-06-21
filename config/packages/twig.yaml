@@ -2,6 +2,16 @@ twig:
     default_path: '%kernel.project_dir%/templates'
 
     globals:
+        app_name: '%app.name%'
+        locale: '%app.locale%'
+        lang: '%app.lang%'
+
+        videos_url_segment: '%web.videos.url_segment%'
+        thumbnails_url_segment: '%web.images.videos.thumbnails.url_segment%'
+        frames_url_segment: '%web.images.videos.frames.url_segment%'
+        previews_url_segment: '%web.videos.previews.url_segment%'
+        avatars_url_segment: '%web.images.users.avatars.url_segment%'
+
         configuration: '@App\Service\Configurations'
 
 when@test:
