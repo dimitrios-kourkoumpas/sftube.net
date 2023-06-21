@@ -42,6 +42,8 @@ final class TagsFixtures extends Fixture
             $tag->setName($t['name']);
 
             $manager->persist($tag);
+
+            $this->addReference('tag-' . $tag->getSlug(), $tag);
         }
 
         $manager->flush();
