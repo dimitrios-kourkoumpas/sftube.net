@@ -72,11 +72,16 @@ class Video
     #[ORM\Column(type: Types::STRING, options: ['default' => self::SLIDESHOW_EXTRACTION])]
     private string $extractionMethod = self::SLIDESHOW_EXTRACTION;
 
+    #[ORM\ManyToMany(targetEntity: Playlist::class, inversedBy: 'videos', fetch: 'EXTRA_LAZY')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
+    private Collection $playlists;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->frames = new ArrayCollection();
+        $this->playlists = new ArrayCollection();
     }
 
     /**
@@ -370,6 +375,38 @@ class Video
     public function setExtractionMethod(string $extractionMethod): static
     {
         $this->extractionMethod = $extractionMethod;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Playlist>
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
+    }
+
+    /**
+     * @param Playlist $playlist
+     * @return $this
+     */
+    public function addPlaylist(Playlist $playlist): static
+    {
+        if (!$this->playlists->contains($playlist)) {
+            $this->playlists->add($playlist);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Playlist $playlist
+     * @return $this
+     */
+    public function removePlaylist(Playlist $playlist): static
+    {
+        $this->playlists->removeElement($playlist);
 
         return $this;
     }
