@@ -27,8 +27,8 @@ class Playlist
     #[ORM\Column(type: Types::STRING, length: 255)]
     private string $slug;
 
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $private;
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $private = false;
 
     #[ORM\ManyToOne(inversedBy: 'playlists')]
     #[ORM\JoinColumn(nullable: false)]
