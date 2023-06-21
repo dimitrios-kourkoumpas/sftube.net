@@ -1,6 +1,9 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
 
+    globals:
+        configuration: '@App\Service\Configurations'
+
 when@test:
     twig:
         strict_variables: true
