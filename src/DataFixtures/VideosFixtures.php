@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\DataFixtures\Loader\DataLoader;
 use App\DataFixtures\Reader\DataReaderFactory;
 use App\Entity\Video;
+use App\Util\FileRenamer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -50,6 +51,9 @@ final class VideosFixtures extends Fixture implements DependentFixtureInterface
             }
 
             $video->setUser($this->getReference('user-' . mt_rand(1, UsersFixtures::MAX_USERS)));
+
+            $video->setFilename(FileRenamer::rename($v['file']));
+            $video->setExtractionMethod([Video::SLIDESHOW_EXTRACTION, Video::PREVIEW_EXTRACTION][mt_rand(0, 1)]);
 
             $manager->persist($video);
 
