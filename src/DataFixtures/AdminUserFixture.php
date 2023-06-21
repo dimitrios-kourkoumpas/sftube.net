@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Loader\DataLoader;
-use App\DataFixtures\Reader\JSONDataReader;
+use App\DataFixtures\Reader\DataReaderFactory;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -19,22 +19,21 @@ final class AdminUserFixture extends Fixture
     private const DATA_FILE = 'admin.json';
 
     /**
-     * @param ParameterBagInterface $parameterBag
+     * @param ParameterBagInterface $parameters
      * @param UserPasswordHasherInterface $hasher
      */
     public function __construct(
-        private readonly ParameterBagInterface $parameterBag,
+        private readonly ParameterBagInterface $parameters,
         private readonly UserPasswordHasherInterface $hasher)
     {
     }
 
     public function load(ObjectManager $manager): void
     {
-        $data = DataLoader::loadData(
-            new JSONDataReader(
-            $this->parameterBag->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE
-            )
-        );
+        $dataFile = $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE;
+
+        $loader = new DataLoader(DataReaderFactory::create($dataFile));
+        $data = $loader->loadData();
 
         $admin = new User();
 

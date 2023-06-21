@@ -12,10 +12,16 @@ final class DataLoader
 {
     /**
      * @param DataReader $reader
+     */
+    public function __construct(private readonly DataReader $reader)
+    {
+    }
+
+    /**
      * @return array
      */
-    public static function loadData(DataReader $reader): array
+    public function loadData(): array
     {
-        return $reader->read();
+        return $this->reader->read();
     }
 }
