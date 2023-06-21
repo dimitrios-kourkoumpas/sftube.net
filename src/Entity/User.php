@@ -79,10 +79,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $comments;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Playlist::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
+    private Collection $playlists;
+
     public function __construct()
     {
         $this->videos = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->playlists = new ArrayCollection();
     }
 
     /**
@@ -322,6 +327,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($comment->getUser() === $this) {
                 $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Playlist>
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
+    }
+
+    /**
+     * @param Playlist $playlist
+     * @return $this
+     */
+    public function addPlaylist(Playlist $playlist): static
+    {
+        if (!$this->playlists->contains($playlist)) {
+            $this->playlists->add($playlist);
+            $playlist->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Playlist $playlist
+     * @return $this
+     */
+    public function removePlaylist(Playlist $playlist): static
+    {
+        if ($this->playlists->removeElement($playlist)) {
+            // set the owning side to null (unless already changed)
+            if ($playlist->getUser() === $this) {
+                $playlist->setUser(null);
             }
         }
 
