@@ -42,6 +42,8 @@ final class CategoriesFixtures extends Fixture
             $category->setName($cat['name']);
 
             $manager->persist($category);
+
+            $this->addReference('category-' . $category->getSlug(), $category);
         }
 
         $manager->flush();

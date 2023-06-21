@@ -49,6 +49,8 @@ final class UsersFixtures extends Fixture
             $user->setRoles([User::ROLE_USER]);
 
             $manager->persist($user);
+
+            $this->addReference('user-' . ($i + 1), $user);
         }
 
         $manager->flush();
