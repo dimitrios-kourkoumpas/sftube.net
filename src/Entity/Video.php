@@ -18,6 +18,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 class Video
 {
+    public const SLIDESHOW_EXTRACTION = 'slideshow';
+
+    public const PREVIEW_EXTRACTION = 'preview';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
@@ -62,10 +66,17 @@ class Video
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $comments;
 
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: Frame::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+    private Collection $frames;
+
+    #[ORM\Column(type: Types::STRING, options: ['default' => self::SLIDESHOW_EXTRACTION])]
+    private string $extractionMethod = self::SLIDESHOW_EXTRACTION;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->frames = new ArrayCollection();
     }
 
     /**
@@ -310,6 +321,55 @@ class Video
                 $comment->setVideo(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Frame>
+     */
+    public function getFrames(): Collection
+    {
+        return $this->frames;
+    }
+
+    public function addFrame(Frame $frame): static
+    {
+        if (!$this->frames->contains($frame)) {
+            $this->frames->add($frame);
+            $frame->setVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFrame(Frame $frame): static
+    {
+        if ($this->frames->removeElement($frame)) {
+            // set the owning side to null (unless already changed)
+            if ($frame->getVideo() === $this) {
+                $frame->setVideo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtractionMethod(): string
+    {
+        return $this->extractionMethod;
+    }
+
+    /**
+     * @param string $extractionMethod
+     * @return Video
+     */
+    public function setExtractionMethod(string $extractionMethod): static
+    {
+        $this->extractionMethod = $extractionMethod;
 
         return $this;
     }
