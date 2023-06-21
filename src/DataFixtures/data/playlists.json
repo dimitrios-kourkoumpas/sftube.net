@@ -1,0 +1,63 @@
+[
+  {
+    "name": "My Videos",
+    "private": true,
+    "videos": [
+      "metallica-enter-sandman",
+      "snow-prank-in-russia"
+    ]
+  },
+  {
+    "name": "Guitar Chix",
+    "videos": [
+      "orianthi-voodoo-child",
+      "johnny-b-goode-cover"
+    ]
+  },
+  {
+    "name": "Long hair Dudes",
+    "videos": [
+      "guns-n-roses-paradise-city"
+    ]
+  },
+  {
+    "name": "Punky Stuff",
+    "videos": [
+      "green-day-basket-case",
+      "punk-vs-metal"
+    ]
+  },
+  {
+    "name": "Yugo Punk",
+    "videos": [
+      "hladno-pivo-fur-immer-punk",
+      "kbo-for-ever-punk"
+    ]
+  },
+  {
+    "name": "The Iron Maidens",
+    "private": true,
+    "videos": [
+      "nita-strauss-and-cortney-cox"
+    ]
+  },
+  {
+    "name": "Metal Mayhem",
+    "videos": [
+      "metallica-enter-sandman",
+      "punk-vs-metal",
+      "skindred-nobody"
+    ]
+  },
+  {
+    "name": "Guitars and Cuties",
+    "private": true,
+    "videos": [
+      "orianthi-voodoo-child",
+      "johnny-b-goode-cover",
+      "nita-strauss-and-jen-majura",
+      "nita-strauss-and-cortney-cox",
+      "voodoo-child-cover"
+    ]
+  }
+]

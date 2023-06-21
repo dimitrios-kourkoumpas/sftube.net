@@ -4,19 +4,19 @@ namespace App\DataFixtures;
 
 use App\DataFixtures\Loader\DataLoader;
 use App\DataFixtures\Reader\DataReaderFactory;
-use App\Entity\Video;
+use App\Entity\Playlist;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
- * Class VideosFixtures
+ * Class PlaylistsFixtures
  * @package App\DataFixtures
  */
-final class VideosFixtures extends Fixture implements DependentFixtureInterface
+final class PlaylistsFixtures extends Fixture implements DependentFixtureInterface
 {
-    private const DATA_FILE = 'videos.json';
+    private const DATA_FILE = 'playlists.json';
 
     /**
      * @param ParameterBagInterface $parameters
@@ -34,27 +34,24 @@ final class VideosFixtures extends Fixture implements DependentFixtureInterface
         $dataFile = $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE;
 
         $loader = new DataLoader(DataReaderFactory::create($dataFile));
-        $videos = $loader->loadData();
+        $playlists = $loader->loadData();
 
-        foreach ($videos as $i => $v) {
-            $video = new Video();
+        foreach ($playlists as $p) {
+            $playlist = new Playlist();
 
-            $video->setTitle($v['title']);
-            $video->setDescription($v['description']);
-            $video->setViews(mt_rand(10,  50));
+            $playlist->setName($p['name']);
 
-            $video->setCategory($this->getReference('category-' . $v['category']));
-
-            foreach ($v['tags'] as $tag) {
-                $video->addTag($this->getReference('tag-' . $tag));
+            if (isset($p['private'])) {
+                $playlist->setPrivate($p['private']);
             }
 
-            $video->setUser($this->getReference('user-' . mt_rand(1, UsersFixtures::MAX_USERS)));
+            $playlist->setUser($this->getReference('user-' . mt_rand(0, UsersFixtures::MAX_USERS)));
 
-            $manager->persist($video);
+            foreach ($p['videos'] as $video) {
+                $playlist->addVideo($this->getReference('video-' . $video));
+            }
 
-            $this->addReference('video-' . $video->getSlug(), $video);
-            $this->addReference('video-' . ($i + 1), $video);
+            $manager->persist($playlist);
         }
 
         $manager->flush();
@@ -66,9 +63,8 @@ final class VideosFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            CategoriesFixtures::class,
-            TagsFixtures::class,
             UsersFixtures::class,
+            VideosFixtures::class,
         ];
     }
 }
