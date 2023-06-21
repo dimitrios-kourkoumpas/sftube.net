@@ -45,7 +45,7 @@ final class PlaylistsFixtures extends Fixture implements DependentFixtureInterfa
                 $playlist->setPrivate($p['private']);
             }
 
-            $playlist->setUser($this->getReference('user-' . mt_rand(0, UsersFixtures::MAX_USERS)));
+            $playlist->setUser($this->getReference('user-' . mt_rand(1, UsersFixtures::MAX_USERS)));
 
             foreach ($p['videos'] as $video) {
                 $playlist->addVideo($this->getReference('video-' . $video));
