@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Loader\DataLoader;
-use App\DataFixtures\Reader\JSONDataReader;
+use App\DataFixtures\Reader\DataReaderFactory;
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -30,11 +30,10 @@ final class CategoriesFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $categories = DataLoader::loadData(
-            new JSONDataReader(
-                $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE
-            )
-        );
+        $dataFile = $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE;
+
+        $loader = new DataLoader(DataReaderFactory::create($dataFile));
+        $categories = $loader->loadData();
 
         foreach ($categories as $cat) {
             $category = new Category();

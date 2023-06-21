@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Loader\DataLoader;
-use App\DataFixtures\Reader\JSONDataReader;
+use App\DataFixtures\Reader\DataReaderFactory;
 use App\Entity\Video;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -31,11 +31,10 @@ final class VideosFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
-        $videos = DataLoader::loadData(
-            new JSONDataReader(
-                $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE
-            )
-        );
+        $dataFile = $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE;
+
+        $loader = new DataLoader(DataReaderFactory::create($dataFile));
+        $videos = $loader->loadData();
 
         foreach ($videos as $v) {
             $video = new Video();

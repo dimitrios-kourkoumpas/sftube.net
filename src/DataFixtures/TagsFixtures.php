@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Loader\DataLoader;
-use App\DataFixtures\Reader\JSONDataReader;
+use App\DataFixtures\Reader\DataReaderFactory;
 use App\Entity\Tag;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -30,11 +30,10 @@ final class TagsFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $tags = DataLoader::loadData(
-            new JSONDataReader(
-                $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE
-            )
-        );
+        $dataFile = $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE;
+
+        $loader = new DataLoader(DataReaderFactory::create($dataFile));
+        $tags = $loader->loadData();
 
         foreach ($tags as $t) {
             $tag = new Tag();
