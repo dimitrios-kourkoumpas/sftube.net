@@ -60,6 +60,7 @@
 
                 <div class="col-md-2">
                     <h2 class="card-box">Recent</h2>
+                    {{ render(controller('App\\Controller\\VideosController::recent', {'max': 3})) }}
                 </div>
 
             </div>
