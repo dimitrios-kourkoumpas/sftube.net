@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CategoriesController
@@ -10,7 +11,11 @@ use App\Entity\Category;
  */
 final class CategoriesController extends BaseController
 {
-    public function categories(int $max = 10)
+    /**
+     * @param int $max
+     * @return Response
+     */
+    public function categories(int $max = 10): Response
     {
         $categories = $this->em->getRepository(Category::class)->findBy([], ['name' => 'ASC'], $max);
 
