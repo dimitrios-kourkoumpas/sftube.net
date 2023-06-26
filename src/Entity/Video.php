@@ -22,6 +22,8 @@ class Video
 
     public const PREVIEW_EXTRACTION = 'preview';
 
+    public const MAX_FRAMES = 10;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
@@ -47,6 +49,19 @@ class Video
     #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
     private int $views = 0;
 
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $published = false;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $converted = false;
+
+
+    #[ORM\Column(type: Types::STRING, options: ['default' => self::SLIDESHOW_EXTRACTION])]
+    private string $extractionMethod = self::SLIDESHOW_EXTRACTION;
+
+    #[ORM\Column(type: Types::JSON)]
+    private array $metadata = [];
+
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
@@ -66,11 +81,8 @@ class Video
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'video', targetEntity: Frame::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: Frame::class, orphanRemoval: true, fetch: 'EXTRA_LAZY', cascade: ['persist'])]
     private Collection $frames;
-
-    #[ORM\Column(type: Types::STRING, options: ['default' => self::SLIDESHOW_EXTRACTION])]
-    private string $extractionMethod = self::SLIDESHOW_EXTRACTION;
 
     #[ORM\ManyToMany(targetEntity: Playlist::class, inversedBy: 'videos', fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['name' => 'ASC'])]
@@ -380,6 +392,38 @@ class Video
     }
 
     /**
+     * @return bool
+     */
+    public function isPublished(): bool
+    {
+        return $this->published;
+    }
+
+    /**
+     * @param bool $published
+     */
+    public function setPublished(bool $published): void
+    {
+        $this->published = $published;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConverted(): bool
+    {
+        return $this->converted;
+    }
+
+    /**
+     * @param bool $converted
+     */
+    public function setConverted(bool $converted): void
+    {
+        $this->converted = $converted;
+    }
+
+    /**
      * @return Collection<int, Playlist>
      */
     public function getPlaylists(): Collection
@@ -409,5 +453,30 @@ class Video
         $this->playlists->removeElement($playlist);
 
         return $this;
+    }
+
+    /**
+     * @param string|null $key
+     * @return mixed
+     */
+    public function getMetadata(?string $key = null): mixed
+    {
+        if ($key !== null) {
+            if (isset($this->metadata[$key])) {
+                return $this->metadata[$key];
+            }
+
+            return null;
+        }
+
+        return $this->metadata;
+    }
+
+    /**
+     * @param array $metadata
+     */
+    public function setMetadata(array $metadata): void
+    {
+        $this->metadata = $metadata;
     }
 }

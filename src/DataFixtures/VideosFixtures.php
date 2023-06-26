@@ -5,11 +5,13 @@ namespace App\DataFixtures;
 use App\DataFixtures\Loader\DataLoader;
 use App\DataFixtures\Reader\DataReaderFactory;
 use App\Entity\Video;
+use App\Service\VideoExtractor\VideoExtractor;
 use App\Util\FileRenamer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class VideosFixtures
@@ -21,8 +23,14 @@ final class VideosFixtures extends Fixture implements DependentFixtureInterface
 
     /**
      * @param ParameterBagInterface $parameters
+     * @param VideoExtractor $extractor
+     * @param Filesystem $filesystem
      */
-    public function __construct(private readonly ParameterBagInterface $parameters)
+    public function __construct(
+        private readonly ParameterBagInterface $parameters,
+        private readonly VideoExtractor $extractor,
+        private readonly Filesystem $filesystem
+    )
     {
     }
 
@@ -38,27 +46,42 @@ final class VideosFixtures extends Fixture implements DependentFixtureInterface
         $videos = $loader->loadData();
 
         foreach ($videos as $i => $v) {
-            $video = new Video();
+            if ($this->filesystem->exists($this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . 'videos' . DIRECTORY_SEPARATOR . $v['file'])) {
+                $newFilename = FileRenamer::rename($v['file']);
 
-            $video->setTitle($v['title']);
-            $video->setDescription($v['description']);
-            $video->setViews(mt_rand(10,  50));
+                // simulate normal application flow, ie target the uploads directory
+                $this->filesystem->copy(
+                    $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . 'videos' . DIRECTORY_SEPARATOR . $v['file'],
+                    $this->parameters->get('app.filesystem.videos.upload.path') . DIRECTORY_SEPARATOR . $newFilename
+                );
 
-            $video->setCategory($this->getReference('category-' . $v['category']));
+                $video = new Video();
 
-            foreach ($v['tags'] as $tag) {
-                $video->addTag($this->getReference('tag-' . $tag));
+                $video->setTitle($v['title']);
+                $video->setDescription($v['description']);
+                $video->setViews(mt_rand(10,  50));
+
+                $video->setCategory($this->getReference('category-' . $v['category']));
+
+                foreach ($v['tags'] as $tag) {
+                    $video->addTag($this->getReference('tag-' . $tag));
+                }
+
+                $video->setUser($this->getReference('user-' . mt_rand(1, UsersFixtures::MAX_USERS)));
+
+                $video->setFilename($newFilename);
+                $video->setExtractionMethod([Video::SLIDESHOW_EXTRACTION, Video::PREVIEW_EXTRACTION][mt_rand(0, 1)]);
+
+                $this->extractor->extract($video);
+
+                // hardcoded by default for DataFixtures
+                $video->setPublished(true);
+
+                $manager->persist($video);
+
+                $this->addReference('video-' . $video->getSlug(), $video);
+                $this->addReference('video-' . ($i + 1), $video);
             }
-
-            $video->setUser($this->getReference('user-' . mt_rand(1, UsersFixtures::MAX_USERS)));
-
-            $video->setFilename(FileRenamer::rename($v['file']));
-            $video->setExtractionMethod([Video::SLIDESHOW_EXTRACTION, Video::PREVIEW_EXTRACTION][mt_rand(0, 1)]);
-
-            $manager->persist($video);
-
-            $this->addReference('video-' . $video->getSlug(), $video);
-            $this->addReference('video-' . ($i + 1), $video);
         }
 
         $manager->flush();
