@@ -1,0 +1,25 @@
+<div class="card-box" style="min-height: 200px; width: 100%">
+    <h4 class="header-title m-t-0 m-b-30 text-center">
+        <a href="javascript: void(0);">{{ video.title }}</a>
+    </h4>
+
+    <div class="text-center">
+        <a href="javascript: void(0);">
+            <video class="video-grid-video-{{ video.id }}" width="100px" height="75px"
+                   src="{{ asset(previews_url_segment ~ video.filename) }}" loop muted
+                   poster="{{ asset(thumbnails_url_segment ~ video.thumbnail) }}"
+                   style="width: 100px; height: 75px;"></video>
+        </a>
+    </div>
+</div>
+
+<script>
+    $('.video-grid-video-{{ video.id }}')
+        .on('mouseover', function (e) {
+            this.play();
+        })
+        .on('mouseout', function (e) {
+            this.pause();
+            this.load();
+        });
+</script>

@@ -1,0 +1,28 @@
+<div class="card-box" style="min-height: 200px; width: 100%">
+    <h4 class="header-title m-t-0 m-b-30 text-center">
+        <a href="javascript: void(0);">{{ video.title }}</a>
+    </h4>
+    <div class="text-center">
+        <a href="javascript: void(0);">
+            <div class="slideshow video-{{ video.id }}-slideshow" style="min-height: 75px;"
+                 data-cycle-center-horz=true data-cycle-log="false">
+                {% for i, frame in video.frames %}
+                    <img src="{{ asset(frames_url_segment ~ frame.url) }}"
+                         class="card-img-top{{ i is same as(0) ? ' first' : '' }}" alt="{{ video.title }}" width="100px"
+                         height="75px"/>
+                {% endfor %}
+            </div>
+        </a>
+    </div>
+</div>
+
+<script>
+    $('.video-{{ video.id }}-slideshow').cycle({
+        timeout: 200
+    }).cycle('pause');
+    $('.video-{{ video.id }}-slideshow').hover(function () {
+        $(this).cycle('resume');
+    }, function () {
+        $(this).cycle('goto', 0).cycle('pause');
+    });
+</script>
