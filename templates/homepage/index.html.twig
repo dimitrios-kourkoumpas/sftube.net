@@ -3,6 +3,8 @@
 {% block title %}{{ app_name }}{% endblock %}
 
 {% block body %}
+    <h2 class="card-box">{{ app_name }}</h2>
+
     {% for video in videos %}
         {{ video.title }} <br>
     {% endfor %}
