@@ -43,6 +43,7 @@
 
                 <div class="col-md-2">
                     <h2 class="card-box">Categories</h2>
+                    {{ render(controller('App\\Controller\\CategoriesController::categories', {'max': 10})) }}
                 </div>
 
                 <div class="col-md-8">
