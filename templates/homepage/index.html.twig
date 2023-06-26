@@ -1,3 +1,9 @@
-{% for video in videos %}
-    {{ video.title }} <br>
-{% endfor%}
+{% extends 'base-template.html.twig' %}
+
+{% block title %}{{ app_name }}{% endblock %}
+
+{% block body %}
+    {% for video in videos %}
+        {{ video.title }} <br>
+    {% endfor %}
+{% endblock %}
