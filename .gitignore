@@ -24,7 +24,7 @@
 ###< symfony/phpunit-bridge ###
 
 ###> videos, thumbnails, frames and avatars ###
-/public/assets/uploads/videos
+/public/assets/uploads/
 /public/assets/images/videos
 /public/assets/images/users
 /public/assets/videos

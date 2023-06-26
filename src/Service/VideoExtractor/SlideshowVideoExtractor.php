@@ -2,9 +2,9 @@
 
 namespace App\Service\VideoExtractor;
 
+use App\Entity\Frame;
 use App\Entity\Video;
 use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
 
 /**
  * Class SlideshowVideoExtractor
@@ -18,22 +18,11 @@ final class SlideshowVideoExtractor implements VideoExtractorInterface
     private FFMpeg $ffmpeg;
 
     /**
-     * @var FFProbe $ffprobe
-     */
-    private FFProbe $ffprobe;
-
-    /**
-     * @var array $metadata
-     */
-    private array $metadata = [];
-
-    /**
      * @param array $paths
      */
     public function __construct(private readonly array $paths)
     {
         $this->ffmpeg = FFMpeg::create();
-        $this->ffprobe = FFProbe::create();
     }
 
     /**
@@ -42,15 +31,36 @@ final class SlideshowVideoExtractor implements VideoExtractorInterface
      */
     public function extract(Video $video): void
     {
-        dd($this->paths);
-    }
+        $duration = $video->getMetadata('duration');
 
-    /**
-     * @param Video $video
-     * @return void
-     */
-    private function extractMetadata(Video $video): void
-    {
-        $this->metadata = $this->ffprobe->format($this->paths['app.filesystem.videos.upload.path'] . DIRECTORY_SEPARATOR . $video->getFilename())->all();
+        $interval = (int) $duration / Video::MAX_FRAMES;
+
+        $videoFile = $this->ffmpeg->open($this->paths['app.filesystem.videos.upload.path'] . DIRECTORY_SEPARATOR . $video->getFilename());
+
+        $at = $interval;
+        $i = 1;
+
+        $directory = $filename = pathinfo($video->getFilename(), PATHINFO_FILENAME);
+
+        if (!file_exists($this->paths['app.filesystem.images.videos.frames.path'] . DIRECTORY_SEPARATOR . $directory)) {
+            mkdir($this->paths['app.filesystem.images.videos.frames.path'] . DIRECTORY_SEPARATOR . $directory,0777, true);
+        }
+
+        while ($at < $duration) {
+            $frameFilename = $filename . '-' . $i . '.jpg';
+
+            $videoFile
+                ->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds($at))
+                ->save($this->paths['app.filesystem.images.videos.frames.path'] . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR . $frameFilename);
+
+            $frame = new Frame();
+
+            $frame->setUrl($directory . '/' . $frameFilename);
+
+            $video->addFrame($frame);
+
+            $at += $interval;
+            $i++;
+        }
     }
 }

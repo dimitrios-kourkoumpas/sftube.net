@@ -4,7 +4,6 @@ namespace App\Service\VideoExtractor;
 
 use App\Entity\Video;
 use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
 
 /**
  * Class PreviewVideoExtractor
@@ -12,29 +11,21 @@ use FFMpeg\FFProbe;
  */
 final class PreviewVideoExtractor implements VideoExtractorInterface
 {
+    private const NB_PREVIEW_CLIPS = 5;
+
+    private const PREVIEW_CLIPS_DURATION = 2;
+
     /**
      * @var FFMpeg $ffmpeg
      */
     private FFMpeg $ffmpeg;
 
     /**
-     * @var FFProbe $ffprobe
-     */
-    private FFProbe $ffprobe;
-
-    /**
-     * @var array $metadata
-     */
-    private array $metadata = [];
-
-    /**
      * @param array $paths
      */
     public function __construct(private readonly array $paths)
     {
-
         $this->ffmpeg = FFMpeg::create();
-        $this->ffprobe = FFProbe::create();
     }
 
     /**
@@ -43,16 +34,47 @@ final class PreviewVideoExtractor implements VideoExtractorInterface
      */
     public function extract(Video $video): void
     {
-        dd($this->paths);
-    }
+        $previewClips = [];
 
+        $videoFile = $this->ffmpeg->open($this->paths['app.filesystem.videos.upload.path'] . DIRECTORY_SEPARATOR . $video->getFilename());
 
-    /**
-     * @param Video $video
-     * @return void
-     */
-    private function extractMetadata(Video $video): void
-    {
-        $this->metadata = $this->ffprobe->format($this->paths['app.filesystem.videos.upload.path'] . DIRECTORY_SEPARATOR . $video->getFilename())->all();
+        $filename = pathinfo($video->getFilename(), PATHINFO_FILENAME);
+        $extension = pathinfo($video->getFilename(), PATHINFO_EXTENSION);
+
+        $duration = $video->getMetadata('duration');
+
+        $format = new \FFMpeg\Format\Video\X264();
+
+        // remove audio
+        $format->setAdditionalParameters(['-an']);
+
+        $at = 0;
+        $i = 1;
+
+        $interval = ($duration - (self::NB_PREVIEW_CLIPS * self::PREVIEW_CLIPS_DURATION)) / self::NB_PREVIEW_CLIPS;
+
+        while ($at < $duration) {
+            $clip = $videoFile->clip(
+                \FFMpeg\Coordinate\TimeCode::fromSeconds($at),
+                \FFMpeg\Coordinate\TimeCode::fromSeconds(self::PREVIEW_CLIPS_DURATION)
+            );
+
+            $clipFilename = $this->paths['app.filesystem.videos.previews.path'] . DIRECTORY_SEPARATOR . $filename . '-' . $i . '.' . $extension;
+
+            $clip->save($format, $clipFilename);
+
+            $previewClips[] = $clipFilename;
+
+            $i++;
+            $at += $interval;
+        }
+
+        $videoFile->concat($previewClips)
+            ->saveFromSameCodecs($this->paths['app.filesystem.videos.previews.path'] . DIRECTORY_SEPARATOR . $video->getFilename(), true);
+
+        // cleanup
+        foreach ($previewClips as $previewClip) {
+            unlink($previewClip);
+        }
     }
 }

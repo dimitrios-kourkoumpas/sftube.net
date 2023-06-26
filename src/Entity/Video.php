@@ -81,7 +81,7 @@ class Video
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'video', targetEntity: Frame::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: Frame::class, orphanRemoval: true, fetch: 'EXTRA_LAZY', cascade: ['persist'])]
     private Collection $frames;
 
     #[ORM\ManyToMany(targetEntity: Playlist::class, inversedBy: 'videos', fetch: 'EXTRA_LAZY')]
@@ -456,10 +456,19 @@ class Video
     }
 
     /**
-     * @return array
+     * @param string|null $key
+     * @return mixed
      */
-    public function getMetadata(): array
+    public function getMetadata(?string $key = null): mixed
     {
+        if ($key !== null) {
+            if (isset($this->metadata[$key])) {
+                return $this->metadata[$key];
+            }
+
+            return null;
+        }
+
         return $this->metadata;
     }
 

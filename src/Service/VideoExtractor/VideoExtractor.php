@@ -69,8 +69,8 @@ final class VideoExtractor
 
         $this->extractThumbnail($video);
 
-//        $extractor = VideoExtractorFactory::create($video, $this->paths);
-//        $extractor->extract($video);
+        $extractor = VideoExtractorFactory::create($video, $this->paths);
+        $extractor->extract($video);
 
         $this->setFlags($video);
 
