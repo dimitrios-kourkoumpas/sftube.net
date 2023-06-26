@@ -22,6 +22,9 @@ doctrine:
             convertedPublishedFilter:
                 class: App\Doctrine\Filter\ConvertedPublishedFilter
                 enabled: true
+            regularUsersFilter:
+                class: App\Doctrine\Filter\RegularUsersFilter
+                enabled: false
 
 when@test:
     doctrine:
