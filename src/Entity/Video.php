@@ -22,6 +22,8 @@ class Video
 
     public const PREVIEW_EXTRACTION = 'preview';
 
+    public const PER_PAGE = 16;
+
     public const MAX_FRAMES = 10;
 
     #[ORM\Id]
