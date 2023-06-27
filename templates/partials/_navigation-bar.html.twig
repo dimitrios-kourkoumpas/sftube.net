@@ -12,14 +12,14 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="javascript: void(0);">Tags</a></li>
-                <li><a href="javascript: void(0);">Playlists</a></li>
+                <li><a href="javascript: void(0);">{{ t('ui.navbar.menu.item.tags')|trans }}</a></li>
+                <li><a href="javascript: void(0);">{{ t('ui.navbar.menu.item.playlists')|trans }}</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <form class="navbar-form" role="search" action="#" method="GET">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search videos" name="term" id="search-term" autocomplete="off" disabled>
+                            <input type="text" class="form-control" placeholder="{{ t('ui.navbar.menu.input.search-count-videos', {'count': 'many'})|trans }}" name="term" id="search-term" autocomplete="off" disabled>
                             <div class="input-group-btn">
                                 <button class="btn btn-success waves-effect waves-light" type="submit" disabled>
                                     <i class="fa fa-search"></i>
@@ -37,11 +37,11 @@
                             &nbsp;{{ app.user.fullname }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="javascript: void(0);" class="text-danger">Logout</a></li>
+                            <li><a href="javascript: void(0);" class="text-danger">{{ t('ui.navbar.menu.item.logout')|trans }}</a></li>
                         </ul>
                     </li>
                 {% else %}
-                    <li><a href="javascript: void(0);">Login</a></li>
+                    <li><a href="javascript: void(0);">{{ t('ui.navbar.menu.item.login')|trans }}</a></li>
                 {% endif %}
 
             </ul>

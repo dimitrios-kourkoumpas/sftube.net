@@ -1,0 +1,15 @@
+ui:
+    navbar:
+        menu:
+            item:
+                tags: Tags
+                playlists: Playlists
+                login: Login
+                logout: Logout
+            input:
+                search-count-videos: 'search {count} videos'
+    template:
+        base:
+            heading:
+                categories: 'Categories'
+                recent: 'Recent'
