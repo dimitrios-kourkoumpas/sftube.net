@@ -42,6 +42,12 @@ final class VideosFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
+        if (!$this->filesystem->exists($this->parameters->get('app.filesystem.images.videos.thumbnails.path') . DIRECTORY_SEPARATOR . Video::NOT_AVAILABLE)) {
+            $this->filesystem->copy($this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . Video::NOT_AVAILABLE
+                , $this->parameters->get('app.filesystem.images.videos.thumbnails.path') . DIRECTORY_SEPARATOR . Video::NOT_AVAILABLE
+            );
+        }
+
         $dataFile = $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . self::DATA_FILE;
 
         $loader = new DataLoader(DataReaderFactory::create($dataFile));
