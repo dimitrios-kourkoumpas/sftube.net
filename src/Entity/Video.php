@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Self_;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -28,6 +29,8 @@ class Video
 
     public const MAX_FRAMES = 10;
 
+    public const NOT_AVAILABLE = 'not-available.jpeg';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
@@ -44,8 +47,8 @@ class Video
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    private ?string $thumbnail = null;
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true, options: ['default' => self::NOT_AVAILABLE])]
+    private string $thumbnail = self::NOT_AVAILABLE;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $filename = null;
@@ -165,9 +168,9 @@ class Video
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getThumbnail(): ?string
+    public function getThumbnail(): string
     {
         return $this->thumbnail;
     }
