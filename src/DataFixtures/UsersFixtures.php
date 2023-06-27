@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Util\FileRenamer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Inflector\Rules\English\Inflectible;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -23,8 +26,9 @@ final class UsersFixtures extends Fixture
 
     /**
      * @param UserPasswordHasherInterface $hasher
+     * @param ParameterBagInterface $parameters
      */
-    public function __construct(private UserPasswordHasherInterface $hasher)
+    public function __construct(private readonly UserPasswordHasherInterface $hasher, private readonly ParameterBagInterface $parameters)
     {
     }
 
@@ -34,12 +38,22 @@ final class UsersFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
+        $avatarsDataPath = $this->parameters->get('app.fixtures.datapath') . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR;
+
+        // copy generic avatar
+        if (!file_exists($this->parameters->get('app.filesystem.images.users.avatars.path') . DIRECTORY_SEPARATOR . User::GENERIC_AVATAR)) {
+            copy(
+                $avatarsDataPath . User::GENERIC_AVATAR,
+                $this->parameters->get('app.filesystem.images.users.avatars.path') . DIRECTORY_SEPARATOR . User::GENERIC_AVATAR
+            );
+        }
+
         $faker = \Faker\Factory::create();
 
-        for ($i = 0; $i < self::MAX_USERS; $i++) {
+        foreach (glob($avatarsDataPath . '*.jpg') as $i => $avatar) {
             $user = new User();
 
-            $user->setFirstname($faker->firstName);
+            $user->setFirstname($faker->firstName($this->getGenderFromAvatar($avatar)));
             $user->setLastname($faker->lastName);
 
             $user->setEmail('user_' . ($i + 1) . '@' . self::EMAIL_DOMAIN);
@@ -50,11 +64,33 @@ final class UsersFixtures extends Fixture
 
             $user->setRoles([User::ROLE_USER]);
 
+            $avatarFilename = FileRenamer::rename($avatar);
+
+            copy(
+                $avatar,
+                $this->parameters->get('app.filesystem.images.users.avatars.path') . DIRECTORY_SEPARATOR . $avatarFilename
+            );
+
+            $user->setAvatar($avatarFilename);
+
             $manager->persist($user);
 
             $this->addReference('user-' . ($i + 1), $user);
         }
 
         $manager->flush();
+    }
+
+    /**
+     * @param string $avatarFilename
+     * @return string
+     */
+    private function getGenderFromAvatar(string $avatarFilename): string
+    {
+        $filename = pathinfo($avatarFilename, PATHINFO_BASENAME);
+
+        $parts = explode('-', $filename);
+
+        return $parts[1];
     }
 }
