@@ -38,7 +38,6 @@ final class RandomizeVideosDatesCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
-     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -50,7 +49,13 @@ final class RandomizeVideosDatesCommand extends Command
 
         $conn = $this->em->getConnection();
 
-        $conn->executeStatement($sql);
+        try {
+            $conn->executeStatement($sql);
+        } catch (Exception $e) {
+            $io->error($e->getMessage());
+
+            return Command::FAILURE;
+        }
 
         $io->success('Done');
 
