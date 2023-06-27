@@ -44,7 +44,7 @@
             <div class="row">
 
                 <div class="col-md-2">
-                    <h2 class="card-box">Categories</h2>
+                    <h2 class="card-box">{{ t('ui.template.base.heading.categories')|trans }}</h2>
                     {{ render(controller('App\\Controller\\CategoriesController::categories', {'max': 10})) }}
                 </div>
 
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <h2 class="card-box">Recent</h2>
+                    <h2 class="card-box">{{ t('ui.template.base.heading.recent')|trans }}</h2>
                     {{ render(controller('App\\Controller\\VideosController::recent', {'max': 3})) }}
                 </div>
 
