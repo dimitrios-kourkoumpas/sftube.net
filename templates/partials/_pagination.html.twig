@@ -1,0 +1,21 @@
+<nav aria-label="Page navigation">
+    <div class="card-box">
+        <ul class="pagination pagination-lg">
+            <li{{ pagination.page is same as(1) ? ' class="disabled"' : '' }}>
+                <a href="{{ pagination.URLFragment ~ '?page=1' }}" aria-label="First">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            {% for i in 1..pagination.pages %}
+                <li{{ i is same as(pagination.page) ? ' class="active"' : '' }}><a href="{{ pagination.URLFragment ~ '?page=' ~ i }}">{{ i }}</a> </li>
+            {% endfor %}
+
+            <li{{ pagination.page is same as(pagination.pages) ? ' class="disabled"' : '' }}>
+                <a href="{{ pagination.URLFragment ~ '?page=' ~ (pagination.pages) }}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

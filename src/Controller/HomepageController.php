@@ -34,11 +34,13 @@ final class HomepageController extends BaseController
 
         $pages = (int) ceil($total / $perPage);
 
+        $URLFragment = $request->getPathInfo();
+
         $videos = $repository->findBy([], ['createdAt' => 'DESC'], $perPage, ($page - 1) * $perPage);
 
         return $this->render('homepage/index.html.twig', [
             'videos' => $videos,
-            'pagination' => compact('page', 'pages'),
+            'pagination' => compact('page', 'pages', 'URLFragment'),
         ]);
     }
 }
