@@ -2,7 +2,7 @@
     <div class="card-box">
         <ul class="pagination pagination-lg">
             <li{{ pagination.page is same as(1) ? ' class="disabled"' : '' }}>
-                <a href="{{ pagination.URLFragment ~ '?page=1' }}" aria-label="First">
+                <a href="{{ pagination.page is same as(1) ? 'javascript: void(0);' : pagination.URLFragment ~ '?page=1' }}" aria-label="First">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -12,7 +12,7 @@
             {% endfor %}
 
             <li{{ pagination.page is same as(pagination.pages) ? ' class="disabled"' : '' }}>
-                <a href="{{ pagination.URLFragment ~ '?page=' ~ (pagination.pages) }}" aria-label="Last">
+                <a href="{{ pagination.page is same as(pagination.pages) ? 'javacsript: void(0);' : pagination.URLFragment ~ '?page=' ~ (pagination.pages) }}" aria-label="Last">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
