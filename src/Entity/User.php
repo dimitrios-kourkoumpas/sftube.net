@@ -22,9 +22,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public const ROLE_USER = 'user';
+    public const ROLE_USER = 'ROLE_USER';
 
-    public const ROLE_ADMIN = 'admin';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     public const GENERIC_AVATAR = 'generic-avatar.png';
 
