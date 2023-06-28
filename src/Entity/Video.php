@@ -486,4 +486,13 @@ class Video
     {
         $this->metadata = $metadata;
     }
+
+    /**
+     * @param User|null $user
+     * @return bool
+     */
+    public function isOwner(?User $user = null): bool
+    {
+        return $user && $this->user->getId() === $user->getId();
+    }
 }
