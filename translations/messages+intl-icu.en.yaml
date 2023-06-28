@@ -7,9 +7,30 @@ ui:
                 login: Login
                 logout: Logout
             input:
-                search-count-videos: 'search {count} videos'
+                search:
+                    placeholder: search {count} videos
     template:
         base:
             heading:
-                categories: 'Categories'
-                recent: 'Recent'
+                categories: Categories
+                recent: Recent
+        security:
+            title:
+                login: Login
+            heading:
+                login: Login
+            form:
+                input:
+                    placeholder:
+                        email: Email
+                        password: Password
+                    label:
+                        remember-me: Remember me
+                button:
+                    caption:
+                        login: Login
+            link:
+                text:
+                    forgot-password: Forgot your password?
+                    dont-have-account: Dont have an account?
+                    signup: Sign up

@@ -1,0 +1,78 @@
+{% extends 'single-page.html.twig' %}
+
+{% block title %}{{ t('ui.template.security.title.login')|trans }}{% endblock %}
+
+{% block body %}
+    <div class="account-pages"></div>
+    <div class="clearfix"></div>
+    <div class="wrapper-page">
+        <div class="text-center">
+            <a href="{{ path('app.homepage') }}" class="logo"><span>SF<span>Tube</span></span></a>
+        </div>
+        <div class="m-t-40 card-box">
+            <div class="text-center">
+                <h4 class="text-uppercase font-bold m-b-0">{{ t('ui.template.security.heading.login')|trans }}</h4>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal m-t-20" method="post">
+                    {% if error %}
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+                    <div class="form-group ">
+                        <div class="col-xs-12">
+                            <input type="email" value="{{ last_username }}" name="email" class="form-control" placeholder="{{ t('ui.template.security.form.input.placeholder.email')|trans }}" required autofocus autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="password" name="password" class="form-control" placeholder="{{ t('ui.template.security.form.input.placeholder.password')|trans }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <div class="col-xs-12">
+                            <div class="checkbox checkbox-custom">
+                                <input id="checkbox-signup" type="checkbox" name="_remember_me">
+                                <label for="checkbox-signup">
+                                    {{ t('ui.template.security.form.input.label.remember-me')|trans }}
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <div class="form-group text-center m-t-30">
+                        <div class="col-xs-12">
+                            <button class="btn btn-custom btn-bordred btn-block waves-effect waves-light" type="submit">{{ t('ui.template.security.form.button.caption.login')|trans }}</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group m-t-30 m-b-0">
+                        <div class="col-sm-12">
+                            <a href="javascript:void(0);" class="text-muted"><i class="fa fa-lock m-r-5"></i> {{ t('ui.template.security.link.text.forgot-password')|trans }}</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        {% if configuration.isSet('allow-user-signup') and configuration.get('allow-user-signup') %}
+
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <p class="text-muted">{{ t('ui.template.security.link.text.dont-have-account')|trans }} <a href="javascript:void(0);" class="text-primary m-l-5"><b>{{ t('ui.template.security.link.text.signup')|trans }}</b></a></p>
+                </div>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% endblock %}

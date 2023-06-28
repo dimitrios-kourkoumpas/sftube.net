@@ -19,7 +19,7 @@
                 <li>
                     <form class="navbar-form" role="search" action="#" method="GET">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="{{ t('ui.navbar.menu.input.search-count-videos', {'count': 'many'})|trans }}" name="term" id="search-term" autocomplete="off" disabled>
+                            <input type="text" class="form-control" placeholder="{{ t('ui.navbar.menu.input.search.placeholder', {'count': 'many'})|trans }}" name="term" id="search-term" autocomplete="off" disabled>
                             <div class="input-group-btn">
                                 <button class="btn btn-success waves-effect waves-light" type="submit" disabled>
                                     <i class="fa fa-search"></i>
@@ -37,11 +37,11 @@
                             &nbsp;{{ app.user.fullname }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="javascript: void(0);" class="text-danger">{{ t('ui.navbar.menu.item.logout')|trans }}</a></li>
+                            <li><a href="{{ path('app.logout') }}" class="text-danger">{{ t('ui.navbar.menu.item.logout')|trans }}</a></li>
                         </ul>
                     </li>
                 {% else %}
-                    <li><a href="javascript: void(0);">{{ t('ui.navbar.menu.item.login')|trans }}</a></li>
+                    <li><a href="{{ path('app.login') }}">{{ t('ui.navbar.menu.item.login')|trans }}</a></li>
                 {% endif %}
 
             </ul>
