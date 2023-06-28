@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Video;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class VideosController
@@ -13,6 +14,23 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class VideosController extends BaseController
 {
+    /**
+     * @param Video $video
+     * @return Response
+     */
+    #[Route('/watch/{id}/{slug}', name: 'app.videos.watch', methods: ['GET'])]
+    public function watch(Video $video): Response
+    {
+        // increment views
+        $video->setViews($video->getViews() + 1);
+
+        $this->em->persist($video);
+        $this->em->flush();
+
+        return $this->render('videos/watch.html.twig', [
+            'video' => $video,
+        ]);
+    }
 
     /**
      * @param int $max

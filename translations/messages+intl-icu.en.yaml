@@ -41,23 +41,28 @@ ui:
                 register: Registration
             form:
                 placeholder:
-                    firstname: First name
-                    lastname: Last name
+                    firstname: 'First name'
+                    lastname: 'Last name'
                     email: Email
                     password: Password
-                    repeat-password: Repeat password
+                    repeat-password: 'Repeat password'
                 button:
                     submit:
                         caption: Submit
             text:
-                agree-to-the: Agree to the
-                terms-and-conditions:  Terms and Conditions
+                agree-to-the: 'Agree to the'
+                terms-and-conditions: 'Terms and Conditions'
             link:
                 text:
-                    already-have-an-account: Already have an account?
+                    already-have-an-account: 'Already have an account?'
                     login: Login
+        videos:
+            watch:
+                link:
+                    text:
+                        home: Home
 controller:
     registration:
         register:
             flash:
-                registration-successful: Registration successful
+                registration-successful: 'Registration successful'
