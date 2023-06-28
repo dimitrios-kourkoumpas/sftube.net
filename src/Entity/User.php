@@ -10,9 +10,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Class User
@@ -20,7 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[Vich\Uploadable()]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
     public const ROLE_USER = 'ROLE_USER';
 
@@ -72,6 +75,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(type: Types::STRING, options: ['default' => self::GENERIC_AVATAR])]
     private string $avatar = self::GENERIC_AVATAR;
+
+    #[Vich\UploadableField(mapping: 'avatars', fileNameProperty: 'avatar')]
+    private ?File $avatarFile = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Video::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
@@ -371,5 +377,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getAvatarFile(): ?File
+    {
+        return $this->avatarFile;
+    }
+
+    /**
+     * @param File|null $avatarFile
+     */
+    public function setAvatarFile(?File $avatarFile): void
+    {
+        $this->avatarFile = $avatarFile;
+    }
+
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+    }
+
+    public function unserialize(string $data)
+    {
+        // TODO: Implement unserialize() method.
+    }
+
+    /**
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'password' => $this->password,
+        ];
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'];
+        $this->email = $data['email'];
+        $this->password = $data['password'];
     }
 }

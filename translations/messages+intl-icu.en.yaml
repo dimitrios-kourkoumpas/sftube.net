@@ -8,7 +8,7 @@ ui:
                 logout: Logout
             input:
                 search:
-                    placeholder: search {count} videos
+                    placeholder: 'search {count} videos'
     template:
         base:
             heading:
@@ -25,12 +25,39 @@ ui:
                         email: Email
                         password: Password
                     label:
-                        remember-me: Remember me
+                        remember-me: 'Remember me'
                 button:
                     caption:
                         login: Login
             link:
                 text:
-                    forgot-password: Forgot your password?
-                    dont-have-account: Dont have an account?
-                    signup: Sign up
+                    forgot-password: 'Forgot your password?'
+                    dont-have-account: 'Dont have an account?'
+                    signup: 'Sign up'
+        registration:
+            title:
+                register: Register
+            heading:
+                register: Registration
+            form:
+                placeholder:
+                    firstname: First name
+                    lastname: Last name
+                    email: Email
+                    password: Password
+                    repeat-password: Repeat password
+                button:
+                    submit:
+                        caption: Submit
+            text:
+                agree-to-the: Agree to the
+                terms-and-conditions:  Terms and Conditions
+            link:
+                text:
+                    already-have-an-account: Already have an account?
+                    login: Login
+controller:
+    registration:
+        register:
+            flash:
+                registration-successful: Registration successful
