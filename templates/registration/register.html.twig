@@ -1,0 +1,131 @@
+{% extends 'single-page.html.twig' %}
+
+{% block title %}{{ t('ui.template.registration.title.register')|trans }}{% endblock %}
+
+{% block body %}
+    <div class="account-pages"></div>
+    <div class="clearfix"></div>
+    <div class="wrapper-page">
+        <div class="text-center">
+            <a href="{{ path('app.homepage') }}" class="logo"><span>SF<span>Tube</span></span></a>
+        </div>
+        <div class="m-t-40 card-box">
+            <div class="text-center">
+                <h4 class="text-uppercase font-bold m-b-0">{{ t('ui.template.registration.heading.register')|trans }}</h4>
+            </div>
+            <div class="panel-body">
+
+                {{ form_start(form, {'attr': {'class': 'form-horizontal m-t-20', 'type': 'file'}}) }}
+
+                {% set _firstname_error = not form_errors(form.firstname) is empty %}
+
+                <div class="form-group{{ _firstname_error ? ' has-error' }}">
+                    <div class="col-xs-12">
+                        {{ form_widget(form.firstname, {'attr': {'class': 'form-control', 'placeholder': t('ui.template.registration.form.placeholder.firstname')|trans, 'autofocus': true, 'autocomplete': 'off'}}) }}
+                    </div>
+                    {% if _firstname_error %}
+                        <div class="help-block">
+                            {{ form_errors(form.firstname) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% set _lastname_error = not form_errors(form.lastname) is empty %}
+
+                <div class="form-group{{ _lastname_error ? ' has-error' }}">
+                    <div class="col-xs-12">
+                        {{ form_widget(form.lastname, {'attr': {'class': 'form-control', 'placeholder': t('ui.template.registration.form.placeholder.lastname')|trans, 'autocomplete': 'off'}}) }}
+                    </div>
+                    {% if _lastname_error %}
+                        <div class="help-block">
+                            {{ form_errors(form.lastname) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% set _email_error = not form_errors(form.email) is empty %}
+
+                <div class="form-group{{ _email_error ? ' has-error' }}">
+                    <div class="col-xs-12">
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': t('ui.template.registration.form.placeholder.email')|trans, 'autocomplete': 'off'}}) }}
+                    </div>
+                    {% if _email_error %}
+                        <div class="help-block">
+                            {{ form_errors(form.email) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% set _password_error = not form_errors(form.password) is empty %}
+
+                <div class="form-group{{ _password_error ? ' has-error' }}">
+                    <div class="col-xs-12">
+                        {{ form_widget(form.password.first, {'attr': {'class': 'form-control', 'placeholder': t('ui.template.registration.form.placeholder.password')|trans}}) }}
+                    </div>
+                    {% if _password_error %}
+                        <div class="help-block">
+                            {{ form_errors(form.password.first) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group{{ _password_error ? ' has-error' }}">
+                    <div class="col-xs-12">
+                        {{ form_widget(form.password.second, {'attr': {'class': 'form-control', 'placeholder': t('ui.template.registration.form.placeholder.repeat-password')|trans}}) }}
+                    </div>
+                    {% if _password_error %}
+                        <div class="help-block">
+                            {{ form_errors(form.password.second) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% set _avatar_error = not form_errors(form.avatarFile) is empty %}
+
+                <div class="form-group{{ _avatar_error ? ' has-error' }}">
+                    <div class="col-xs-12">
+                        {{ form_widget(form.avatarFile, {'attr': {'class': 'form-control', 'type': 'file'}}) }}
+                    </div>
+                    {% if _avatar_error %}
+                        <div class="help-block">
+                            {{ form_errors(form.avatarFile) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group ">
+                    <div class="col-xs-12">
+                        <div class="checkbox checkbox-custom">
+                            {{ form_widget(form.terms) }}
+                            <label for="checkbox-signup">
+                                {{ t('ui.template.registration.text.agree-to-the')|trans }} <a href="{{ path('app.homepage') }}">{{ t('ui.template.registration.text.terms-and-conditions')|trans }}</a>
+{#                                Agree to the <a href="javascript:void(0);">Terms and Conditions</a>#}
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group text-center m-t-30">
+                    <div class="col-xs-12">
+                        <button class="btn btn-custom btn-bordred btn-block waves-effect waves-light" type="submit">
+                            {{ t('ui.template.registration.form.button.submit.caption')|trans }}
+                        </button>
+                    </div>
+                </div>
+
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <p class="text-muted">{{ t('ui.template.registration.link.text.already-have-an-account')|trans }}
+                    <a href="{{ path('app.login') }}" class="text-primary m-l-5"><strong>{{ t('ui.template.registration.link.text.login')|trans }}</strong></a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
