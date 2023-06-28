@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block body %}
+    <h2 class="card-box">{{ video.title }}</h2>
+
+    <div class="panel">
+        <div class="panel-body">
+
+            {% set _autoplay = configuration.isSet('autoplay-videos') and configuration.get('autoplay-videos') %}
+
+            <video src="{{ asset(videos_url_segment ~ video.filename) }}"
+                   poster="{{ asset(thumbnails_url_segment ~ video.thumbnail) }}"
+                   controls{{ _autoplay ? ' autoplay' }}></video>
+
+            <p class="text-muted font-13 m-t-30 m-b-30">
+                {{ video.description|nl2br }}
+            </p>
+        </div>
+    </div>
+
+    <div class="card-box">
+        <a class="btn btn-success waves-effect waves-light" href="{{ path('app.homepage') }}">{{ t('ui.template.videos.watch.link.text.home')|trans }}</a>
+    </div>
+{% endblock %}
