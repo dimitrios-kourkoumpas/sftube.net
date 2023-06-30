@@ -82,8 +82,8 @@ controller:
         upload:
             flash:
                 upload-successful: 'Video uploaded successfully'
-video:
-    type:
+form:
+    video:
         label:
             title: Title
             description: Description
