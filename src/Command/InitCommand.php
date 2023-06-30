@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 #[AsCommand(
     name: 'app:init',
-    description: 'Initializes application (database + filesystem)',
+    description: 'Initializes application (database + filesystem) and starts message queue',
 )]
 final class InitCommand extends Command
 {
@@ -41,6 +41,13 @@ final class InitCommand extends Command
             'command' => 'app:randomize:videos-dates',
         ], [
             'command' => 'app:randomize:comments-dates',
+        ], [
+            'command' => 'messenger:consume',
+            'arguments' => [
+                'receivers' => [
+                    'async',
+                ],
+            ],
         ],
     ];
 
@@ -66,8 +73,6 @@ final class InitCommand extends Command
                 return Command::FAILURE;
             }
         }
-
-        $io->success('Init complete!');
 
         return Command::SUCCESS;
     }
