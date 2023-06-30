@@ -6,8 +6,10 @@ namespace App\Controller;
 
 use App\Entity\Video;
 use App\Form\VideoType;
+use App\Message\ExtractVideoMessage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -37,11 +39,12 @@ final class VideosController extends BaseController
 
     /**
      * @param Request $request
+     * @param MessageBusInterface $bus
      * @return Response
      */
     #[Route('/upload', name: 'app.videos.upload', methods: ['GET', 'POST'])]
     #[IsGranted('upload')]
-    public function upload(Request $request): Response
+    public function upload(Request $request, MessageBusInterface $bus): Response
     {
         $video = new Video();
 
@@ -56,6 +59,10 @@ final class VideosController extends BaseController
             $this->em->flush();
 
             $this->addFlash('success', $this->translator->trans('controller.videos.upload.flash.upload-successful'));
+
+            $bus->dispatch(new ExtractVideoMessage($video->getId()));
+
+            $this->addFlash('info', $this->translator->trans('controller.videos.upload.flash.video-queued'));
 
             return $this->redirectToRoute('app.homepage');
         }
