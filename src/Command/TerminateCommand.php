@@ -18,11 +18,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 #[AsCommand(
     name: 'app:terminate',
-    description: 'Terminates application (database + filesystem)',
+    description: 'Terminates application (database + filesystem) and message queue',
 )]
 final class TerminateCommand extends Command
 {
     private const COMMANDS = [
+        [
+            'command' => 'messenger:stop-workers',
+        ],
         [
             'command' => 'app:remove:filesystem',
         ], [
