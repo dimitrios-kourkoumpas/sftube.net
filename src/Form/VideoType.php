@@ -49,44 +49,44 @@ final class VideoType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'required' => true,
-                'label' => $this->translator->trans('video.type.label.title'),
+                'label' => $this->translator->trans('form.video.label.title'),
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('video.type.label.description'),
+                'label' => $this->translator->trans('form.video.label.description'),
             ])
             ->add('videoFile', VichFileType::class, [
                 'required' => true,
                 'allow_delete' => false,
                 'download_uri' => false,
-                'label' => $this->translator->trans('video.type.label.video'),
+                'label' => $this->translator->trans('form.video.label.video'),
             ])
             ->add('extractionMethod', ChoiceType::class, [
                 'choices' => [
-                    $this->translator->trans('video.type.label.extraction-method.slideshow') => Video::SLIDESHOW_EXTRACTION,
-                    $this->translator->trans('video.type.label.extraction-method.preview') => Video::PREVIEW_EXTRACTION,
+                    $this->translator->trans('form.video.label.extraction-method.slideshow') => Video::SLIDESHOW_EXTRACTION,
+                    $this->translator->trans('form.video.label.extraction-method.preview') => Video::PREVIEW_EXTRACTION,
                 ],
-                'label' => $this->translator->trans('video.type.label.extraction-method'),
+                'label' => $this->translator->trans('form.video.label.extraction-method'),
             ])
             ->add('allow_comments', CheckboxType::class, [
                 'data' => true,
-                'label' => $this->translator->trans('video.type.label.allow-comments'),
+                'label' => $this->translator->trans('form.video.label.allow-comments'),
             ])
             ->add('category', EntityType::class, [
-                'label' => $this->translator->trans('video.type.label.category'),
+                'label' => $this->translator->trans('form.video.label.category'),
                 'required' => true,
                 'class' => Category::class,
                 'query_builder' => fn(EntityRepository $er) => $er->createQueryBuilder('c')->orderBy('c.name', 'ASC'),
             ])
             ->add('tags', EntityType::class, [
-                'label' => $this->translator->trans('video.type.label.tags'),
+                'label' => $this->translator->trans('form.video.label.tags'),
                 'required' => false,
                 'multiple' => true,
                 'class' => Tag::class,
                 'query_builder' => fn(EntityRepository $er) => $er->createQueryBuilder('t')->orderBy('t.name', 'ASC'),
             ])
             ->add('playlists', EntityType::class, [
-                'label' => $this->translator->trans('video.type.label.playlists'),
+                'label' => $this->translator->trans('form.video.label.playlists'),
                 'required' => false,
                 'multiple' => true,
                 'class' => Playlist::class,
