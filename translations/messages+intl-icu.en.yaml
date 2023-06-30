@@ -62,7 +62,13 @@ ui:
                 link:
                     text:
                         home: Home
-            form:
+                text:
+                    uploaded: Uploaded
+                    uploader: Uploader
+                    views: Views
+                    category: Category
+                    tags: Tags
+                    form:
                 submit:
                     caption: Upload
             upload:

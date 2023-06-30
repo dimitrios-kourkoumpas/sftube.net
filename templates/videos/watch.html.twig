@@ -17,6 +17,41 @@
             <p class="text-muted font-13 m-t-30 m-b-30">
                 {{ video.description|nl2br }}
             </p>
+
+            <div class="text-left">
+                <p class="text-muted font-13"><strong>{{ t('ui.template.videos.watch.text.uploaded')|trans }}:</strong>
+                    <span class="m-l-15">{{ video.createdAt|timeElapsedSinceNow }}</span>
+                </p>
+
+                <p class="text-muted font-13"><strong>{{ t('ui.template.videos.watch.text.uploader')|trans }} :</strong>
+                    <span class="m-l-15">
+                        <a href="javascript:void(0);">{{ video.user.fullname }}</a>
+                    </span>
+                </p>
+
+                <p class="text-muted font-13"><strong>{{ t('ui.template.videos.watch.text.views')|trans }} :</strong> <span class="m-l-15">{{ video.views }}</span></p>
+
+                <p class="text-muted font-13 m-b-5">
+                    <strong>{{ t('ui.template.videos.watch.text.category')|trans }} :</strong> <span class="m-l-15">
+                        <a href="javascript:void(0);">
+                            {{ video.category.name }}
+                        </a>
+                    </span>
+                </p>
+
+                {% if video.tags.count > 0 %}
+                    <p class="text-muted font-13 m-b-5"><strong>{{ t('ui.template.videos.watch.text.tags')|trans }} :</strong>
+                        {% for tag in video.tags %}
+                            <span class="m-l-15">
+                                <a href="javascript:void(0);">
+                                    {{ tag.name }}
+                                </a>
+                            </span>
+                        {% endfor %}
+                    </p>
+                {% endif %}
+
+            </div>
         </div>
     </div>
 
