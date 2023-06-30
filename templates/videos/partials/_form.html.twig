@@ -1,0 +1,97 @@
+{{ form_start(form, {'method': 'POST', 'attr': {'role': 'form'}}) }}
+
+
+{% set _title_errors = not form_errors(form.title) is empty %}
+
+<div class="form-group{% if _title_errors %} has-error{% endif %}">
+    {% if _title_errors %}
+        <div class="text-danger">
+            {{ form_label(form.title) }}
+        </div>
+    {% else %}
+        {{ form_label(form.title) }}
+    {% endif %}
+    {{ form_widget(form.title, {'attr': {'class': 'form-control', 'autocomplete': 'off', 'autofocus': false}}) }}
+    {% if _title_errors %}
+        <div class="text-danger">
+            {{ form_errors(form.title) }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 5}}) }}
+    {{ form_errors(form.description) }}
+</div>
+
+{% if show_video_field %}
+    {% set _video_errors = not form_errors(form.videoFile) is empty %}
+
+    <div class="form-group{% if _video_errors %} has-error{% endif %}">
+        {% if _video_errors %}
+            <div class="text-danger">
+                {{ form_label(form.videoFile) }}
+            </div>
+        {% else %}
+            {{ form_label(form.videoFile) }}
+        {% endif %}
+        {{ form_widget(form.videoFile, {'attr': {'class': 'form-control', 'type': 'file'}}) }}
+        {% if _video_errors %}
+            <div class="text-danger">
+                {{ form_errors(form.video) }}
+            </div>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% set _category_errors = not form_errors(form.category) is empty %}
+
+<div class="form-group{% if _category_errors %} has-error{% endif %}">
+    {% if _category_errors %}
+        <div class="text-danger">
+            {{ form_label(form.category) }}
+        </div>
+    {% else %}
+        {{ form_label(form.category) }}
+    {% endif %}
+    {{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
+    {% if _category_errors %}
+        <div class="text-danger">
+            {{ form_errors(form.category) }}
+        </div>
+    {% endif %}
+</div>
+
+
+<div class="form-group">
+    {{ form_label(form.tags) }}
+    {{ form_widget(form.tags, {'attr': {'class': 'js-multi-select', 'multiple': true}}) }}
+    {{ form_errors(form.tags) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.playlists) }}
+    {{ form_widget(form.playlists, {'attr': {'class': 'js-multi-select', 'multiple': true}}) }}
+    {{ form_errors(form.playlists) }}
+</div>
+
+{% if show_extraction_method %}
+    <div class="form-group">
+        {{ form_label(form.extractionMethod) }}
+        {{ form_widget(form.extractionMethod, {'attr': {'class': 'form-control'}}) }}
+    </div>
+{% endif %}
+
+<div class="form-group">
+    <div class="checkbox checkbox-custom">
+        {{ form_widget(form.allow_comments) }}
+        {{ form_label(form.allow_comments) }}
+    </div>
+</div>
+
+<div class="form-group">
+    <button class="btn btn-primary waves-effect waves-light">{{ button_label|default(t('ui.template.videos.form.submit.caption')|trans)|raw }}</button>
+</div>
+
+{{ form_end(form) }}
