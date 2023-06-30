@@ -77,6 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     private string $avatar = self::GENERIC_AVATAR;
 
     #[Vich\UploadableField(mapping: 'avatars', fileNameProperty: 'avatar')]
+    #[Assert\File(maxSize: '2m', mimeTypes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'])]
     private ?File $avatarFile = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Video::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
@@ -90,6 +91,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Playlist::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $playlists;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
+    private bool $can_upload = true;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
+    private bool $can_comment = true;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $blocked = false;
 
     public function __construct()
     {
@@ -426,5 +436,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         $this->id = $data['id'];
         $this->email = $data['email'];
         $this->password = $data['password'];
+    }
+
+    public function getCanUpload(): ?bool
+    {
+        return $this->can_upload;
+    }
+
+    public function setCanUpload(bool $can_upload): static
+    {
+        $this->can_upload = $can_upload;
+
+        return $this;
+    }
+
+    public function getCanComment(): ?bool
+    {
+        return $this->can_comment;
+    }
+
+    public function setCanComment(bool $can_comment): static
+    {
+        $this->can_comment = $can_comment;
+
+        return $this;
+    }
+
+    public function isBlocked(): ?bool
+    {
+        return $this->blocked;
+    }
+
+    public function setBlocked(bool $blocked): static
+    {
+        $this->blocked = $blocked;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getFullname();
     }
 }

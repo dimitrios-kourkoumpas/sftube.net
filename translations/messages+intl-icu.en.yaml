@@ -6,6 +6,7 @@ ui:
                 playlists: Playlists
                 login: Login
                 logout: Logout
+                upload: Upload
             input:
                 search:
                     placeholder: 'search {count} videos'
@@ -61,8 +62,36 @@ ui:
                 link:
                     text:
                         home: Home
+            form:
+                submit:
+                    caption: Upload
+            upload:
+                title: Upload
+                heading:
+                    text:
+                        upload: 'Upload video'
+                link:
+                    text:
+                        home: 'Home'
 controller:
     registration:
         register:
             flash:
                 registration-successful: 'Registration successful'
+    videos:
+        upload:
+            flash:
+                upload-successful: 'Video uploaded successfully'
+video:
+    type:
+        label:
+            title: Title
+            description: Description
+            video: Video
+            extraction-method: 'Extraction method'
+            extraction-method.slideshow: Slideshow
+            extraction-method.preview: Preview
+            allow-comments: 'Allow comments'
+            category: Category
+            tags: Tags
+            playlists: Playlists

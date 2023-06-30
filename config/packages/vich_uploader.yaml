@@ -9,3 +9,10 @@ vich_uploader:
             inject_on_load: false
             delete_on_update: true
             delete_on_remove: true
+        videos:
+            uri_prefix: '%web.videos.url_segment%'
+            upload_destination: '%app.filesystem.videos.upload.path%'
+            namer: App\Vich\Naming\UniqueIDMD5Namer
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true

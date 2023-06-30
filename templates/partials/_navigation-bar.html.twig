@@ -37,6 +37,10 @@
                             &nbsp;{{ app.user.fullname }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
+                            {% if configuration.isSet('allow-video-uploads') and configuration.get('allow-video-uploads') %}
+                                <li><a href="{{ path('app.videos.upload') }}">{{ t('ui.navbar.menu.item.upload')|trans }}</a></li>
+                                <li role="separator" class="divider"></li>
+                            {% endif %}
                             <li><a href="{{ path('app.logout') }}" class="text-danger">{{ t('ui.navbar.menu.item.logout')|trans }}</a></li>
                         </ul>
                     </li>

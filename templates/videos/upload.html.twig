@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ t('ui.template.videos.upload.title')|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('assets/plugins/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block body %}
+    <h2 class="card-box">{{ t('ui.template.videos.upload.heading.text.upload')|trans }}</h2>
+
+    {{ include('videos/partials/_form.html.twig', {'button_label': t('ui.template.videos.form.submit.caption')|trans, 'show_video_field': true, 'show_extraction_method': true}) }}
+
+    <a class="btn btn-lg btn-success waves-effect waves-light" href="{{ path('app.homepage') }}">{{ t('ui.template.videos.upload.link.text.home')|trans }}</a>
+{% endblock %}
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+    <script src="{{ asset('assets/plugins/select2/dist/js/select2.min.js') }}"></script>
+{% endblock %}
+
+{% block javascripts_inline %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('.js-multi-select').select2();
+        });
+    </script>
+{% endblock %}

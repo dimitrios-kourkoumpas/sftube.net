@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Video;
+use App\Form\VideoType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * Class VideosController
@@ -29,6 +32,36 @@ final class VideosController extends BaseController
 
         return $this->render('videos/watch.html.twig', [
             'video' => $video,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    #[Route('/upload', name: 'app.videos.upload', methods: ['GET', 'POST'])]
+    #[IsGranted('upload')]
+    public function upload(Request $request): Response
+    {
+        $video = new Video();
+
+        $form = $this->createForm(VideoType::class, $video);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $video->setUser($this->getUser());
+
+            $this->em->persist($video);
+            $this->em->flush();
+
+            $this->addFlash('success', $this->translator->trans('controller.videos.upload.flash.upload-successful'));
+
+            return $this->redirectToRoute('app.homepage');
+        }
+
+        return $this->render('videos/upload.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 

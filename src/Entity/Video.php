@@ -10,8 +10,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Self_;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Class Video
@@ -19,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[Vich\Uploadable()]
 class Video
 {
     public const SLIDESHOW_EXTRACTION = 'slideshow';
@@ -49,6 +51,10 @@ class Video
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true, options: ['default' => self::NOT_AVAILABLE])]
     private string $thumbnail = self::NOT_AVAILABLE;
+
+    #[Vich\UploadableField(mapping: 'videos', fileNameProperty: 'filename')]
+    #[Assert\File(maxSize: '100m', mimeTypes: ['video/mp4'], extensions: ['mp4'])]
+    private ?File $videoFile = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $filename = null;
@@ -94,6 +100,9 @@ class Video
     #[ORM\ManyToMany(targetEntity: Playlist::class, inversedBy: 'videos', fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $playlists;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
+    private bool $allow_comments = true;
 
     public function __construct()
     {
@@ -261,9 +270,9 @@ class Video
     }
 
     /**
-     * @return Category
+     * @return Category|null
      */
-    public function getCategory(): Category
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
@@ -494,5 +503,41 @@ class Video
     public function isOwner(?User $user = null): bool
     {
         return $user && $this->user->getId() === $user->getId();
+    }
+
+    public function isAllowComments(): ?bool
+    {
+        return $this->allow_comments;
+    }
+
+    public function setAllowComments(bool $allow_comments): static
+    {
+        $this->allow_comments = $allow_comments;
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getVideoFile(): ?File
+    {
+        return $this->videoFile;
+    }
+
+    /**
+     * @param File|null $videoFile
+     */
+    public function setVideoFile(?File $videoFile): void
+    {
+        $this->videoFile = $videoFile;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->title;
     }
 }
