@@ -72,7 +72,7 @@ ui:
                         upload: 'Upload video'
                 link:
                     text:
-                        home: 'Home'
+                        home: Home
 controller:
     registration:
         register:
@@ -82,6 +82,7 @@ controller:
         upload:
             flash:
                 upload-successful: 'Video uploaded successfully'
+                video-queued: 'Video queued for processing'
 form:
     video:
         label:
@@ -95,3 +96,15 @@ form:
             category: Category
             tags: Tags
             playlists: Playlists
+twig:
+    filter:
+        time-elapsed-since-now:
+            year: year
+            month: month
+            week: week
+            day: day
+            hour: hour
+            minute: minute
+            second: second
+            ago: ago
+            just-now: 'just now'
