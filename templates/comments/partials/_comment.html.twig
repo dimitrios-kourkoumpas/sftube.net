@@ -1,0 +1,17 @@
+<div class="card-box comment">
+    <img src="{{ asset(avatars_url_segment ~ comment.user.avatar) }}"
+         alt="{{ comment.user.fullname }}" class="comment-avatar">
+    <div class="comment-body">
+        <div class="comment-text">
+            <div class="comment-header">
+                <a href="javascript:void(0);">
+                    {{ comment.user.fullname }}
+                </a>
+                <span>{{ comment.createdAt|timeElapsedSinceNow }}</span>
+            </div>
+
+            {{ comment.comment }}
+
+        </div>
+    </div>
+</div>

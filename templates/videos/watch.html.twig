@@ -29,7 +29,8 @@
                     </span>
                 </p>
 
-                <p class="text-muted font-13"><strong>{{ t('ui.template.videos.watch.text.views')|trans }} :</strong> <span class="m-l-15">{{ video.views }}</span></p>
+                <p class="text-muted font-13"><strong>{{ t('ui.template.videos.watch.text.views')|trans }} :</strong>
+                    <span class="m-l-15">{{ video.views }}</span></p>
 
                 <p class="text-muted font-13 m-b-5">
                     <strong>{{ t('ui.template.videos.watch.text.category')|trans }} :</strong> <span class="m-l-15">
@@ -40,7 +41,7 @@
                 </p>
 
                 {% if video.tags.count > 0 %}
-                    <p class="text-muted font-13 m-b-5"><strong>{{ t('ui.template.videos.watch.text.tags')|trans }} :</strong>
+                    <p class="text-muted font-13 m-b-5"><strong>{{ t('ui.template.videos.watch.text.tags')|trans }}: </strong>
                         {% for tag in video.tags %}
                             <span class="m-l-15">
                                 <a href="javascript:void(0);">
@@ -55,7 +56,19 @@
         </div>
     </div>
 
+
+    {% if video.comments.count > 0 %}
+        <h4 class="card-box header-title m-t-0 m-b-30"><i
+                    class="zmdi zmdi-comments m-r-5"></i> {{ t('Comments')|trans }}</h4>
+
+        {% for comment in video.comments %}
+            {{ include('comments/partials/_comment.html.twig', {'comment': comment}) }}
+        {% endfor %}
+
+    {% endif %}
+
     <div class="card-box">
-        <a class="btn btn-success waves-effect waves-light" href="{{ path('app.homepage') }}">{{ t('ui.template.videos.watch.link.text.home')|trans }}</a>
+        <a class="btn btn-success waves-effect waves-light"
+           href="{{ path('app.homepage') }}">{{ t('ui.template.videos.watch.link.text.home')|trans }}</a>
     </div>
 {% endblock %}
