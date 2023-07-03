@@ -68,9 +68,18 @@ ui:
                     views: Views
                     category: Category
                     tags: Tags
-                    form:
                 submit:
                     caption: Upload
+                heading:
+                    comments: Comments
+                toastr:
+                    message:
+                        comment-submitted: 'Comment successfully submitted'
+                        error-displaying-comments: 'Error displaying comments'
+                        error-submitting-comment: 'Error submitting comment'
+                    title:
+                        success: 'Success!'
+                        error: 'Error!'
             upload:
                 title: Upload
                 heading:
@@ -79,6 +88,15 @@ ui:
                 link:
                     text:
                         home: Home
+            form:
+                submit:
+                    caption: Submit
+            comments:
+                form:
+                    comment:
+                        placeholder: comment
+                    submit:
+                        caption: 'Submit comment'
 controller:
     registration:
         register:

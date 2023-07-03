@@ -226,6 +226,17 @@ Error: Error
         '|The filename is too long':
             ' It should have {{ filename_max_length }} characters or less':
                 '': 'The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.'
+'The password strength is too low':
+    ' Please use a stronger password':
+        '': 'The password strength is too low. Please use a stronger password.'
+'This value contains characters that are not allowed by the current restriction-level':
+    '': 'This value contains characters that are not allowed by the current restriction-level.'
+'Using invisible characters is not allowed':
+    '': 'Using invisible characters is not allowed.'
+'Mixing numbers from different scripts is not allowed':
+    '': 'Mixing numbers from different scripts is not allowed.'
+'Using hidden overlay characters is not allowed':
+    '': 'Using hidden overlay characters is not allowed.'
 'This form should not contain extra fields':
     '': 'This form should not contain extra fields.'
 'The uploaded file was too large':

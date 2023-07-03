@@ -505,7 +505,7 @@ class Video
         return $user && $this->user->getId() === $user->getId();
     }
 
-    public function isAllowComments(): ?bool
+    public function getAllowComments(): ?bool
     {
         return $this->allow_comments;
     }
