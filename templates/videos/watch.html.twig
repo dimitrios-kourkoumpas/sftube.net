@@ -2,6 +2,13 @@
 
 {% block title %}{{ video.title }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('assets/plugins/toastr/toastr.min.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+
 {% block body %}
     <h2 class="card-box">{{ video.title }}</h2>
 
@@ -56,19 +63,86 @@
         </div>
     </div>
 
-
-    {% if video.comments.count > 0 %}
-        <h4 class="card-box header-title m-t-0 m-b-30"><i
-                    class="zmdi zmdi-comments m-r-5"></i> {{ t('Comments')|trans }}</h4>
-
-        {% for comment in video.comments %}
-            {{ include('comments/partials/_comment.html.twig', {'comment': comment}) }}
-        {% endfor %}
-
+    {% if is_granted('comment', video) %}
+        <div class="card-box">
+            <form role="form">
+                <div class="form-group">
+                    <textarea id="comment-box" rows="5" placeholder="{{ t('ui.template.videos.comments.form.comment.placeholder')|trans }}" class="form-control"></textarea>
+                </div>
+                <p class="text-right">
+                    <button class="btn btn-success waves-effect waves-light" id="submit-comment-btn">
+                        {{ t('ui.template.videos.comments.form.submit.caption')|trans }}
+                    </button>
+                </p>
+            </form>
+        </div>
     {% endif %}
+
+    <div id="comments-section">
+        {% if video.comments.count > 0 %}
+            <h4 class="card-box header-title m-t-0 m-b-30">
+                <i class="zmdi zmdi-comments m-r-5"></i> {{ t('ui.template.videos.watch.heading.comments')|trans }}
+            </h4>
+
+                {% for comment in video.comments %}
+                    {{ include('comments/partials/_comment.html.twig', {'comment': comment}) }}
+                {% endfor %}
+        {% endif %}
+    </div>
 
     <div class="card-box">
         <a class="btn btn-success waves-effect waves-light"
            href="{{ path('app.homepage') }}">{{ t('ui.template.videos.watch.link.text.home')|trans }}</a>
     </div>
+{% endblock %}
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/js/sftube.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+{% endblock %}
+
+{% block javascripts_inpage %}
+    {{ parent() }}
+    <script>
+    {% if is_granted('comment', video) %}
+        $('#submit-comment-btn').on('click', function (e) {
+            e.preventDefault();
+
+            const comment = $('#comment-box').val();
+
+            $.ajax({
+                url: '{{ path('app.videos.comment', {'id': video.id}) }}',
+                method: 'POST',
+                data: {
+                    comment: comment
+                },
+                dataType: 'json',
+                success: function (response, status, xhr) {
+                    if (response.success) {
+                        toastr.success('{{ t('ui.template.videos.watch.toastr.message.comment-submitted')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.troastr.defaults);
+
+                        $.ajax({
+                            url: '{{ path('app.videos.comments', {'id': video.id}) }}',
+                            method: 'GET',
+                            dataType: 'html',
+                            success: function (response, status, xhr) {
+                                $('#comment-box').val('');
+
+                                $('#comments-section').html(response);
+                            },
+                            error: function (xhr, status, error) {
+                                toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-displaying-comments')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.troastr.defaults);
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-submitting-comment')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.troastr.defaults);
+                }
+            });
+        });
+    {% endif %}
+    </script>
 {% endblock %}

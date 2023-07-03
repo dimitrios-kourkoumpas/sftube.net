@@ -1,0 +1,10 @@
+{% if video.comments.count > 0 %}
+    <h4 class="card-box header-title m-t-0 m-b-30">
+        <i class="zmdi zmdi-comments m-r-5"></i> {{ t('ui.template.videos.watch.heading.comments')|trans }}
+    </h4>
+
+
+    {% for comment in video.comments %}
+        {{ include('comments/partials/_comment.html.twig', {'comment': comment}) }}
+    {% endfor %}
+{% endif %}
