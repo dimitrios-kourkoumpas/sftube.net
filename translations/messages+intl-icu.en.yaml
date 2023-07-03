@@ -77,9 +77,14 @@ ui:
                         comment-submitted: 'Comment successfully submitted'
                         error-displaying-comments: 'Error displaying comments'
                         error-submitting-comment: 'Error submitting comment'
+                        vote-submitted: 'Vote submitted'
+                        error-getting-votes: 'Error getting votes'
+                        error-submitting-vote: 'Error submitting vote'
                     title:
-                        success: 'Success!'
-                        error: 'Error!'
+                        success: Success!
+                        error: Error!
+                votes:
+                    heading: Votes
             upload:
                 title: Upload
                 heading:

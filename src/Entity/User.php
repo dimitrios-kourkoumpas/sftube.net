@@ -101,11 +101,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     private bool $blocked = false;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Vote::class, orphanRemoval: true)]
+    private Collection $votes;
+
     public function __construct()
     {
         $this->videos = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->playlists = new ArrayCollection();
+        $this->votes = new ArrayCollection();
     }
 
     /**
@@ -480,5 +484,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     public function __toString(): string
     {
         return $this->getFullname();
+    }
+
+    /**
+     * @return Collection<int, Vote>
+     */
+    public function getVotes(): Collection
+    {
+        return $this->votes;
+    }
+
+    public function addVote(Vote $vote): static
+    {
+        if (!$this->votes->contains($vote)) {
+            $this->votes->add($vote);
+            $vote->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVote(Vote $vote): static
+    {
+        if ($this->votes->removeElement($vote)) {
+            // set the owning side to null (unless already changed)
+            if ($vote->getUser() === $this) {
+                $vote->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

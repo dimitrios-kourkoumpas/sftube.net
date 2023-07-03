@@ -63,6 +63,8 @@
         </div>
     </div>
 
+    {{ include('votes/partials/_votes.html.twig', {'video': video}) }}
+
     {% if is_granted('comment', video) %}
         <div class="card-box">
             <form role="form">
@@ -140,6 +142,43 @@
                 },
                 error: function (xhr, status, error) {
                     toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-submitting-comment')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.troastr.defaults);
+                }
+            });
+        });
+    {% endif %}
+
+    {% if is_granted('ROLE_USER') %}
+        $('.vote-button').on('click', function (e) {
+            e.preventDefault();
+
+            const vote = $(this).data('vote');
+
+            $.ajax({
+                url: '{{ path('app.videos.vote', {'id': video.id}) }}',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    vote: vote
+                },
+                success: function (response, status, xhr) {
+                    if (response.success) {
+                        toastr.success('{{ t('ui.template.videos.watch.toastr.message.vote-submitted')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.troastr.defaults);
+
+                        $.ajax({
+                            url: '{{ path('app.videos.votes', {'id': video.id}) }}',
+                            method: 'GET',
+                            dataType: 'html',
+                            success: function (response, status, xhr) {
+                                $('#voting').html(response);
+                            },
+                            error: function (xhr, status, error) {
+                                toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-getting-votes')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.troastr.defaults);
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-submitting-vote')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.troastr.defaults);
                 }
             });
         });

@@ -1,0 +1,39 @@
+{% set _userVoted = video.voted(app.user) %}
+    {% if is_granted('ROLE_USER') %}
+        <div class="col-xs-1">
+            <button class="btn btn-lg btn-success vote-button pull-left"{{ _userVoted ? ' disabled' : '' }}
+                    data-vote="up">
+                <i class="zmdi zmdi-thumb-up"></i>
+            </button>
+        </div>
+
+    {% endif %}
+
+    {% set _progressBarWidth = (is_granted('ROLE_USER')) ? '10' : '12' %}
+
+<div class="col-xs-{{ _progressBarWidth }}">
+    {% set _percentage = video.votesPercentage %}
+
+    {% if _percentage <= 50 %}
+        {% set _class = 'progress-bar-danger' %}
+    {% else %}
+        {% set _class = 'progress-bar-success' %}
+    {% endif %}
+
+    <div class="progress" style="background-color: #0B7FC7; height: 42px;">
+        <div class="progress-bar {{ _class }}" role="progressbar" aria-valuenow="{{ _percentage }}"
+             aria-valuemin="0" aria-valuemax="100" style="padding-top: 15px; width: {{ _percentage }}%;">
+            <span style="font-size: large;">{{ _percentage }}%</span>
+            <span class="sr-only">{{ _percentage }}%</span>
+        </div>
+    </div>
+</div>
+
+{% if is_granted('ROLE_USER') %}
+    <div class="col-xs-1">
+        <button class="btn btn-lg btn-danger vote-button pull-right"{{ _userVoted ? ' disabled' : '' }}
+                data-vote="down">
+            <i class="zmdi zmdi-thumb-down"></i>
+        </button>
+    </div>
+{% endif %}

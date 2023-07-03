@@ -104,12 +104,16 @@ class Video
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
     private bool $allow_comments = true;
 
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: Vote::class, orphanRemoval: true, cascade: ['persist'])]
+    private Collection $votes;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->frames = new ArrayCollection();
         $this->playlists = new ArrayCollection();
+        $this->votes = new ArrayCollection();
     }
 
     /**
@@ -539,5 +543,77 @@ class Video
     public function __toString(): string
     {
         return $this->title;
+    }
+
+    /**
+     * @return Collection<int, Vote>
+     */
+    public function getVotes(): Collection
+    {
+        return $this->votes;
+    }
+
+    public function addVote(Vote $vote): static
+    {
+        if (!$this->votes->contains($vote)) {
+            $this->votes->add($vote);
+            $vote->setVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVote(Vote $vote): static
+    {
+        if ($this->votes->removeElement($vote)) {
+            // set the owning side to null (unless already changed)
+            if ($vote->getVideo() === $this) {
+                $vote->setVideo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalVotes(): int
+    {
+        return $this->votes->count();
+    }
+
+    /**
+     * @param string $type
+     * @return int
+     */
+    public function getVotesByType(string $type): int
+    {
+        return $this->votes->filter(fn(Vote $vote) => $vote->getVote() === $type)->count();
+    }
+
+    /**
+     * @return int
+     */
+    public function getVotesPercentage(): int
+    {
+        $total = $this->getTotalVotes();
+
+        if ($total === 0) {
+            return 0;
+        }
+
+        $upVotes = $this->getVotesByType(Vote::UP);
+
+        return (int) (ceil($upVotes * 100) / $total);
+    }
+
+    /**
+     * @param User|null $user
+     * @return bool
+     */
+    public function hasVoted(?User $user = null): bool
+    {
+        return $user && $this->votes->exists(fn(int $key, Vote $vote) => $vote->getUser()->getId() === $user->getId());
     }
 }
