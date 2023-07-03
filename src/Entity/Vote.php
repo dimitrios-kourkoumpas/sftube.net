@@ -25,7 +25,7 @@ class Vote
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 4)]
-    private ?string $type = null;
+    private ?string $vote = null;
 
     #[ORM\ManyToOne(inversedBy: 'votes')]
     private ?Video $video = null;
@@ -39,14 +39,14 @@ class Vote
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getVote(): ?string
     {
-        return $this->type;
+        return $this->vote;
     }
 
-    public function setType(string $type): static
+    public function setVote(string $vote): static
     {
-        $this->type = $type;
+        $this->vote = $vote;
 
         return $this;
     }

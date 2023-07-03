@@ -35,7 +35,7 @@ final class VotesFixtures extends Fixture implements DependentFixtureInterface
 
                 $vote = new Vote();
 
-                $vote->setType([Vote::UP, Vote::DOWN][mt_rand(0, 1)]);
+                $vote->setVote([Vote::UP, Vote::DOWN][mt_rand(0, 1)]);
                 $vote->setVideo($video);
                 $vote->setUser($user);
 

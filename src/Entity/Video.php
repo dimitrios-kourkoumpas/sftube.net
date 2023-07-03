@@ -589,7 +589,7 @@ class Video
      */
     public function getVotesByType(string $type): int
     {
-        return $this->votes->filter(fn(Vote $vote) => $vote->getType() === $type)->count();
+        return $this->votes->filter(fn(Vote $vote) => $vote->getVote() === $type)->count();
     }
 
     /**
@@ -614,6 +614,6 @@ class Video
      */
     public function hasVoted(?User $user = null): bool
     {
-        return $user && $this->votes->exists(fn(Vote $vote) => $vote->getUser()->getId() === $user->getId());
+        return $user && $this->votes->exists(fn(int $key, Vote $vote) => $vote->getUser()->getId() === $user->getId());
     }
 }
