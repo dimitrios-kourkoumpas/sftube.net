@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -41,15 +42,16 @@ final class InitCommand extends Command
             'command' => 'app:randomize:videos-dates',
         ], [
             'command' => 'app:randomize:comments-dates',
-        ], [
-            'command' => 'messenger:consume',
-            'arguments' => [
-                'receivers' => [
-                    'async',
-                ],
-            ],
         ],
     ];
+
+    /**
+     * @return void
+     */
+    protected function configure(): void
+    {
+        $this->addOption('start-worker', 'sw', InputOption::VALUE_NONE, 'Start queue worker');
+    }
 
     /**
      * @param InputInterface $input
@@ -60,7 +62,20 @@ final class InitCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        foreach (self::COMMANDS as $cmd) {
+        $initCommands = self::COMMANDS;
+
+        if ($input->getOption('start-worker')) {
+            $initCommands[] = [
+                'command' => 'messenger:consume',
+                'arguments' => [
+                    'receivers' => [
+                        'async',
+                    ],
+                ],
+            ];
+        }
+
+        foreach ($initCommands as $cmd) {
             $command = $this->getApplication()->find($cmd['command']);
 
             $arguments = new ArrayInput($cmd['arguments'] ?? []);
