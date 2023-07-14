@@ -1,5 +1,5 @@
 <div class="list-group">
     {% for category in categories%}
-        <a href="javascript: void(0);" class="list-group-item card-box">{{ category.name }}</a>
+        <a href="{{ path('app.category.view', {'slug': category.slug}) }}" class="list-group-item card-box">{{ category.name }}</a>
     {% endfor %}
 </div>

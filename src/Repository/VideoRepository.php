@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,6 +40,43 @@ class VideoRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @param Category $category
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countVideosForCategory(Category $category): int
+    {
+        $qb = $this->createQueryBuilder('v');
+
+        $qb->select('COUNT(v) AS total');
+        $qb->where('v.category = :category');
+        $qb->setParameter('category', $category);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @param Category $category
+     * @param int $page
+     * @param int $perPage
+     * @return Video[]
+     */
+    public function findVideosForCategory(Category $category, int $page, int $perPage)
+    {
+        $qb = $this->createQueryBuilder('v');
+
+        $qb->select('v');
+        $qb->where('v.category = :category');
+        $qb->setParameter('category', $category);
+        $qb->setMaxResults($perPage);
+        $qb->setFirstResult(($page - 1) * $perPage);
+        $qb->orderBy('v.createdAt', 'DESC');
+
+        return $qb->getQuery()->getResult();
     }
 
 //    /**
