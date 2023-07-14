@@ -123,7 +123,7 @@
                 dataType: 'json',
                 success: function (response, status, xhr) {
                     if (response.success) {
-                        toastr.success('{{ t('ui.template.videos.watch.toastr.message.comment-submitted')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.troastr.defaults);
+                        toastr.success('{{ t('ui.template.videos.watch.toastr.message.comment-submitted')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.toastr.defaults);
 
                         $.ajax({
                             url: '{{ path('app.videos.comments', {'id': video.id}) }}',
@@ -135,13 +135,13 @@
                                 $('#comments-section').html(response);
                             },
                             error: function (xhr, status, error) {
-                                toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-displaying-comments')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.troastr.defaults);
+                                toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-displaying-comments')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
                             }
                         });
                     }
                 },
                 error: function (xhr, status, error) {
-                    toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-submitting-comment')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.troastr.defaults);
+                    toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-submitting-comment')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
                 }
             });
         });
@@ -162,7 +162,7 @@
                 },
                 success: function (response, status, xhr) {
                     if (response.success) {
-                        toastr.success('{{ t('ui.template.videos.watch.toastr.message.vote-submitted')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.troastr.defaults);
+                        toastr.success('{{ t('ui.template.videos.watch.toastr.message.vote-submitted')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.toastr.defaults);
 
                         $.ajax({
                             url: '{{ path('app.videos.votes', {'id': video.id}) }}',
@@ -172,13 +172,13 @@
                                 $('#voting').html(response);
                             },
                             error: function (xhr, status, error) {
-                                toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-getting-votes')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.troastr.defaults);
+                                toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-getting-votes')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
                             }
                         });
                     }
                 },
                 error: function (xhr, status, error) {
-                    toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-submitting-vote')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.troastr.defaults);
+                    toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-submitting-vote')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
                 }
             });
         });
