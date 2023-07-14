@@ -107,6 +107,9 @@ ui:
                         placeholder: comment
                     submit:
                         caption: 'Submit comment'
+        tags:
+            title: 'Tags'
+            heading: 'Tags'
 controller:
     registration:
         register:
