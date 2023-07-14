@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ t('ui.template.tags.title')|trans }}{% endblock %}
+
+{% block body %}
+    <h2 class="card-box">{{ t('ui.template.tags.heading')|trans }}</h2>
+
+    <div class="row">
+    {% for i, tag in tags %}
+        <div class="col-md-2">
+            <div class="card-box">
+                <a href="javascript:void(0);">{{ tag.name }}</a>
+            </div>
+        </div>
+        {% if (i % 6) is same as(5) %}
+            </div>
+            <div class="row">
+        {% endif %}
+    {% endfor %}
+    </div>
+
+    {% if pagination.pages > 1 %}
+        {{ include('partials/_pagination.html.twig', {'pagination': pagination}) }}
+    {% endif %}
+
+{% endblock %}
