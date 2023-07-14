@@ -17,6 +17,9 @@
             <link href="{{ asset('assets/css/menu.css') }}" rel="stylesheet" type="text/css" />
             <link href="{{ asset('assets/css/responsive.css') }}" rel="stylesheet" type="text/css" />
             <link href="{{ asset('assets/css/sticky-footer-navbar.css') }}" rel="stylesheet" type="text/css" />
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <link href="{{ asset('assets/plugins/toastr/toastr.min.css') }}" type="text/css" rel="stylesheet" />
+            {% endif %}
         {% endblock %}
 
         <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -94,6 +97,27 @@
             <script src="{{ asset('assets/js/jquery.app.js') }}"></script>
 
         {% endblock %}
+
+
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <script src="{{ asset('assets/js/sftube.js') }}"></script>
+            <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+
+            <script>
+                const videoPublishedEventSource = new EventSource("{{ mercure('http://localhost/videos/published')|escape('js') }}");
+                videoPublishedEventSource.onmessage = event => {
+                    const video = JSON.parse(event.data);
+
+                    if (video.published) {
+                        if (video.user.id === {{ app.user.id }}) {
+                            toastr.success(video.title, '{{ t('ui.template.base.toast.success.your-video-has-been-published')|trans }}', SFTube.toastr.defaults);
+                        }
+
+                        toastr.info('<div class="text-center"><a href="' + video.url + '"><img src="' + video.thumbnail + '" class="mb5" alt="' + video.title + '" width="50px" height="50px" /></a></div><div class="text-center"><a href="' + video.url + '">' + video.title + '</a></div>', '{{ t('ui.template.base.toast.info.new-video-is-up')|trans }}', SFTube.toastr.defaults);
+                    }
+                }
+            </script>
+        {% endif %}
 
         {% block javascripts_inpage %}{% endblock %}
     </body>
