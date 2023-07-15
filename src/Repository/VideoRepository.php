@@ -79,6 +79,60 @@ class VideoRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @param array $tags
+     * @param int $page
+     * @param int $perPage
+     * @return Video[]
+     */
+    public function findVideosForTags(array $tags, int $page, int $perPage): array
+    {
+        $qb = $this->getFindForTagsQueryBuilder($tags);
+
+        $qb->setFirstResult(($page - 1) * $perPage);
+        $qb->setMaxResults($perPage);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param array $tags
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countVideosForTags(array $tags): int
+    {
+        $qb = $this->getFindForTagsQueryBuilder($tags);
+
+        $qb->select('COUNT(v.id) AS total');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @param array $tags
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getFindForTagsQueryBuilder(array $tags)
+    {
+        $qb = $this->createQueryBuilder('v');
+
+        $qb->innerJoin('v.tags', 'tags');
+
+        foreach ($tags as $i => $tag) {
+            if ($i === 0) {
+                $qb->where('tags = :tag');
+                $qb->setParameter('tag', $tag);
+            }
+
+            $qb->andWhere('tags = :tag');
+            $qb->setParameter('tag', $tag);
+        }
+
+        return $qb;
+    }
+
 //    /**
 //     * @return Video[] Returns an array of Video objects
 //     */
