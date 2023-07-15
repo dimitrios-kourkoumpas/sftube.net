@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ t('ui.template.playlists.title')|trans }}{% endblock %}
+
+{% block body %}
+    <h2 class="card-box">{{ t('ui.template.playlists.heading')|trans }}</h2>
+
+    <div class="row">
+    {% for i, playlist in playlists %}
+        <div class="col-md-2">
+            <div class="card-box">
+                <a href="#">
+                    {% if app.user and playlist.private %}
+                        <span class="text-danger fa fa-lock"></span>
+                    {% endif %}
+                    {{ playlist.name }}
+                </a>
+            </div>
+        </div>
+        {% if (i % 6) is same as(5) %}
+            </div>
+            <div class="row">
+        {% endif %}
+    {% endfor %}
+    </div>
+
+{% endblock %}

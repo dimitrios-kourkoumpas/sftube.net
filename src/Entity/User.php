@@ -356,11 +356,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     }
 
     /**
+     * @param bool|null $private
      * @return Collection<int, Playlist>
      */
-    public function getPlaylists(): Collection
+    public function getPlaylists(?bool $private = false): Collection
     {
-        return $this->playlists;
+        if ($private === null) {
+            return $this->playlists;
+        }
+
+        return $this->playlists->filter(fn(Playlist $playlist) => $playlist->isPrivate() === $private);
     }
 
     /**
