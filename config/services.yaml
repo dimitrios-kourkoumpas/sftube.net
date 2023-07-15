@@ -56,3 +56,7 @@ services:
             - 'controller.service_arguments'
         bind:
             FOS\ElasticaBundle\Finder\TransformedFinder $finder: '@fos_elastica.finder.video'
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+        arguments:
+            - '@snc_redis.session'

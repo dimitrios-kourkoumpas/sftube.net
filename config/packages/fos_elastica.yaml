@@ -7,8 +7,6 @@ fos_elastica:
             persistence:
                 driver: orm
                 model: App\Entity\Video
-                provider: ~
-                finder: ~
             properties:
                 id:
                     type: integer
