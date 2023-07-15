@@ -9,7 +9,7 @@
     {% for i, tag in tags %}
         <div class="col-md-2">
             <div class="card-box">
-                <a href="javascript:void(0);">{{ tag.name }}</a>
+                <a href="{{ path('app.tags.view', {'slugs': tag.slug}) }}">{{ tag.name }}</a>
             </div>
         </div>
         {% if (i % 6) is same as(5) %}

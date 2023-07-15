@@ -41,6 +41,21 @@ class TagRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param array $slugs
+     * @return Tag[]
+     */
+    public function findTagsForSlugs(array $slugs)
+    {
+        $qb = $this->createQueryBuilder('t');
+
+        $qb->select('t');
+        $qb->where('t.slug IN (:slugs)');
+        $qb->setParameter('slugs', $slugs);
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Tag[] Returns an array of Tag objects
 //     */
