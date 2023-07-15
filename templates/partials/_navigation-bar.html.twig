@@ -17,11 +17,11 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <form class="navbar-form" role="search" action="#" method="GET">
+                    <form class="navbar-form" role="search" action="{{ path('app.search') }}" method="GET">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="{{ t('ui.navbar.menu.input.search.placeholder', {'count': 'many'})|trans }}" name="term" id="search-term" autocomplete="off" disabled>
+                            <input type="text" class="form-control" placeholder="{{ t('ui.navbar.menu.input.search.placeholder', {'count': render(controller('App\\Controller\\SearchController::countSearchable'))})|trans }}" name="term" id="search-term" autocomplete="off">
                             <div class="input-group-btn">
-                                <button class="btn btn-success waves-effect waves-light" type="submit" disabled>
+                                <button class="btn btn-success waves-effect waves-light" type="submit">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </div>

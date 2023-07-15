@@ -50,3 +50,9 @@ services:
 
     App\Vich\Naming\UniqueIDMD5Namer:
         public: true
+
+    App\Controller\SearchController:
+        tags:
+            - 'controller.service_arguments'
+        bind:
+            FOS\ElasticaBundle\Finder\TransformedFinder $finder: '@fos_elastica.finder.video'
