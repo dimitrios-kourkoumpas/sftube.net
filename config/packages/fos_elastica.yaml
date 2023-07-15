@@ -1,0 +1,27 @@
+# Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
+fos_elastica:
+    clients:
+        default: { url: '%env(ELASTICSEARCH_URL)%' }
+    indexes:
+        video:
+            persistence:
+                driver: orm
+                model: App\Entity\Video
+                provider: ~
+                finder: ~
+            properties:
+                id:
+                    type: integer
+                title:
+                    type: text
+                description:
+                    type: text
+                category: ~
+                tags: ~
+                published:
+                    type: boolean
+                converted:
+                    type: boolean
+                createdAt:
+                    type: date
+
