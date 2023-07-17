@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Entity\Playlist;
 use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -108,6 +109,45 @@ class VideoRepository extends ServiceEntityRepository
         $qb->select('COUNT(v.id) AS total');
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @param Playlist $playlist
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countVideosForPlaylist(Playlist $playlist): int
+    {
+        $qb = $this->createQueryBuilder('v');
+
+        $qb->select('COUNT(v.id)');
+        $qb->innerJoin('v.playlists', 'p');
+        $qb->where('p = :playlist');
+        $qb->setParameter('playlist', $playlist);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @param Playlist $playlist
+     * @param int $page
+     * @param int $limit
+     * @return Video[]
+     */
+    public function findVideosForPlaylist(Playlist $playlist, int $page, int $limit): array
+    {
+        $qb = $this->createQueryBuilder('v');
+
+        $qb->select('v');
+        $qb->innerJoin('v.playlists', 'p');
+        $qb->where('p = :playlist');
+        $qb->setParameter('playlist', $playlist);
+        $qb->setMaxResults($limit);
+        $qb->setFirstResult(($page - 1) * $limit);
+        $qb->orderBy('v.createdAt', 'DESC');
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

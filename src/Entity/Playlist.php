@@ -36,7 +36,7 @@ class Playlist
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
-    #[ORM\ManyToMany(targetEntity: Video::class, mappedBy: 'playlists', fetch: 'EXTRA_LAZY')]
+    #[ORM\ManyToMany(targetEntity: Video::class, inversedBy: 'playlists', fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $videos;
 
@@ -129,38 +129,12 @@ class Playlist
     }
 
     /**
-     * @return Collection<int, Video>
+     * @param User|null $user
+     * @return bool
      */
-    public function getVideos(): Collection
+    public function isOwner(?User $user = null): bool
     {
-        return $this->videos;
-    }
-
-    /**
-     * @param Video $video
-     * @return $this
-     */
-    public function addVideo(Video $video): static
-    {
-        if (!$this->videos->contains($video)) {
-            $this->videos->add($video);
-            $video->addPlaylist($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Video $video
-     * @return $this
-     */
-    public function removeVideo(Video $video): static
-    {
-        if ($this->videos->removeElement($video)) {
-            $video->removePlaylist($this);
-        }
-
-        return $this;
+        return $user && $this->getUser()->getId() === $user->getId();
     }
 
     /**
@@ -169,5 +143,29 @@ class Playlist
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection<int, Video>
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(Video $video): static
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos->add($video);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Video $video): static
+    {
+        $this->videos->removeElement($video);
+
+        return $this;
     }
 }

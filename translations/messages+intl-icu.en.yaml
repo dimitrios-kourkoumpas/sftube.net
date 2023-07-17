@@ -7,6 +7,8 @@ ui:
                 login: Login
                 logout: Logout
                 upload: Upload
+                my-playlists: 'My playlists'
+                new-playlist: 'New playlist'
             input:
                 search:
                     placeholder: 'search {count} videos'
@@ -108,8 +110,29 @@ ui:
                     submit:
                         caption: 'Submit comment'
         tags:
-            title: 'Tags'
-            heading: 'Tags'
+            title: Tags
+            heading: Tags
+        playlists:
+            my:
+                title: 'My playlists'
+                heading: 'My playlists'
+            edit:
+                title: Edit
+                heading: Edit
+            create:
+                form:
+                    update: Update
+                    save: Save
+                title: 'New playlist'
+                heading: 'New playlist'
+            title: Playlists
+            heading: Playlists
+            view:
+                tooltip:
+                    edit: Edit
+                    delete: Delete
+            delete-form:
+                confirmation: 'Are you sure you want to delete "{playlist}"?'
 controller:
     registration:
         register:
@@ -120,6 +143,13 @@ controller:
             flash:
                 upload-successful: 'Video uploaded successfully'
                 video-queued: 'Video queued for processing'
+    playlists:
+        delete:
+            flash:
+                playlist-deleted-successfully: 'Playlist successfully deleted'
+        create:
+            flash:
+                playlist-created: 'Playlist successfully created'
 form:
     video:
         label:
@@ -133,6 +163,11 @@ form:
             category: Category
             tags: Tags
             playlists: Playlists
+    playlist:
+        label:
+            name: Name
+            private: Private
+            videos: Videos
 twig:
     filter:
         time-elapsed-since-now:

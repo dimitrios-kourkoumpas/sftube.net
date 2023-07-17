@@ -1,0 +1,44 @@
+{{ form_start(form, {'method': 'POST', 'attr': {'role': 'form'}}) }}
+
+
+    {% set _name_errors = not form_errors(form.name) is empty %}
+
+<div class="form-group{% if _name_errors %} has-error{% endif %}">
+    {% if _name_errors %}
+        <div class="text-danger">
+            {{ form_label(form.name) }}
+        </div>
+    {% else %}
+        {{ form_label(form.name) }}
+    {% endif %}
+    {{ form_widget(form.name, {'attr': {'class': 'form-control', 'autocomplete': 'off', 'autofocus': true}}) }}
+    {% if _name_errors %}
+        <div class="text-danger">
+            {{ form_errors(form.name) }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+
+    <div class="checkbox checkbox-custom">
+        {{ form_widget(form.private) }}
+        <label for="playlist_private">
+            {{ form_label(form.private) }}
+        </label>
+    </div>
+
+</div>
+
+<div class="form-group">
+    {{ form_label(form.videos) }}
+    {{ form_widget(form.videos, {'attr': {'class': 'js-multi-select', 'multiple': true}}) }}
+    {{ form_errors(form.videos) }}
+</div>
+
+<div class="form-group">
+    <button type="submit"
+            class="btn btn-success waves-effect waves-light">{{ button_label|default('Save')|raw }}</button>
+</div>
+
+{{ form_end(form) }}
