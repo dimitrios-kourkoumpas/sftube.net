@@ -69,7 +69,7 @@ final class VideoType extends AbstractType
                 'label' => $this->translator->trans('form.video.label.extraction-method'),
             ])
             ->add('allow_comments', CheckboxType::class, [
-                'data' => true,
+                'required' => false,
                 'label' => $this->translator->trans('form.video.label.allow-comments'),
             ])
             ->add('category', EntityType::class, [

@@ -74,6 +74,55 @@ final class VideosController extends BaseController
     }
 
     /**
+     * @param Video $video
+     * @param Request $request
+     * @return Response
+     */
+    #[Route('/edit/{id}', name: 'app.videos.edit', methods: ['GET', 'POST'])]
+    public function edit(Video $video, Request $request): Response
+    {
+        $form = $this->createForm(VideoType::class, $video);
+
+        // con not change these anymore :)
+        $form->remove('videoFile');
+        $form->remove('extractionMethod');
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->persist($video);
+            $this->em->flush();
+
+            $this->addFlash('success', $this->translator->trans('controller.videos.edit.flash.video-updated'));
+
+            return $this->redirectToRoute('app.videos.my');
+        }
+
+        return $this->render('videos/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Video $video
+     * @return Response
+     */
+    #[Route('/video/{id}/delete', name: 'app.videos.delete', methods: ['POST'])]
+    #[IsGranted('delete', 'video')]
+    public function delete(Request $request, Video $video): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $video->getId(), $request->request->get('_token'))) {
+            $this->em->remove($video);
+            $this->em->flush();
+
+            $this->addFlash('success', $this->translator->trans('controller.videos.delete.flash.video-deleted'));
+
+            return $this->redirectToRoute('app.homepage');
+        }
+    }
+
+    /**
      * @param Request $request
      * @return Response
      */
