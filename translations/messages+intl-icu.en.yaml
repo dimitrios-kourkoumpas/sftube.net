@@ -93,17 +93,29 @@ ui:
                         error: Error!
                 votes:
                     heading: Votes
+                tooltip:
+                    edit: Edit
+                    delete: Delete
+                sweetalert:
+                    delete-video:
+                        title: 'Are you sure?'
+                        text: 'Are you sure you want to delete "{video}"?'
+                        cancel-button-text: Cancel
+                        confirmation-button-text: 'Delete it!'
             upload:
                 title: Upload
                 heading:
                     text:
                         upload: 'Upload video'
+                        edit: Edit
                 link:
                     text:
                         home: Home
             form:
                 submit:
                     caption: Submit
+                update:
+                    caption: Update
             comments:
                 form:
                     comment:
@@ -113,6 +125,8 @@ ui:
             my:
                 title: 'My videos'
                 heading: 'My videos'
+            edit:
+                title: Edit
         tags:
             title: Tags
             heading: Tags
@@ -147,6 +161,12 @@ controller:
             flash:
                 upload-successful: 'Video uploaded successfully'
                 video-queued: 'Video queued for processing'
+        edit:
+            flash:
+                video-updated: 'Video successfully updated'
+        delete:
+            flash:
+                video-deleted: 'Video successfully deleted'
     playlists:
         delete:
             flash:

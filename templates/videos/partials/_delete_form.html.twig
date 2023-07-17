@@ -1,0 +1,5 @@
+<form method="POST" action="{{ path('app.videos.delete', {'id': video.id}) }}" style="display: inline">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ video.id) }}"/>
+    <button id="deleteVideoBtn" class="btn btn-sm btn-danger waves-effect waves-light" data-toggle="tooltip" data-placement="bottom" title="{{ t('ui.template.videos.watch.tooltip.delete')|trans }}">
+        <span class="fa fa-trash"></span></button>
+</form>

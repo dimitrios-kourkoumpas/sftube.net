@@ -3,15 +3,16 @@
 {% block title %}{{ playlist.name }}{% endblock %}
 
 {% block body %}
-    <h2 class="card-box">{{ playlist.name }}<span style="display: inline">
-            {% if is_granted('IS_AUTHENTICATED_FULLY') and playlist.owner(app.user) %}
-                <a class="btn btn-sm btn-info waves-effect waves-light" data-toggle="tooltip" data-placement="bottom"
-                   title="{{ t('ui.template.playlists.view.tooltip.edit')|trans }}"
-                   href="{{ path('app.playlists.edit', {'id': playlist.id}) }}"><span class="fa fa-edit"></span></a>
-                {{ include('playlists/partials/_delete_form.html.twig') }}
-
-            {% endif %}
-        </span></h2>
+    <h2 class="card-box">{{ playlist.name }}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') and playlist.owner(app.user) %}
+            <span style="display: inline;" class="pull-right">
+                    <a class="btn btn-sm btn-info waves-effect waves-light" data-toggle="tooltip" data-placement="bottom"
+                       title="{{ t('ui.template.playlists.view.tooltip.edit')|trans }}"
+                       href="{{ path('app.playlists.edit', {'id': playlist.id}) }}"><span class="fa fa-edit"></span></a>
+                    {{ include('playlists/partials/_delete_form.html.twig') }}
+            </span>
+        {% endif %}
+        </h2>
 
     <div class="row">
     {% for i, video in videos %}
