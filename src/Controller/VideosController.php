@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Video;
 use App\Form\VideoType;
 use App\Message\ExtractVideoMessage;
@@ -69,6 +70,38 @@ final class VideosController extends BaseController
 
         return $this->render('videos/upload.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    #[Route('/my-videos', name: 'app.videos.my', methods: ['GET'])]
+    #[IsGranted(User::ROLE_USER)]
+    public function myVideos(Request $request): Response
+    {
+        $page = $request->query->getInt('page', 1);
+
+        $perPage = $this->configurations->isSet('videos-per-page')
+            ? (int) $this->configurations->get('videos-per-page')
+            : Video::PER_PAGE;
+
+        $user = $this->getUser();
+
+        $repository = $this->em->getRepository(Video::class);
+
+        $total = $repository->count(['user' => $user]);
+
+        $pages = (int) ceil($total / $perPage);
+
+        $videos = $repository->findBy(['user' => $user], ['createdAt' => 'DESC'], $perPage, ($page - 1) * $perPage);
+
+        $URLFragment = $request->getPathInfo();
+
+        return $this->render('videos/my-videos.html.twig', [
+            'videos' => $videos,
+            'pagination' => compact('page', 'pages', 'URLFragment'),
         ]);
     }
 

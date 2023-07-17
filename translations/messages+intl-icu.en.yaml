@@ -9,6 +9,7 @@ ui:
                 upload: Upload
                 my-playlists: 'My playlists'
                 new-playlist: 'New playlist'
+                my-videos: 'My videos'
             input:
                 search:
                     placeholder: 'search {count} videos'
@@ -109,6 +110,9 @@ ui:
                         placeholder: comment
                     submit:
                         caption: 'Submit comment'
+            my:
+                title: 'My videos'
+                heading: 'My videos'
         tags:
             title: Tags
             heading: Tags
