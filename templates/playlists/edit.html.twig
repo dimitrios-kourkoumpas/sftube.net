@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('assets/plugins/select2/dist/css/select2.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block title %}{{ t('ui.template.playlists.edit.title')|trans }}{% endblock %}
+
+{% block body %}
+
+    <h2 class="card-box">{{ t('ui.template.playlists.edit.heading')|trans }}</h2>
+
+
+    {{ include('playlists/partials/_form.html.twig', {'button_label': t('ui.template.playlists.create.form.update')|trans}) }}
+
+
+{% endblock %}
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+    <script src="{{ asset('assets/plugins/select2/dist/js/select2.min.js') }}"></script>
+{% endblock %}
+
+{% block javascripts_inpage %}
+    {{ parent() }}
+<script>
+    $(document).ready(function () {
+        $('.js-multi-select').select2();
+    });
+</script>
+{% endblock %}

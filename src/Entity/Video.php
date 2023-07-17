@@ -97,9 +97,6 @@ class Video
     #[ORM\OneToMany(mappedBy: 'video', targetEntity: Frame::class, orphanRemoval: true, fetch: 'EXTRA_LAZY', cascade: ['persist'])]
     private Collection $frames;
 
-    #[ORM\ManyToMany(targetEntity: Playlist::class, inversedBy: 'videos', fetch: 'EXTRA_LAZY')]
-    #[ORM\OrderBy(['name' => 'ASC'])]
-    private Collection $playlists;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
     private bool $allow_comments = true;
@@ -107,13 +104,17 @@ class Video
     #[ORM\OneToMany(mappedBy: 'video', targetEntity: Vote::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $votes;
 
+    #[ORM\ManyToMany(targetEntity: Playlist::class, mappedBy: 'videos', fetch: 'EXTRA_LAZY')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
+    private Collection $playlists;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->frames = new ArrayCollection();
-        $this->playlists = new ArrayCollection();
         $this->votes = new ArrayCollection();
+        $this->playlists = new ArrayCollection();
     }
 
     /**
@@ -444,38 +445,6 @@ class Video
     }
 
     /**
-     * @return Collection<int, Playlist>
-     */
-    public function getPlaylists(): Collection
-    {
-        return $this->playlists;
-    }
-
-    /**
-     * @param Playlist $playlist
-     * @return $this
-     */
-    public function addPlaylist(Playlist $playlist): static
-    {
-        if (!$this->playlists->contains($playlist)) {
-            $this->playlists->add($playlist);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Playlist $playlist
-     * @return $this
-     */
-    public function removePlaylist(Playlist $playlist): static
-    {
-        $this->playlists->removeElement($playlist);
-
-        return $this;
-    }
-
-    /**
      * @param string|null $key
      * @return mixed
      */
@@ -615,5 +584,32 @@ class Video
     public function hasVoted(?User $user = null): bool
     {
         return $user && $this->votes->exists(fn(int $key, Vote $vote) => $vote->getUser()->getId() === $user->getId());
+    }
+
+    /**
+     * @return Collection<int, Playlist>
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
+    }
+
+    public function addPlaylist(Playlist $playlist): static
+    {
+        if (!$this->playlists->contains($playlist)) {
+            $this->playlists->add($playlist);
+            $playlist->addVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylist(Playlist $playlist): static
+    {
+        if ($this->playlists->removeElement($playlist)) {
+            $playlist->removeVideo($this);
+        }
+
+        return $this;
     }
 }

@@ -1,0 +1,6 @@
+<form method="POST" action="{{ path('app.playlists.delete', {'id': playlist.id}) }}" onsubmit="return confirm('{{ t('ui.template.playlists.delete-form.confirmation', {'playlist': playlist.name})|trans }}');" style="display: inline">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ playlist.id) }}"/>
+    <input type="hidden" name="_method" value="DELETE" />
+    <button class="btn btn-sm btn-danger waves-effect waves-light" data-toggle="tooltip" data-placement="bottom" title="{{ t('ui.template.playlists.view.tooltip.delete')|trans }}">
+        <span class="fa fa-trash"></span></button>
+</form>
