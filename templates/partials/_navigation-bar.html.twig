@@ -40,6 +40,8 @@
                             {% if configuration.isSet('allow-video-uploads') and configuration.get('allow-video-uploads') %}
                                 <li><a href="{{ path('app.videos.upload') }}">{{ t('ui.navbar.menu.item.upload')|trans }}</a></li>
                                 <li role="separator" class="divider"></li>
+                                <li><a href="{{ path('app.videos.my') }}">{{ t('ui.navbar.menu.item.my-videos')|trans }}</a></li>
+                                <li role="separator" class="divider"></li>
                             {% endif %}
                             <li><a href="{{ path('app.playlists.my') }}">{{ t('ui.navbar.menu.item.my-playlists')|trans }}</a></li>
                             <li><a href="{{ path('app.playlists.create') }}">{{ t('ui.navbar.menu.item.new-playlist')|trans }}</a></li>
