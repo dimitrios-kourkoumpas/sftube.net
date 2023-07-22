@@ -104,12 +104,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Vote::class, orphanRemoval: true)]
     private Collection $votes;
 
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'mySubscribers')]
+    private Collection $mySubscriptions;
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'mySubscriptions')]
+    #[ORM\JoinTable(name: 'subscriptions')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'subscriber_user_id', referencedColumnName: 'id')]
+    private Collection $mySubscribers;
+
     public function __construct()
     {
         $this->videos = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->playlists = new ArrayCollection();
         $this->votes = new ArrayCollection();
+        $this->mySubscriptions = new ArrayCollection();
+        $this->mySubscribers = new ArrayCollection();
+
     }
 
     /**
@@ -519,5 +531,89 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSubscriptions(): Collection
+    {
+        return $this->mySubscriptions;
+    }
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function addSubscription(User $user): void
+    {
+        if  (!$this->mySubscriptions->contains($user)) {
+            $this->mySubscriptions->add($user);
+
+            $user->addSubscriber($this);
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function removeSubscription(User $user): void
+    {
+        if ($this->mySubscriptions->contains($user)) {
+            $this->mySubscriptions->removeElement($user);
+        }
+
+        $user->removeSubscriber($this);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasSubscription(User $user): bool
+    {
+        return $this->mySubscriptions->contains($user);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSubscribers(): Collection
+    {
+        return $this->mySubscribers;
+    }
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function addSubscriber(User $user): void
+    {
+        if (!$this->mySubscribers->contains($user)) {
+            $this->mySubscribers->add($user);
+
+            $user->addSubscription($this);
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function removeSubscriber(User $user): void
+    {
+        if ($this->mySubscribers->contains($user)) {
+            $this->mySubscribers->removeElement($user);
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasSubscriber(User $user): bool
+    {
+        return $this->mySubscribers->contains($user);
     }
 }

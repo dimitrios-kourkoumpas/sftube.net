@@ -10,6 +10,8 @@ ui:
                 my-playlists: 'My playlists'
                 new-playlist: 'New playlist'
                 my-videos: 'My videos'
+                my-subscriptions: 'My subscriptions'
+                my-subscribers: 'My subscribers'
             input:
                 search:
                     placeholder: 'search {count} videos'
@@ -18,6 +20,7 @@ ui:
             heading:
                 categories: Categories
                 recent: Recent
+                from-subscriptions: 'Subscriptions'
             toast:
                 success:
                     your-video-has-been-published: 'Your video has been published'
@@ -151,6 +154,13 @@ ui:
                     delete: Delete
             delete-form:
                 confirmation: 'Are you sure you want to delete "{playlist}"?'
+        subscriptions:
+            title:
+                my-subscribers: 'My subscribers'
+                my-subscriptions: 'My subscriptions'
+            heading:
+                my-subscribers: 'My subscribers'
+                my-subscriptions: 'My subscriptions'
 controller:
     registration:
         register:

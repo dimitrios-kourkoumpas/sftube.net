@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ t('ui.template.subscriptions.title.my-subscriptions')|trans }}{% endblock %}
+
+{% block body %}
+
+    <h2 class="card-box">{{ t('ui.template.subscriptions.heading.my-subscriptions')|trans }}</h2>
+    <div class="row">
+    {% for i, user in subscriptions %}
+        <div class="col-md-3">
+            {{ include('users/partials/_user-card.html.twig', {'user': user}) }}
+        </div>
+
+        {% if (i % 4) is same as(3) %}
+            </div><div class="row">
+        {% endif %}
+    {% endfor %}
+    </div>
+
+{% endblock %}
