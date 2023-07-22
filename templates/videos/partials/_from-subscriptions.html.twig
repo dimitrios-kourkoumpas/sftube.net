@@ -1,0 +1,7 @@
+{% for video in videos %}
+    <div class="row">
+        <div class="col-md-12">
+            {{ include('videos/partials/_video-card.html.twig', {'video': video}) }}
+        </div>
+    </div>
+{% endfor %}

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use function PHPUnit\Framework\returnArgument;
 
 /**
  * Class VideosController
@@ -163,6 +164,38 @@ final class VideosController extends BaseController
         $videos = $this->em->getRepository(Video::class)->findBy([], ['createdAt' => 'DESC'], $max);
 
         return $this->render('videos/partials/_recent.html.twig', [
+            'videos' => $videos,
+        ]);
+    }
+
+    /**
+     * @param int $max
+     * @return Response
+     */
+    #[IsGranted(User::ROLE_USER)]
+    public function fromSubscriptions(int $max = 3): Response
+    {
+        $subscriptions = $this->getUser()->getSubscriptions();
+
+        $videos = [];
+
+        foreach ($subscriptions as $subscription) {
+            foreach ($subscription->getVideos() as $video) {
+                $videos[] = $video;
+            }
+        }
+
+        usort($videos, function (Video $v1, Video $v2) {
+            if ($v1->getCreatedAt() === $v2->getCreatedAt()) {
+                return 0;
+            }
+
+            return $v1->getCreatedAt() > $v2->getCreatedAt() ? -1 : 1;
+        });
+
+        $videos = array_slice($videos, 0, $max);
+
+        return $this->render('videos/partials/_from-subscriptions.html.twig', [
             'videos' => $videos,
         ]);
     }

@@ -65,8 +65,13 @@
                 </div>
 
                 <div class="col-md-2">
-                    <h2 class="card-box">{{ t('ui.template.base.heading.recent')|trans }}</h2>
-                    {{ render(controller('App\\Controller\\VideosController::recent', {'max': 3})) }}
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <h2 class="card-box">{{ t('ui.template.base.heading.from-subscriptions')|trans }}</h2>
+                        {{ render(controller('App\\Controller\\VideosController::fromSubscriptions', {'max': 3})) }}
+                    {% else %}
+                        <h2 class="card-box">{{ t('ui.template.base.heading.recent')|trans }}</h2>
+                        {{ render(controller('App\\Controller\\VideosController::recent', {'max': 3})) }}
+                    {% endif %}
                 </div>
 
             </div>
