@@ -1,0 +1,18 @@
+{% extends 'single-page.html.twig' %}
+
+{% block title %}{{ t('ui.template.static.title.terms-and-conditions')|trans }}{% endblock %}
+
+{%  block body %}
+
+    <h2 class="card-box">{{ t('ui.template.static.heading.terms-and-conditions')|trans }}</h2>
+
+    <div class="panel">
+        <div class="panel-body">
+            {{ t('ui.template.static.terms-and-conditions.text')|trans }}
+        </div>
+        <div class="panel-footer">
+            <a href="{{ path('app.register') }}" class="btn btn-primary waves-effect waves-light">{{ t('ui.template.static.terms-and-conditions.link.back.caption')|trans }}</a>
+        </div>
+    </div>
+
+{% endblock %}

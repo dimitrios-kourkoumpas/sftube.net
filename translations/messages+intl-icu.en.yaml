@@ -20,7 +20,7 @@ ui:
             heading:
                 categories: Categories
                 recent: Recent
-                from-subscriptions: 'Subscriptions'
+                from-subscriptions: Subscriptions
             toast:
                 success:
                     your-video-has-been-published: 'Your video has been published'
@@ -161,6 +161,16 @@ ui:
             heading:
                 my-subscribers: 'My subscribers'
                 my-subscriptions: 'My subscriptions'
+        static:
+            title:
+                terms-and-conditions: 'Terms and conditions'
+            heading:
+                terms-and-conditions: 'Terms and conditions'
+            terms-and-conditions:
+                text: 'Use it, do not abuse it'
+                link:
+                    back:
+                        caption: Back
 controller:
     registration:
         register:
