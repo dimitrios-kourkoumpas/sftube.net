@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\ApiResource\State\Provider\VideoWatchProvider;
 use App\Repository\VideoRepository;
 use App\Util\Slugger;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -21,6 +26,26 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable()]
+#[ApiResource(
+    types: ['https://schema.org/Video'],
+    operations: [
+        new GetCollection(
+            normalizationContext: [
+                'groups' => [
+                    'videos:collection:get',
+                ],
+            ],
+        ),
+        new Get(
+            normalizationContext: [
+                'groups' => [
+                    'videos:item:get',
+                ],
+            ],
+            provider: VideoWatchProvider::class,
+        ),
+    ]
+)]
 class Video
 {
     public const SLIDESHOW_EXTRACTION = 'slideshow';
@@ -36,20 +61,24 @@ class Video
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
+    #[Groups(['videos:collection:get', 'videos:item:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 5, max: 255)]
+    #[Groups(['videos:collection:get', 'videos:item:get'])]
     private string $title;
 
     #[ORM\Column(length: 255)]
     private string $slug;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['videos:item:get'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true, options: ['default' => self::NOT_AVAILABLE])]
+    #[Groups(['videos:collection:get', 'videos:item:get'])]
     private string $thumbnail = self::NOT_AVAILABLE;
 
     #[Vich\UploadableField(mapping: 'videos', fileNameProperty: 'filename')]
@@ -57,9 +86,11 @@ class Video
     private ?File $videoFile = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[Groups(['videos:item:get'])]
     private ?string $filename = null;
 
     #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    #[Groups(['videos:collection:get', 'videos:item:get'])]
     private int $views = 0;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
@@ -76,6 +107,7 @@ class Video
     private array $metadata = [];
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['videos:collection:get', 'videos:item:get'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(inversedBy: 'videos')]
@@ -99,6 +131,7 @@ class Video
 
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
+    #[Groups(['videos:item:get'])]
     private bool $allow_comments = true;
 
     #[ORM\OneToMany(mappedBy: 'video', targetEntity: Vote::class, orphanRemoval: true, cascade: ['persist'])]
@@ -564,6 +597,7 @@ class Video
     /**
      * @return int
      */
+    #[Groups(['videos:item:get'])]
     public function getVotesPercentage(): int
     {
         $total = $this->getTotalVotes();
