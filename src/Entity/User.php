@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,6 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -23,6 +27,25 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
 #[Vich\Uploadable()]
+#[ApiResource(
+    types: ['https://schema.org/User'],
+    operations: [
+        new Get(
+            uriTemplate: '/videos/{id}/user',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Video::class,
+                    fromProperty: 'user'
+                ),
+            ],
+            normalizationContext: [
+                'groups' => [
+                    'users:item:get',
+                ],
+            ]
+        ),
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
     public const ROLE_USER = 'ROLE_USER';
@@ -37,12 +60,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
+    #[Groups(['users:item:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Assert\Length(max: 180)]
+    #[Groups(['users:item:get'])]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::JSON)]
@@ -74,6 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      * @var string $avatar
      */
     #[ORM\Column(type: Types::STRING, options: ['default' => self::GENERIC_AVATAR])]
+    #[Groups(['users:item:get'])]
     private string $avatar = self::GENERIC_AVATAR;
 
     #[Vich\UploadableField(mapping: 'avatars', fileNameProperty: 'avatar')]
@@ -278,6 +304,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     /**
      * @return string
      */
+    #[Groups(['users:item:get'])]
     public function getFullname(): string
     {
         return $this->firstname . ' ' . $this->lastname;

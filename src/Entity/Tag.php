@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use App\Repository\TagRepository;
 use App\Util\Slugger;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,6 +14,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -20,18 +24,42 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity('name')]
+#[ApiResource(
+    types: ['https://schema.org/Tag'],
+    operations: [
+        new GetCollection(
+            uriTemplate: '/videos/{id}/tags',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Video::class,
+                    fromProperty: 'tags'
+                ),
+            ],
+            normalizationContext: [
+                'groups' => [
+                    'tags:collection:get',
+                ],
+            ],
+            order: [
+                'name' => 'ASC',
+            ]
+        ),
+    ]
+)]
 class Tag
 {
     public const PER_PAGE = 60;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
+    #[Groups(['tags:collection:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Unique]
     #[Assert\Length(max: 255)]
+    #[Groups(['tags:collection:get'])]
     private string $name;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
