@@ -60,3 +60,15 @@ services:
     Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
         arguments:
             - '@snc_redis.session'
+
+    Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter: ~
+
+    App\Serializer\ApiNormalizer:
+        decorates: 'api_platform.jsonld.normalizer.item' # jsonld
+    #        decorates: 'api_platform.serializer.normalizer.item' # json
+
+
+    # this is for json. need a different name to avoid duplicate YAML key
+    'app.serializer.normalizer.item.json':
+        class: App\Serializer\ApiNormalizer
+        decorates: 'api_platform.serializer.normalizer.item'
