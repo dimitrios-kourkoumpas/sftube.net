@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Video;
+use App\Event\VideoWatchEvent;
 use App\Form\VideoType;
 use App\Message\ExtractVideoMessage;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,10 +30,7 @@ final class VideosController extends BaseController
     public function watch(Video $video): Response
     {
         // increment views
-        $video->setViews($video->getViews() + 1);
-
-        $this->em->persist($video);
-        $this->em->flush();
+        $this->dispatcher->dispatch(new VideoWatchEvent($video));
 
         return $this->render('videos/watch.html.twig', [
             'video' => $video,
