@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use App\ApiResource\State\Provider\VideoWatchProvider;
 use App\Repository\VideoRepository;
 use App\Util\Slugger;

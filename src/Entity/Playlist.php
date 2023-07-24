@@ -4,26 +4,54 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use App\Repository\PlaylistRepository;
 use App\Util\Slugger;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PlaylistRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+    types: ['https://schema.org/Playlist'],
+    operations: [
+        new GetCollection(
+            uriTemplate: 'videos/{id}/playlists',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Playlist::class,
+                    toProperty: 'videos'
+                ),
+            ],
+            normalizationContext: [
+                'groups' => [
+                    'playlists:collection:get',
+                ],
+            ],
+            order: [
+                'name' => 'ASC',
+            ]
+        ),
+    ]
+)]
 class Playlist
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['playlists:collection:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
+    #[Groups(['playlists:collection:get'])]
     private string $name;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
