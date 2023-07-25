@@ -21,7 +21,7 @@ final readonly class VideoWatchProvider implements ProviderInterface
      * @param EntityManagerInterface $em
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(private readonly EntityManagerInterface $em, private readonly EventDispatcherInterface $dispatcher)
+    public function __construct(private EntityManagerInterface $em, private EventDispatcherInterface $dispatcher)
     {
     }
 

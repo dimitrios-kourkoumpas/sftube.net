@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use App\Repository\PlaylistRepository;
@@ -22,6 +23,16 @@ use Symfony\Component\Validator\Constraints as Assert;
     types: ['https://schema.org/Playlist'],
     operations: [
         new GetCollection(
+            normalizationContext: [
+                'groups' => [
+                    'playlists:collection:get',
+                ],
+            ],
+            order: [
+                'name' => 'ASC',
+            ]
+        ),
+        new GetCollection(
             uriTemplate: 'videos/{id}/playlists',
             uriVariables: [
                 'id' => new Link(
@@ -38,6 +49,13 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'name' => 'ASC',
             ]
         ),
+        new Get(
+            normalizationContext: [
+                'groups' => [
+                    'playlists:item:get',
+                ],
+            ]
+        ),
     ]
 )]
 class Playlist
@@ -45,13 +63,13 @@ class Playlist
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['playlists:collection:get'])]
+    #[Groups(['playlists:item:get', 'playlists:collection:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
-    #[Groups(['playlists:collection:get'])]
+    #[Groups(['playlists:item:get', 'playlists:collection:get'])]
     private string $name;
 
     #[ORM\Column(type: Types::STRING, length: 255)]

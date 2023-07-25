@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,6 +31,24 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     types: ['https://schema.org/User'],
     operations: [
+        new GetCollection(
+            normalizationContext: [
+                'groups' => [
+                    'users:collection:get',
+                ],
+            ],
+            order: [
+                'lastname' => 'ASC',
+                'firstname' => 'ASC',
+            ]
+        ),
+        new Get(
+            normalizationContext: [
+                'groups' => [
+                    'users:item:get',
+                ],
+            ]
+        ),
         new Get(
             uriTemplate: '/videos/{id}/user',
             uriVariables: [
@@ -60,14 +79,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups(['users:item:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Assert\Length(max: 180)]
-    #[Groups(['users:item:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get'])]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::JSON)]
@@ -99,7 +118,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      * @var string $avatar
      */
     #[ORM\Column(type: Types::STRING, options: ['default' => self::GENERIC_AVATAR])]
-    #[Groups(['users:item:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get'])]
     private string $avatar = self::GENERIC_AVATAR;
 
     #[Vich\UploadableField(mapping: 'avatars', fileNameProperty: 'avatar')]
@@ -304,7 +323,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     /**
      * @return string
      */
-    #[Groups(['users:item:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get'])]
     public function getFullname(): string
     {
         return $this->firstname . ' ' . $this->lastname;

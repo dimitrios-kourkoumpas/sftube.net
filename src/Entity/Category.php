@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use App\Repository\CategoryRepository;
 use App\Util\Slugger;
@@ -27,6 +28,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     types: ['https://schema.org/Category'],
     operations: [
+        new GetCollection(
+            normalizationContext: [
+                'groups' => [
+                    'categories:collection:get',
+                ],
+            ],
+            order: [
+                'name' => 'ASC',
+            ]
+        ),
+        new Get(
+            normalizationContext: [
+                'groups' => [
+                    'categories:item:get',
+                ],
+            ]
+        ),
         new Get(
             uriTemplate: '/videos/{id}/category',
             uriVariables: [
@@ -48,14 +66,14 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups(['categories:item:get'])]
+    #[Groups(['categories:collection:get', 'categories:item:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Unique]
     #[Assert\Length(max: 255)]
-    #[Groups(['categories:item:get'])]
+    #[Groups(['categories:collection:get', 'categories:item:get'])]
     private string $name;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
