@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\ConfigurationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +19,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity(repositoryClass: ConfigurationRepository::class)]
 #[UniqueEntity('name')]
+#[ApiResource(
+    types: ['https://schema.org/Configuration'],
+    operations: [
+        new GetCollection(),
+        new Get(),
+    ]
+)]
 class Configuration
 {
     #[ORM\Id]

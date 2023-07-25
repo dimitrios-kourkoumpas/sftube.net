@@ -45,6 +45,57 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ],
             provider: VideoWatchProvider::class,
         ),
+        new GetCollection(
+            uriTemplate: '/categories/{id}/videos',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Category::class,
+                    fromProperty: 'videos'
+                )
+            ],
+            normalizationContext: [
+                'groups' => [
+                    'videos:collection:get'
+                ],
+            ],
+            order: [
+                'createdAt' => 'DESC',
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/tags/{id}/videos',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Tag::class,
+                    toProperty: 'tags'
+                )
+            ],
+            normalizationContext: [
+                'groups' => [
+                    'videos:collection:get'
+                ],
+            ],
+            order: [
+                'createdAt' => 'DESC',
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/playlists/{id}/videos',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Playlist::class,
+                    toProperty: 'playlists'
+                )
+            ],
+            normalizationContext: [
+                'groups' => [
+                    'videos:collection:get'
+                ],
+            ],
+            order: [
+                'createdAt' => 'DESC',
+            ]
+        ),
     ]
 )]
 class Video
