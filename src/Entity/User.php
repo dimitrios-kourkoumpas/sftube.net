@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use App\ApiResource\State\Provider\MeProvider;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -60,6 +61,56 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             normalizationContext: [
                 'groups' => [
                     'users:item:get',
+                ],
+            ]
+        ),
+        new Get(
+            uriTemplate: '/me',
+            provider: MeProvider::class,
+            security: 'is_granted(\'' . self::ROLE_USER . '\')',
+            normalizationContext: [
+                'groups' => [
+                    'users:item:get',
+                ],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/me/videos',
+            provider: MeProvider::class,
+            security: 'is_granted(\'' . self::ROLE_USER . '\')',
+            normalizationContext: [
+                'groups' => [
+                    'videos:collection:get',
+                ],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/me/playlists',
+            provider: MeProvider::class,
+            security: 'is_granted(\'' . self::ROLE_USER . '\')',
+            normalizationContext: [
+                'groups' => [
+                    'playlists:collection:get',
+                ],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/me/subscriptions',
+            provider: MeProvider::class,
+            security: 'is_granted(\'' . self::ROLE_USER . '\')',
+            normalizationContext: [
+                'groups' => [
+                    'users:collection:get',
+                ],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/me/subscribers',
+            provider: MeProvider::class,
+            security: 'is_granted(\'' . self::ROLE_USER . '\')',
+            normalizationContext: [
+                'groups' => [
+                    'users:collection:get',
                 ],
             ]
         ),
