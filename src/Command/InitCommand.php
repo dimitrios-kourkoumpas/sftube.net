@@ -44,6 +44,8 @@ final class InitCommand extends Command
             'command' => 'app:randomize:comments-dates',
         ], [
             'command' => 'fos:elastica:populate',
+        ], [
+            'command' => 'lexik:jwt:generate-keypair',
         ],
     ];
 
