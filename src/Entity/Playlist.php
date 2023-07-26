@@ -76,6 +76,7 @@ class Playlist
     private string $slug;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    #[Groups(['playlists:item:get', 'playlists:collection:get'])]
     private bool $private = false;
 
     #[ORM\ManyToOne(inversedBy: 'playlists')]
