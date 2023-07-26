@@ -34,3 +34,7 @@
 src/Controller/TestController.php
 templates/test/index.html.twig
 ###< TestController ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
