@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -81,6 +83,7 @@ class Category
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Video::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
+    #[ApiFilter(OrderFilter::class, arguments: ['orderParameterName' => 'order'])]
     private Collection $videos;
 
     public function __construct()

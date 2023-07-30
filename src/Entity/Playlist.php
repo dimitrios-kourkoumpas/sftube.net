@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -69,6 +71,7 @@ class Playlist
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
+    #[ApiFilter(OrderFilter::class, arguments: ['orderParameterName' => 'order'])]
     #[Groups(['playlists:item:get', 'playlists:collection:get'])]
     private string $name;
 

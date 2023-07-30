@@ -26,7 +26,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     types: ['https://schema.org/Configuration'],
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            order: [
+                'name' => 'ASC',
+            ]
+        ),
         new Get(),
         new Post(
             security: 'is_granted(\'' . User::ROLE_ADMIN . '\')'
