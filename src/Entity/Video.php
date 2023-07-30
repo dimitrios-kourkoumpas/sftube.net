@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -36,6 +38,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                     'videos:collection:get',
                 ],
             ],
+            order: [
+                'createdAt' => 'DESC',
+            ]
         ),
         new Get(
             normalizationContext: [
@@ -159,6 +164,7 @@ class Video
     private array $metadata = [];
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[ApiFilter(OrderFilter::class, arguments: ['orderParameterName' => 'order'])]
     #[Groups(['videos:collection:get', 'videos:item:get'])]
     private \DateTimeImmutable $createdAt;
 

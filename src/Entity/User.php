@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -29,6 +31,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
 #[Vich\Uploadable()]
+#[ApiFilter(OrderFilter::class, properties: ['lastname', 'firstname'], arguments: ['orderParameterName' => 'order'])]
 #[ApiResource(
     types: ['https://schema.org/User'],
     operations: [
