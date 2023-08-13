@@ -10,8 +10,11 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
+use App\ApiResource\State\Processor\VideoUploadProcessor;
 use App\ApiResource\State\Provider\VideoWatchProvider;
 use App\Repository\VideoRepository;
+use App\Security\Voter\VideoVoter;
 use App\Util\Slugger;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -49,6 +52,20 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 ],
             ],
             provider: VideoWatchProvider::class,
+        ),
+        new Post(
+            security: 'is_granted(\'' . VideoVoter::UPLOAD . '\')',
+            inputFormats: [
+                'multipart' => [
+                    'multipart/form-data',
+                ],
+            ],
+            normalizationContext: [
+                'groups' => [
+                    'videos:item:get',
+                ],
+            ],
+            processor: VideoUploadProcessor::class
         ),
         new GetCollection(
             uriTemplate: '/categories/{id}/videos',
