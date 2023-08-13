@@ -8,12 +8,12 @@ namespace App\Message;
  * Class ExtractVideoMessage
  * @package App\Message
  */
-final class ExtractVideoMessage
+final readonly class ExtractVideoMessage
 {
     /**
      * @param int $videoId
      */
-    public function __construct(private readonly int $videoId)
+    public function __construct(private int $videoId)
     {
     }
 

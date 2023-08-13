@@ -3,7 +3,7 @@ framework:
         failure_transport: failed
 
         transports:
-            async:
+            videos:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 retry_strategy:
                     max_retries: 3
@@ -12,4 +12,4 @@ framework:
             # sync: 'sync://'
 
         routing:
-            App\Message\ExtractVideoMessage: async
+            App\Message\ExtractVideoMessage: videos
