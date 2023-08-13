@@ -24,6 +24,7 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             jwt: ~
+            user_checker: App\Security\UserChecker
         main:
             lazy: true
             provider: app_user_provider
@@ -33,6 +34,7 @@ security:
                 login_path: app.login
                 check_path: app.login
                 enable_csrf: true
+            user_checker: App\Security\UserChecker
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds

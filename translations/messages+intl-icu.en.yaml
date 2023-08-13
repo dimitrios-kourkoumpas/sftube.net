@@ -224,3 +224,6 @@ twig:
             second: second
             ago: ago
             just-now: 'just now'
+security:
+    user-checker:
+        you-are-blocked: 'You have been blocked'
