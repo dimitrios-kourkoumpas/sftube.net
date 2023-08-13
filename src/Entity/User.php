@@ -10,6 +10,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
+use App\ApiResource\State\Processor\UserRegistrationProcessor;
 use App\ApiResource\State\Provider\MeProvider;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -47,6 +49,20 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ]
         ),
         new Get(
+            normalizationContext: [
+                'groups' => [
+                    'users:item:get',
+                ],
+            ]
+        ),
+        new Post(
+            uriTemplate: '/register',
+            inputFormats: [
+                'multipart' => [
+                    'multipart/form-data',
+                ],
+            ],
+            processor: UserRegistrationProcessor::class,
             normalizationContext: [
                 'groups' => [
                     'users:item:get',
