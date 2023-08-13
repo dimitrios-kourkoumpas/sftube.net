@@ -20,7 +20,7 @@ use Symfony\Component\Routing\RouterInterface;
  * Class ExtractVideoMessageHandler
  * @package App\MessageHandler
  */
-#[AsMessageHandler(fromTransport: 'async')]
+#[AsMessageHandler(fromTransport: 'videos')]
 final readonly class ExtractVideoMessageHandler
 {
     use FullHost;
