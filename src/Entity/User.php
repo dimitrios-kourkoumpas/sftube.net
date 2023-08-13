@@ -228,6 +228,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\InverseJoinColumn(name: 'subscriber_user_id', referencedColumnName: 'id')]
     private Collection $mySubscribers;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default' => null])]
+    private ?\DateTimeInterface $lastLogin = null;
+
     public function __construct()
     {
         $this->videos = new ArrayCollection();
@@ -731,5 +734,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     public function hasSubscriber(User $user): bool
     {
         return $this->mySubscribers->contains($user);
+    }
+
+    public function getLastLogin(): ?\DateTimeInterface
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(?\DateTimeInterface $lastLogin): static
+    {
+        $this->lastLogin = $lastLogin;
+
+        return $this;
     }
 }
