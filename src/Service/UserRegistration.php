@@ -12,13 +12,13 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  * Class UserRegistration
  * @package App\Service
  */
-final class UserRegistration
+final readonly class UserRegistration
 {
     /**
      * @param EntityManagerInterface $em
      * @param UserPasswordHasherInterface $hasher
      */
-    public function __construct(private readonly EntityManagerInterface $em, private readonly UserPasswordHasherInterface $hasher)
+    public function __construct(private EntityManagerInterface $em, private UserPasswordHasherInterface $hasher)
     {
     }
 
