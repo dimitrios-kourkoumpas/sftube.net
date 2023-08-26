@@ -1,0 +1,48 @@
+<div id="new-{{ inflections.lower }}-modal" class="modal fade in" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">New {{ inflections.singular }}</h4>
+            </div>
+            <form id="new-{{ inflections.lower }}-modal-form" role="form">
+                <div class="modal-body">
+                    {% for field in meta|filter(field => field.id is not defined and field.fieldName != 'slug') %}
+                            <div class="form-group">
+
+                                {% if field.type == 'string' %}
+                                    <label for="new-{{ inflections.lower }}-modal-{{ inflections.lower }}-{{ field.fieldName }}" class="control-label">{{ field.fieldName|ucfirst }}</label>
+                                    <input type="text" name="{{ field.fieldName }}" id="new-{{ inflections.lower }}-modal-{{ inflections.lower }}-{{ field.fieldName }}" class="form-control" {{ field.nullable == false ? ' required' : '' }} autocomplete="off">
+                                {% endif %}
+
+                                {% if field.type == 'text' %}
+                                    <label for="new-{{ inflections.lower }}-modal-{{ inflections.lower }}-{{ field.fieldName }}" class="control-label">{{ field.fieldName|ucfirst }}</label>
+                                    <textarea name="{{ field.fieldName }}" id="new-{{ inflections.lower }}-modal-{{ inflections.lower }}-{{ field.fieldName }}" class="form-control" {{ field.nullable == false ? ' required' : '' }} cols="5"></textarea>
+                                {% endif %}
+
+                                {# TODO: add more cases for data types and/or relations :) #}
+
+                            </div>
+                    {% endfor %}
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default waves-effect waves-light" data-dismiss="modal">Close</button>
+                <button id="new-{{ inflections.lower }}-modal-save-button" type="submit" class="btn btn-success waves-effect waves-light">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#new-{{ inflections.lower }}-modal').on('shown.bs.modal', function () {
+        SFTube.clearViolations($(this));
+
+        $('#new-{{ inflections.lower }}-modal-form').find('input').first().focus();
+    });
+
+    $('#new-{{ inflections.lower }}-modal').on('hidden.bs.modal', function () {
+        SFTube.clearModalFields($(this));
+    });
+</script>

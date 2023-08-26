@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\User;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,8 +31,9 @@ final class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     /**
      * @param UrlGeneratorInterface $urlGenerator
+     * @param JWTTokenManagerInterface $tokenManager
      */
-    public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
+    public function __construct(private readonly UrlGeneratorInterface $urlGenerator, private readonly JWTTokenManagerInterface $tokenManager)
     {
     }
 
@@ -66,9 +69,17 @@ final class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
-        return new RedirectResponse($this->urlGenerator->generate('app.homepage'));
-        throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
+        $user = $token->getUser();
+
+        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
+            $request->getSession()->set('jwt', $this->tokenManager->create($user));
+
+            $routeName = 'app.admin.dashboard';
+        } else {
+            $routeName = 'app.homepage';
+        }
+
+        return new RedirectResponse($this->urlGenerator->generate($routeName));
     }
 
     /**

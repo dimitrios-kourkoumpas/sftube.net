@@ -11,12 +11,12 @@ use Twig\Extension\RuntimeExtensionInterface;
  * Class AppExtensionRuntime
  * @package App\Twig\Runtime
  */
-final class AppExtensionRuntime implements RuntimeExtensionInterface
+final readonly class AppExtensionRuntime implements RuntimeExtensionInterface
 {
     /**
      * @param TranslatorInterface $translator
      */
-    public function __construct(private readonly TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
     }
 
@@ -63,5 +63,47 @@ final class AppExtensionRuntime implements RuntimeExtensionInterface
         return $string
             ? implode(', ', $string) . ' ' . $this->translator->trans('twig.filter.time-elapsed-since-now.ago')
             : $this->translator->trans('twig.filter.time-elapsed-since-now.just-now');
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    public function ucfirstFilter(string $string): string
+    {
+        return ucfirst($string);
+    }
+
+    /**
+     * @link https://stackoverflow.com/questions/15188033/human-readable-file-size
+     *
+     * @param string $bytes
+     * @param int $decimalDigits
+     * @return string
+     */
+    public function humanReadableFileSizeFilter(string $bytes, int $decimalDigits = 2): string
+    {
+        $sizes = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+        $factor = floor((strlen($bytes) - 1) / 3);
+
+        return sprintf("%.{$decimalDigits}f", $bytes / (1024 ** $factor)) . @$sizes[$factor];
+    }
+
+    /**
+     * @param string $duration
+     * @return string
+     */
+    public function humanReadableDurationFilter(string $duration): string
+    {
+        $hours = 0;
+
+        if ($duration > 3600) {
+            $hours = floor($duration / 3600);
+        }
+
+        $duration %= 3600;
+
+        return str_pad((string) $hours, 2, '0', STR_PAD_LEFT) . gmdate(':i:s', $duration);
     }
 }

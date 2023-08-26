@@ -74,6 +74,25 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @param int $limit
+     * @return array
+     */
+    public function getMostActiveUsers(int $limit): array
+    {
+        $queryBuilder = $this->createQueryBuilder('u');
+
+        $queryBuilder->select(['u.id', 'u.avatar', 'u.lastname', 'u.firstname', 'CONCAT(u.firstname, \' \', u.lastname) AS fullname' ,  'COUNT(v.id) AS videos']);
+        $queryBuilder->innerJoin('u.videos', 'v');
+        $queryBuilder->groupBy('u.id');
+        $queryBuilder->orderBy('videos', 'DESC');
+        $queryBuilder->addOrderBy('u.lastname', 'ASC');
+        $queryBuilder->addOrderBy('u.firstname', 'ASC');
+        $queryBuilder->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

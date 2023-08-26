@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\ApiResource\State\Processor\VideoUploadProcessor;
 use App\ApiResource\State\Provider\VideoWatchProvider;
@@ -66,6 +67,19 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 ],
             ],
             processor: VideoUploadProcessor::class
+        ),
+        new Patch(
+            normalizationContext: [
+                'groups' => [
+                    'videos:item:get',
+                ],
+            ],
+            denormalizationContext: [
+                'groups' => [
+                    'videos:write',
+                ],
+            ],
+            security: 'is_granted(\'' . User::ROLE_ADMIN . '\') or is_granted(\'' . VideoVoter::EDIT . '\', object)'
         ),
         new GetCollection(
             uriTemplate: '/categories/{id}/videos',
@@ -168,11 +182,11 @@ class Video
     private int $views = 0;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    #[Groups(['admin:read', 'admin:write'])]
     private bool $published = false;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     private bool $converted = false;
-
 
     #[ORM\Column(type: Types::STRING, options: ['default' => self::SLIDESHOW_EXTRACTION])]
     private string $extractionMethod = self::SLIDESHOW_EXTRACTION;
@@ -472,6 +486,15 @@ class Video
     }
 
     /**
+     * @return int
+     */
+    #[Groups(['videos:collection:get', 'videos:item:get'])]
+    public function getCommentsCount(): int
+    {
+        return $this->comments->count();
+    }
+
+    /**
      * @return Collection<int, Frame>
      */
     public function getFrames(): Collection
@@ -672,7 +695,6 @@ class Video
     /**
      * @return int
      */
-    #[Groups(['videos:item:get'])]
     public function getVotesPercentage(): int
     {
         $total = $this->getTotalVotes();

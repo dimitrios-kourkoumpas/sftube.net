@@ -41,6 +41,22 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getCategoriesPopulation(): array
+    {
+        $sql = 'SELECT `name`, COUNT(`video`.`id`) AS `videos` FROM `category`';
+        $sql .= ' LEFT JOIN `video` ON `category`.`id` = `video`.`category_id` GROUP BY `category`.`id`;';
+
+        $connection = $this->_em->getConnection();
+
+        $statement = $connection->prepare($sql);
+
+        return $statement->executeQuery()->fetchAllAssociative();
+    }
+
 //    /**
 //     * @return Category[] Returns an array of Category objects
 //     */

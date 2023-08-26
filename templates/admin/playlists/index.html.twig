@@ -1,0 +1,79 @@
+{% extends 'admin/admin-base-template.html.twig' %}
+
+{% block title %}{{ inflections.plural }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('assets/plugins/jquery.datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/plugins/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <table id="{{ inflections.slug }}-datatable" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>User</th>
+                            <th>Private</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/plugins/jquery.datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sftube.js') }}"></script>
+{% endblock %}
+
+{% block javascripts_inline %}
+    <script>
+        $(document).ready(function () {
+            $('#{{ inflections.slug }}-datatable').DataTable({
+                ajax: {
+                    url: '{{ path('app.admin.playlists.datatable') }}',
+                    dataSrc: null,
+                },
+                columns: [
+                    {
+                        data: 'name',
+                        render: function (data, type, row, meta) {
+                            return '<a href="/admin/playlists/detail/' + row.id + '">'+ data +'</a>';
+                        },
+                        sClass: 'middle-align',
+                        sortable: true
+                    }, {
+                        data: 'user',
+                        render: function (data, type, row, meta) {
+                            return '<a href="/admin/users/detail/' + data.id + '">' + data.fullname + '</a>';
+                        },
+                        sClass: 'middle-align',
+                        sortable: true
+                    },
+                    {
+                        data: 'private',
+                        render: function (data, type, row, meta) {
+                            return row.private ? '<span class="fa fa-lock"></span>' : '';
+                        },
+                        sClass: 'middle-align',
+                        sortable: false
+                    }
+                ],
+                order: [[0, 'asc']],
+            });
+        });
+    </script>
+{% endblock %}

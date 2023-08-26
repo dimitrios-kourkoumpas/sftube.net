@@ -56,6 +56,24 @@ class TagRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @param int $limit
+     * @return array
+     */
+    public function getMostPopulousTags(int $limit): array
+    {
+        $queryBuilder = $this->createQueryBuilder('t');
+
+        $queryBuilder->select(['t.id', 't.name', 'COUNT(v.id) as count']);
+        $queryBuilder->leftJoin('t.videos', 'v');
+        $queryBuilder->groupBy('t.id');
+        $queryBuilder->orderBy('count', 'DESC');
+        $queryBuilder->addOrderBy('t.name', 'ASC');
+        $queryBuilder->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Tag[] Returns an array of Tag objects
 //     */

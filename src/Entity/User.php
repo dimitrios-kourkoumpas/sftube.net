@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\ApiResource\State\Processor\UserRegistrationProcessor;
 use App\ApiResource\State\Provider\MeProvider;
@@ -68,6 +69,19 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                     'users:item:get',
                 ],
             ]
+        ),
+        new Patch(
+            normalizationContext: [
+                'groups' => [
+                    'users:item:get',
+                ],
+            ],
+            denormalizationContext: [
+                'groups' => [
+                    'users:write',
+                ],
+            ],
+            security: 'is_granted(\'' . User::ROLE_ADMIN . '\') or is_granted(\'user == object\')'
         ),
         new Get(
             uriTemplate: '/videos/{id}/user',
@@ -149,7 +163,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'playlists:collection:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
@@ -208,12 +222,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     private Collection $playlists;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
-    private bool $can_upload = true;
+    #[Groups(['admin:read', 'admin:write'])]
+    private bool $canUpload = true;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
-    private bool $can_comment = true;
+    #[Groups(['admin:read', 'admin:write'])]
+    private bool $canComment = true;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    #[Groups(['admin:read', 'admin:write'])]
     private bool $blocked = false;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Vote::class, orphanRemoval: true)]
@@ -396,7 +413,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     /**
      * @return string
      */
-    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'playlists:collection:get'])]
     public function getFullname(): string
     {
         return $this->firstname . ' ' . $this->lastname;
@@ -580,24 +597,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
 
     public function getCanUpload(): ?bool
     {
-        return $this->can_upload;
+        return $this->canUpload;
     }
 
-    public function setCanUpload(bool $can_upload): static
+    public function setCanUpload(bool $canUpload): static
     {
-        $this->can_upload = $can_upload;
+        $this->canUpload = $canUpload;
 
         return $this;
     }
 
     public function getCanComment(): ?bool
     {
-        return $this->can_comment;
+        return $this->canComment;
     }
 
-    public function setCanComment(bool $can_comment): static
+    public function setCanComment(bool $canComment): static
     {
-        $this->can_comment = $can_comment;
+        $this->canComment = $canComment;
 
         return $this;
     }
@@ -746,5 +763,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         $this->lastLogin = $lastLogin;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    #[Groups(['users:collection:get'])]
+    public function getVideosCount(): int
+    {
+        return $this->videos->count();
     }
 }
