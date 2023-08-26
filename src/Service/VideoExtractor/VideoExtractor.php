@@ -93,6 +93,10 @@ final class VideoExtractor
             ->format($this->paths['app.filesystem.videos.upload.path'] . DIRECTORY_SEPARATOR . $video->getFilename())
             ->all();
 
+        if (isset($this->metadata['filename'])) {
+            $this->metadata['filename'] = basename($this->metadata['filename']);
+        }
+
         $video->setMetadata($this->metadata);
     }
 
