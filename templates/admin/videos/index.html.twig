@@ -1,0 +1,147 @@
+{% extends 'admin/admin-base-template.html.twig' %}
+
+{% block title %}{{ inflections.plural }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('assets/plugins/jquery.datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/plugins/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/plugins/switchery/switchery.min.css') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block javascripts_top %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/plugins/moment.js/moment.min.js') }}"></script>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <table id="{{ inflections.slug }}-datatable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Thumbnail</th>
+                                <th>Title</th>
+                                <th>Views</th>
+                                <th>Published</th>
+                                <th>Comments</th>
+                                <th>Uploaded on</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/plugins/jquery.datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/switchery/switchery.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sftube.js') }}"></script>
+{% endblock %}
+
+{% block javascripts_inline %}
+    <script>
+        $(document).ready(function () {
+            $('#{{ inflections.slug }}-datatable').DataTable({
+                ajax: {
+                    url: '{{ path('app.admin.videos.datatable') }}',
+                    dataSrc: null,
+                },
+                columns: [
+                    {
+                        data: 'thumbnail',
+                        render: function (data, type, row, meta) {
+                            return '<img src="' + data + '" class="img-responsive img-thumbnail" alt="' + row.title + '" width="75px" height="75px" />';
+                        },
+                        sClass: 'middle-align',
+                        sortable: false,
+                    }, {
+                        data: 'title',
+                        render: function (data, type, row, meta) {
+                            return '<a href="/admin/videos/detail/' + row.id + '">' + data + '</a>';
+                        },
+                        sClass: 'middle-align',
+                        sortable: true
+                    }, {
+                        data: 'views',
+                        sClass: 'middle-align text-center',
+                        sortable: true
+                    }, {
+                        data: 'published',
+                        render: function (data, type, row, meta) {
+                            return '<input type="checkbox" class="switchery" data-switch="published" data-id="' + row.id + '"' + (data ? ' checked' : '') + ' />';
+                        },
+                        sClass: 'middle-align text-center',
+                        sortable: false
+                    }, {
+                        data: 'comments_count',
+                        sClass: 'middle-align text-center',
+                        sortable: true
+                    }, {
+                        data: 'created_at',
+                        render: function (data, type, row, meta) {
+                            return moment(data).format('D MMM, Y H:mm');
+                        },
+                        sClass: 'middle-align',
+                        sortable: true
+                    }
+                ],
+                columnDefs: [{
+                    type: 'date', 'targets': [5]
+                }],
+                order: [[5, 'desc']],
+            });
+
+            $('#{{ inflections.slug }}-datatable').on('draw.dt', function () {
+                $.each($('.switchery'), function (index, element) {
+                    if ($(element).data('switchery') === true) {
+                        return;
+                    }
+
+                    SFTube.switchery.defaults.disabled = !!$(element).is(':disabled');
+
+                    new Switchery(element, SFTube.switchery.defaults);
+                });
+            });
+
+            $('#{{ inflections.slug }}-datatable').on('change', '.switchery', function (e) {
+                e.preventDefault();
+
+                const id = $(this).data('id');
+
+                let operation = $(this).data('switch');
+
+                let checked = !!$(this).is(':checked');
+
+                let url = '/admin/videos/' + id;
+
+                let fields = {};
+                fields[operation] = checked;
+
+                let options = {
+                    url: url,
+                    fields: fields,
+                    showNotification: true,
+                    meta: {
+                        entitySingular: '{{ inflections.singular }}'
+                    }
+                };
+
+                SFTube.update(options);
+            });
+        });
+    </script>
+{% endblock %}

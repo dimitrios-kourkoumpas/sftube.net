@@ -18,6 +18,9 @@ final class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('timeElapsedSinceNow', [AppExtensionRuntime::class, 'timeElapsedSinceNowFilter']),
+            new TwigFilter('ucfirst', [AppExtensionRuntime::class, 'ucfirstFilter']),
+            new TwigFilter('humanReadableFileSize', [AppExtensionRuntime::class, 'humanReadableFileSizeFilter']),
+            new TwigFilter('humanReadableDuration', [AppExtensionRuntime::class, 'humanReadableDurationFilter']),
         ];
     }
 }

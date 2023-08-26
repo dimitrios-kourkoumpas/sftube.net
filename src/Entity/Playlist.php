@@ -84,6 +84,7 @@ class Playlist
 
     #[ORM\ManyToOne(inversedBy: 'playlists')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['playlists:collection:get'])]
     private User $user;
 
     #[ORM\ManyToMany(targetEntity: Video::class, inversedBy: 'playlists', fetch: 'EXTRA_LAZY')]

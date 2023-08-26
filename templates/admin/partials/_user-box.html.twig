@@ -1,0 +1,16 @@
+<!-- User -->
+<div class="user-box">
+    <div class="user-img">
+        <img src="{{ asset(avatars_url_segment ~ app.user.avatar) }}" alt="{{ app.user.fullname }}" title="{{ app.user.fullname }}" class="img-circle img-thumbnail img-responsive">
+        <div class="user-status online"><i class="zmdi zmdi-dot-circle"></i></div>
+    </div>
+    <h5><a href="#">{{ app.user.fullname }}</a> </h5>
+    <ul class="list-inline">
+        <li>
+            <a href="{{ path('app.logout') }}" class="text-custom">
+                <i class="zmdi zmdi-power"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<!-- End User -->

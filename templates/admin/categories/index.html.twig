@@ -1,0 +1,172 @@
+{% extends 'admin/admin-base-template.html.twig' %}
+
+{% block title %}{{ inflections.plural }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('assets/plugins/jquery.datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/plugins/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <table id="{{ inflections.slug }}-datatable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-body text-right">
+                    <button id="new-{{ inflections.lower }}-btn" class="btn btn-lg btn-success waves-effect waves-light" data-toggle="modal" data-target="#new-{{ inflections.lower }}-modal">
+                        New {{ inflections.lower }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'admin/partials/modals/_new-modal.html.twig' %}
+    {% include 'admin/partials/modals/_edit-modal.html.twig' %}
+
+{% endblock %}
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/plugins/jquery.datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sftube.js') }}"></script>
+{% endblock %}
+
+{% block javascripts_inline %}
+    <script>
+        $(document).ready(function () {
+            $('#{{ inflections.slug }}-datatable').DataTable({
+                ajax: {
+                    url: '{{ path('app.admin.categories.datatable') }}',
+                    dataSrc: null,
+                },
+                columns: [
+                    {
+                        data: 'name',
+                        sClass: 'middle-align'
+                    }, {
+                        data: 'id',
+                        render: function (data, type, row, meta) {
+                            return '<button class="edit-button btn btn-primary waves-effect waves-light" data-id="' + row.id + '">' +
+                                '<span class="zmdi zmdi-edit"></span>' +
+                            '</button>'
+                                + ' ' +
+                            '<button class="delete-button btn btn-danger waves-effect waves-light" data-id="' + row.id + '">' +
+                                '<span class="zmdi zmdi-delete"></span>' +
+                            '</button>';
+                        },
+                        sClass: 'middle-align text-right',
+                        sortable: false
+                    }
+                ],
+                order: [[0, 'asc']]
+            });
+
+            $('#new-{{ inflections.lower }}-modal-save-button').on('click', function (e) {
+                e.preventDefault();
+
+                let formData = SFTube.getFormData($('#new-{{ inflections.lower }}-modal-form'));
+                let modal = $('#new-{{ inflections.lower }}-modal');
+
+                let options = {
+                    url: '{{ path('app.admin.categories.create') }}',
+                    fields: formData,
+                    reloadDataTable: true,
+                    showNotification: true,
+                    meta: {
+                        slug: '{{ inflections.slug }}',
+                        entitySingular: '{{ inflections.singular }}',
+                        modal: modal
+                    }
+                };
+
+                SFTube.create('{{ inflections.singular }}', options);
+            });
+
+            $('#{{ inflections.slug }}-datatable').on('click', '.edit-button', function (e) {
+                e.preventDefault();
+
+                const id = $(this).data('id');
+
+                let url = '/admin/{{ inflections.slug }}/' + id;
+
+                let options = {
+                    url: url,
+                    meta: {
+                        slug: '{{ inflections.slug }}',
+                        modal: $('#edit-{{ inflections.lower }}-modal')
+                    }
+                };
+
+                SFTube.populateModalForm(options);
+            });
+
+            $('#edit-{{ inflections.lower }}-modal-save-button').on('click', function (e) {
+                e.preventDefault();
+
+                let formData = SFTube.getFormData($('#edit-{{ inflections.lower }}-modal-form'));
+                let modal = $('#edit-{{ inflections.lower }}-modal');
+
+                const id = $(modal).find("input[name='id']").val();
+
+                let options = {
+                    url: '/admin/{{ inflections.slug }}/' + id,
+                    fields: formData,
+                    reloadDataTable: true,
+                    showNotification: true,
+                    meta: {
+                        slug: '{{ inflections.slug }}',
+                        entitySingular: '{{ inflections.singular }}',
+                        modal: modal
+                    }
+                };
+
+                SFTube.update(options);
+            });
+
+
+
+            $('#{{ inflections.slug }}-datatable').on('click', '.delete-button', function (e) {
+                e.preventDefault();
+
+                const id = $(this).data('id');
+
+                let url = '/admin/{{ inflections.slug }}/' + id;
+
+                let options = {
+                    url: url,
+                    reloadDataTable: true,
+                    showNotification: true,
+                    meta: {
+                        slug: '{{ inflections.slug }}',
+                        entitySingular: '{{ inflections.singular }}'
+                    }
+                };
+
+                SFTube.delete(options);
+            });
+        });
+    </script>
+{% endblock %}

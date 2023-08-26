@@ -1,0 +1,218 @@
+{% extends 'admin/admin-base-template.html.twig' %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('assets/plugins/switchery/switchery.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/plugins/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="bg-picture card-box">
+                <div class="profile-info-name">
+                    <a href="#" data-toggle="modal" data-target="#video-player-modal">
+                        <img src="{{ asset(thumbnails_url_segment ~ video.thumbnail) }}"
+                             class="img-thumbnail"
+                             alt="{{ video.title }}">
+                    </a>
+
+                    <div class="profile-info-detail">
+                        <h3 class="m-t-0 m-b-0">{{ video.title }}</h3>
+                        <p class="text-muted m-b-20"><i>
+                                <a href="/admin/users/detail/{{ video.user.id }}">{{ video.user.fullname }}</a> - {{ video.createdAt|date('j M, Y') }}</i>
+                        </p>
+                        <p>{{ video.description|nl2br }}</p>
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <!--/ meta -->
+            <div class="card-box">
+
+                <h4 class="header-title m-t-0 m-b-30"><i class="zmdi zmdi-comments m-r-5"></i> Comments</h4>
+
+                {% for comment in video.comments %}
+
+                    <div class="comment">
+                        <img src="{{ asset(avatars_url_segment ~ comment.user.avatar) }}"
+                             alt="{{ comment.user.fullname }}" class="comment-avatar">
+                        <div class="comment-body">
+                            <div class="comment-text">
+                                <div class="comment-header">
+                                    <a href="/admin/users/detail/{{ comment.user.id }}"
+                                       title="">{{ comment.user.fullname }}</a><span>{{ comment.createdAt|timeElapsedSinceNow }}</span>
+                                </div>
+                                {{ comment.comment }}
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card-box">
+
+                <h4 class="header-title m-t-0 m-b-30"><i class="zmdi zmdi-info-outline"></i> Info</h4>
+
+                <ul class="list-group m-b-0">
+                    <li class="list-group-item">
+                        <strong>Uploaded:</strong> {{ video.createdAt|date('j-m-Y H:i:s') }}
+                    </li>
+
+                    <li class="list-group-item">
+                        <strong>User:</strong> <a href="/admin/users/detail/{{ video.user.id }}">{{ video.user.fullname }}</a>
+                    </li>
+
+                    <li class="list-group-item">
+                        <strong>Views: </strong> {{ video.views }}
+                    </li>
+
+                    <li class="list-group-item">
+                        <strong>Comments: </strong> {{ video.comments.count }}
+                    </li>
+
+                    <li class="list-group-item">
+                        <strong>Upvote percentage: </strong> {{ video.votesPercentage|round(0, 'ceil') }}%
+                    </li>
+
+                    <li class="list-group-item">
+                        <strong>Extraction method:</strong> {{ video.extractionMethod|ucfirst }}
+                    </li>
+
+
+                    <li class="list-group-item">
+                        <strong>Published: </strong><input type="checkbox" {{ video.published ? ' checked' : '' }}
+                                                           class="switchery" data-switch="published"
+                                                           data-id="{{ video.id }}">
+                    </li>
+
+                    <li class="list-group-item">
+                        <strong>Allow comments: </strong><input
+                                type="checkbox" {{ video.allowComments ? ' checked' : '' }} class="switchery"
+                                data-switch="allow_comments" data-id="{{ video.id }}">
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-box">
+
+                <h4 class="header-title m-t-0 m-b-30"><i class="zmdi zmdi-format-list-bulleted"></i> Playlists</h4>
+
+                <ul class="list-group m-b-0">
+                    {% for playlist in video.playlists %}
+                        <li class="list-group-item">
+                            <a href="{{ path('app.admin.playlists.detail', {'id': playlist.id}) }}">{{ playlist.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="card-box">
+
+                <h4 class="header-title m-t-0 m-b-30"><i class="zmdi zmdi-info-outline"></i> Metadata</h4>
+
+                <ul class="list-group m-b-0">
+                    {% for key in video.metadata|keys %}
+                        {% set _meta = video.metadata %}
+
+                        {% if _meta[key] is not iterable %}
+                            <li class="list-group-item">
+                                {% set _key = key|capitalize|split('_')|join(' ') %}
+
+                                {% if key is same as('size') %}
+                                    <strong>{{ _key }}:</strong> {{ _meta[key]|humanReadableFileSize }}
+                                {% elseif key is same as('duration') or key is same as('start_time') %}
+                                    <strong>{{ _key }}:</strong> {{ _meta[key]|humanReadableDuration }}
+                                {% elseif key is same as('format_name') %}
+                                    <strong>{{ _key }}:</strong> {{ _meta[key]|split(',')|join(', ') }}
+                                {% else %}
+                                    <strong>{{ _key }}:</strong> {{ _meta[key] }}
+                                {% endif %}
+                            </li>
+                        {% else %}
+                            <li class="list-group-item">
+                                <strong>{{ key|capitalize }}:</strong>
+                                <ul>
+                                    {% for k in _meta[key]|keys %}
+                                        <li><strong>{{ k|capitalize|split('_')|join(' ') }}: </strong> {{ _meta[key][k] }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    {{ include('admin/videos/_video-player-modal.html.twig') }}
+
+{% endblock %}
+
+{% block javascripts_bottom %}
+
+    {{ parent() }}
+    <script src="{{ asset('assets/plugins/switchery/switchery.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sftube.js') }}"></script>
+
+{% endblock %}
+
+
+{% block javascripts_inline %}
+
+    <script>
+
+        $(document).ready(function () {
+            $.each($('.switchery'), function (index, element) {
+                new Switchery(element, SFTube.switchery.defaults);
+            });
+
+            $('.switchery').on('change', function (e) {
+                e.preventDefault();
+
+                const id = $(this).data('id');
+
+                let operation = $(this).data('switch');
+
+                let checked = !!$(this).prop('checked');
+
+                let url = '/admin/videos/' + id;
+
+                let fields = {};
+                fields[operation] = checked;
+
+                let options = {
+                    url: url,
+                    fields: fields,
+                    showNotification: true,
+                    meta: {
+                        entitySingular: '{{ inflections.singular }}'
+                    }
+                };
+
+                SFTube.update(options);
+            });
+        });
+
+        $('#video-player-modal').on('hide.bs.modal', function () {
+            let video = $('#video-player-modal video').get(0);
+
+            video.pause();
+            video.currentTime = 0;
+        });
+
+    </script>
+
+{% endblock %}

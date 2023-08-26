@@ -12,6 +12,7 @@
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.10",
         "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/inflector": "^2.0",
         "doctrine/orm": "^2.15",
         "friendsofsymfony/elastica-bundle": "^6.3",
         "lexik/jwt-authentication-bundle": "^2.19",

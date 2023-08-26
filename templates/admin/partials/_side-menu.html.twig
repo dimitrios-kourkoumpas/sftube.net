@@ -1,0 +1,42 @@
+<!--- Sidemenu -->
+<div id="sidebar-menu">
+    <ul>
+        <li>
+            <a href="{{ path('app.admin.dashboard') }}" class="waves-effect{{ inflections.slug is same as('dashboard') ? ' active' }}">
+                <i class="zmdi zmdi-view-dashboard"></i><span> Dashboard </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app.admin.videos.index') }}" class="waves-effect{{ inflections.slug is same as('videos') ? ' active' }}">
+                <i class="fa fa-video-camera"></i><span> Videos </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app.admin.users.index') }}" class="waves-effect{{ inflections.slug is same as('users') ? ' active' }}">
+                <i class="fa fa-users"></i><span> Users </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app.admin.categories.index') }}" class="waves-effect{{ inflections.slug is same as('categories') ? ' active' }}">
+                <i class="fa fa-folder-open"></i><span> Categories </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app.admin.tags.index') }}" class="waves-effect{{ inflections.slug is same as('tags') ? ' active' }}">
+                <i class="fa fa-tags"></i><span> Tags </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app.admin.playlists.index') }}" class="waves-effect{{ inflections.slug is same as('playlists') ? ' active' }}">
+                <i class="fa fa-list"></i><span> Playlists </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app.admin.configurations.index') }}" class="waves-effect{{ inflections.slug is same as('configurations') ? ' active' }}">
+                <i class="fa fa-cogs"></i><span> Configurations </span>
+            </a>
+        </li>
+    </ul>
+    <div class="clearfix"></div>
+</div>
+<!-- Sidebar -->

@@ -7,9 +7,13 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\TagRepository;
 use App\Util\Slugger;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -64,6 +68,18 @@ use Symfony\Component\Validator\Constraints as Assert;
                 ],
             ]
         ),
+        new Post(
+            security: 'is_granted(\'' . User::ROLE_ADMIN . '\')'
+        ),
+        new Put(
+            security: 'is_granted(\'' . User::ROLE_ADMIN . '\')'
+        ),
+        new Patch(
+            security: 'is_granted(\'' . User::ROLE_ADMIN . '\')'
+        ),
+        new Delete(
+            security: 'is_granted(\'' . User::ROLE_ADMIN . '\')'
+        ),
     ]
 )]
 class Tag
@@ -77,7 +93,6 @@ class Tag
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
-    #[Assert\Unique]
     #[Assert\Length(max: 255)]
     #[Groups(['tags:item:get', 'tags:collection:get'])]
     private string $name;

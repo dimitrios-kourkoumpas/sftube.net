@@ -1,0 +1,152 @@
+{% extends 'admin/admin-base-template.html.twig' %}
+
+{% block title %}{{ inflections.plural }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('assets/plugins/jquery.datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/plugins/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/plugins/switchery/switchery.min.css') }}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <table id="{{ inflections.slug }}-datatable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Avatar</th>
+                                <th>Name</th>
+                                <th>Blocked</th>
+                                <th>Can Upload</th>
+                                <th>Can Comment</th>
+                                <th>Videos</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/plugins/jquery.datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/switchery/switchery.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sftube.js') }}"></script>
+{% endblock %}
+
+{% block javascripts_inline %}
+    <script>
+        $(document).ready(function () {
+            $('#{{ inflections.slug }}-datatable').DataTable({
+                ajax: {
+                    url: '{{ path('app.admin.users.datatable') }}',
+                    dataSrc: null,
+                },
+                columns: [
+                    {
+                        data: 'avatar',
+                        render: function (data, type, row, meta) {
+                            let html = '<div class="user-box p-0 m-0">';
+                            html += '<div class="user-img">';
+
+                            html += '<img src="' + data + '" class="img-responsive img-thumbnail" alt="' + row.initials + '" width="75px" height="75px" />'
+
+                            if (row.active_now) {
+                                html += '<div class="user-status online"><i class="zmdi zmdi-dot-circle"></i></div>'
+                            }
+
+                            html += '</div>';
+                            html += '</div>';
+
+                            return html;
+                        },
+                        sClass: 'middle-align',
+                        sortable: false,
+                    }, {
+                        data: 'fullname',
+                        render: function (data, type, row, meta) {
+                            return '<a href="/admin/users/detail/' + row.id + '">' + data + '</a>';
+                        },
+                        sClass: 'middle-align',
+                        sortable: true
+                    }, {
+                        data: 'blocked',
+                        render: function (data, type, row, meta) {
+                            return '<input type="checkbox" class="switchery" data-switch="blocked" data-id="' + row.id + '"' + (data ? ' checked' : '') + ' />';
+                        },
+                        sClass: 'middle-align text-center',
+                        sortable: false
+                    }, {
+                        data: 'can_upload',
+                        render: function (data, type, row, meta) {
+                            return '<input type="checkbox" class="switchery" data-switch="can_upload" data-id="' + row.id + '"' + (data ? ' checked' : '') + ' />';
+                        },
+                        sClass: 'middle-align text-center',
+                        sortable: false
+                    }, {
+                        data: 'can_comment',
+                        render: function (data, type, row, meta) {
+                            return '<input type="checkbox" class="switchery" data-switch="can_comment" data-id="' + row.id + '"' + (data ? ' checked' : '') + ' />';
+                        },
+                        sClass: 'middle-align text-center',
+                        sortable: false
+                    }, {
+                        data: 'videos_count',
+                        sClass: 'middle-align text-center',
+                        sortable: true
+                    }
+                ],
+                order: [[1, 'asc']]
+            });
+
+            $('#{{ inflections.slug }}-datatable').on('draw.dt', function (e, settings) {
+                $.each($('.switchery'), function (index, element) {
+                    if ($(element).data('switchery') === true) {
+                        return;
+                    }
+
+                    new Switchery(element, SFTube.switchery.defaults);
+                });
+            });
+
+            $('#{{ inflections.slug }}-datatable').on('change', '.switchery', function (e) {
+                e.preventDefault();
+
+                const id = $(this).data('id');
+
+                let operation = $(this).data('switch');
+
+                let checked = !!$(this).prop('checked');
+
+                let url = '/admin/users/' + id;
+
+                let fields = {};
+                fields[operation] = checked;
+
+                let options = {
+                    url: url,
+                    fields: fields,
+                    showNotification: true,
+                    meta: {
+                        entitySingular: '{{ inflections.singular }}'
+                    }
+                };
+
+                SFTube.update(options);
+            });
+
+
+        });
+    </script>
+{% endblock %}

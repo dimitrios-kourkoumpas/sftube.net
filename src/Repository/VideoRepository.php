@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\Category;
 use App\Entity\Playlist;
 use App\Entity\Video;
+use App\Entity\Vote;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -172,6 +173,105 @@ class VideoRepository extends ServiceEntityRepository
 
         return $qb;
     }
+
+    /**
+     * @param int $id
+     * @return Video|null
+     */
+    public function findDisableFilter(int $id): ?Video
+    {
+        $filters = $this->_em->getFilters();
+
+        if ($filters->has('convertedPublishedFilter') && $filters->isEnabled('convertedPublishedFilter')) {
+            $filters->disable('convertedPublishedFilter');
+        }
+
+        return $this->find($id);
+    }
+
+    /**
+     * @param int $limit
+     * @return array
+     */
+    public function getMostRecentVideos(int $limit): array
+    {
+        $queryBuilder = $this->createQueryBuilder('v');
+
+        $queryBuilder->select(['v.id', 'v.title', 'v.thumbnail', 'v.createdAt']);
+        $queryBuilder->orderBy('v.createdAt', 'DESC');
+        $queryBuilder->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param int $limit
+     * @return array
+     */
+    public function getMostCommentedVideos(int $limit): array
+    {
+        $queryBuilder = $this->createQueryBuilder('v');
+        $queryBuilder->select(['v.id', 'v.title', 'v.thumbnail', 'COUNT(c.id) AS comments']);
+        $queryBuilder->leftJoin('v.comments', 'c');
+        $queryBuilder->groupBy('v.id');
+        $queryBuilder->orderBy('comments', 'DESC');
+        $queryBuilder->addOrderBy('v.title', 'ASC');
+        $queryBuilder->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param int $limit
+     * @return array
+     */
+    public function getMostTaggedVideos(int $limit): array
+    {
+        $queryBuilder = $this->createQueryBuilder('v');
+        $queryBuilder->select(['v.id', 'v.title', 'v.thumbnail', 'COUNT(t.id) AS count']);
+        $queryBuilder->leftJoin('v.tags', 't');
+        $queryBuilder->groupBy('v.id');
+        $queryBuilder->orderBy('count', 'DESC');
+        $queryBuilder->addOrderBy('v.title', 'ASC');
+        $queryBuilder->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function getVideoUploadsByMonth(): array
+    {
+        $sql = 'SELECT CONCAT(YEAR(`created_at`), "-", MONTH(`created_at`)) AS `date`, COUNT(`video`.`id`) AS `videos`';
+        $sql .= ' FROM `video` GROUP BY MONTH(`created_at`), YEAR(`created_at`)';
+        $sql .= ' ORDER BY YEAR(`created_at`) ASC, MONTH(`created_at`) ASC;';
+
+        $connection = $this->_em->getConnection();
+
+        $statement = $connection->prepare($sql);
+
+        return $statement->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @param int $limit
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getHighestVotedVideos(int $limit): array
+    {
+        $sql = 'SELECT `video`.`id`, `video`.`title`, `video`.`thumbnail`,
+((SELECT COUNT(`vote`.`id`) FROM `vote` WHERE `video`.`id` = `vote`.`video_id` AND `vote`.`vote` = \'' . Vote::UP . '\') * 100) / COUNT(`vote`.`id`) AS `percentage`
+FROM `video`
+LEFT JOIN `vote` ON `video`.`id` = `vote`.`video_id`
+GROUP BY `video`.`id`
+ORDER BY `percentage` DESC, `video`.`title` ASC LIMIT ' . $limit;
+
+        $connection = $this->_em->getConnection();
+
+        $statement = $connection->prepare($sql);
+
+        return $statement->executeQuery()->fetchAllAssociative();
+    }
+
 
 //    /**
 //     * @return Video[] Returns an array of Video objects

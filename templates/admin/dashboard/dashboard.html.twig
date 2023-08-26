@@ -1,1 +1,388 @@
-DASHBOARD
+{% extends 'admin/admin-base-template.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('assets/plugins/switchery/switchery.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/plugins/morris.js/morris.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/plugins/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block title %}{{ inflections.title }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-2 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h5>Total videos</h5>
+                    <h2 class="text-success counterup">{{ data.totals.totalVideos }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h5>Total categories</h5>
+                    <h2 class="text-pink counterup">{{ data.totals.totalCategories }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h5>Total Tags</h5>
+                    <h2 class="text-danger counterup">{{ data.totals.totalTags }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h5>Total users</h5>
+                    <h2 class="text-info counterup">{{ data.totals.totalUsers }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h5>Total playlists</h5>
+                    <h2 class="text-warning counterup">{{ data.totals.totalPlaylists }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h5>Total comments</h5>
+                    <h2 class="text-purple counterup">{{ data.totals.totalComments }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card-box">
+                <div id="videos-upload-line-chart" style="height: 400px;"></div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card-box">
+                <div id="categories-population-doughnut-chart" style="height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h3>Most recent videos</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Video</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for video in data.most_recent_videos %}
+                        <tr>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    <img src="{{ absolute_url(asset(thumbnails_url_segment ~ video.thumbnail)) }}" alt="{{ video.title }}" width="50px" height="50px" />
+                                </a>
+                            </td>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    {{ video.title }}
+                                </a>
+                            </td>
+                            <td class="middle-align text-right">{{ video.createdAt|timeElapsedSinceNow }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h3>Highest voted videos</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Video</th>
+                        <th>&nbsp;</th>
+                        <th class="text-right">%</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for video in data.highest_voted_videos %}
+                        <tr>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    <img src="{{ absolute_url(asset(thumbnails_url_segment ~ video.thumbnail)) }}" alt="{{ video.title }}" width="50px" height="50px" />
+                                </a>
+                            </td>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    {{ video.title }}
+                                </a>
+                            </td>
+                            <td class="middle-align text-right">{{ video.percentage|round(0, 'ceil') }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h3>Most commented videos</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Video</th>
+                        <th>&nbsp;</th>
+                        <th class="text-right">Comments</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for video in data.most_commented_videos %}
+                        <tr>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    <img src="{{ absolute_url(asset(thumbnails_url_segment ~ video.thumbnail)) }}" alt="{{ video.title }}" width="50px" height="50px" />
+                                </a>
+                            </td>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    {{ video.title }}
+                                </a>
+                            </td>
+                            <td class="middle-align text-right">{{ video.comments }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h3>Most tagged videos</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Video</th>
+                        <th>&nbsp;</th>
+                        <th class="text-right">Tags</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for video in data.most_tagged_videos %}
+                        <tr>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    <img src="{{ absolute_url(asset(thumbnails_url_segment ~ video.thumbnail)) }}" alt="{{ video.title }}" width="50px" height="50px" />
+                                </a>
+                            </td>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    {{ video.title }}
+                                </a>
+                            </td>
+                            <td class="middle-align text-right">{{ video.count }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h3>Most populous tags</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Tag</th>
+                        <th class="text-right"># videos</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for tag in data.most_populous_tags %}
+                        <tr>
+                            <td class="middle-align">
+                                <a href="/admin/tags/detail/{{ tag.id }}">{{ tag.name }}</a>
+                            </td>
+                            <td class="middle-align text-right">{{ tag.count }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h3>Most viewed videos</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Video</th>
+                        <th>&nbsp;</th>
+                        <th class="text-right">Views</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for video in data.most_viewed_videos %}
+                        <tr>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    <img src="{{ absolute_url(asset(thumbnails_url_segment ~ video.thumbnail)) }}" alt="{{ video.title }}" width="50px" height="50px" />
+                                </a>
+                            </td>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.videos.detail', {'id': video.id}) }}">
+                                    {{ video.title }}
+                                </a>
+                            </td>
+                            <td class="middle-align text-right">{{ video.views }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h3>Most populous playlists</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Playlist</th>
+                        <th class="text-right">Videos</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for playlist in data.most_populous_playlists %}
+                        <tr>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.playlists.detail', {'id': playlist.id}) }}">{{ playlist.name }}</a>
+                            </td>
+                            <td class="middle-align text-right">{{ playlist.count }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h3>Most active users</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th colspan="2" class="text-left">User</th>
+                        <th class="text-right">Videos</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in data.most_active_users %}
+                        <tr>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.users.detail', {'id': user.id}) }}">
+                                    <img src="{{ asset(avatars_url_segment ~ user.avatar) }}" alt="{{ user.fullname }}" width="50px" height="50px" />
+                                </a>
+                            </td>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.users.detail', {'id': user.id}) }}">{{ user.fullname }}</a>
+                            </td>
+                            <td class="middle-align text-right">{{ user.videos }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h3>Latest logins</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th colspan="2" class="text-left">User</th>
+                        <th class="text-right">on</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in data.latest_logins %}
+                        <tr>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.users.detail', {'id': user.id}) }}">
+                                    <img src="{{ asset(avatars_url_segment ~ user.avatar) }}" alt="{{ user.fullname }}" width="50px" height="50px" />
+                                </a>
+                            </td>
+                            <td class="middle-align">
+                                <a href="{{ path('app.admin.users.detail', {'id': user.id}) }}">{{ user.fullname }}</a>
+                            </td>
+                            <td class="middle-align text-right">{{ user.lastLogin is empty ? '-' : user.lastLogin|date }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/plugins/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/raphael.js/raphael.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/morris.js/morris.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/jquery.counterup/jquery.counterup.min.js') }}"></script>
+
+{% endblock %}
+
+{% block javascripts_inline %}
+    <script>
+        $(document).ready(function () {
+            $('.counterup').counterUp();
+
+            Morris.Line({
+                element: 'videos-upload-line-chart',
+                data: {{ data.charts.video_uploads_by_month|raw }},
+                xkey: 'month',
+                ykeys: ['value'],
+                labels: ['Value'],
+                xLabels: 'month',
+                xLabelFormat: function (x) {
+                    let date = new Date(x);
+
+                    return (date.getMonth() + 1) + '/' + date.getFullYear();
+                },
+                parseTime: true,
+                resize: true,
+                hideHover: 'always'
+            });
+
+            Morris.Donut({
+                element: 'categories-population-doughnut-chart',
+                data: {{ data.charts.categories_population|raw }},
+            });
+        });
+    </script>
+{% endblock %}

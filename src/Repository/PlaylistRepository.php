@@ -41,6 +41,24 @@ class PlaylistRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param int $limit
+     * @return array
+     */
+    public function getMostPopulousPlaylists(int $limit): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        $queryBuilder->select(['p.id', 'p.name', 'COUNT(v.id) as count']);
+        $queryBuilder->leftJoin('p.videos', 'v');
+        $queryBuilder->groupBy('p.id');
+        $queryBuilder->orderBy('count', 'DESC');
+        $queryBuilder->addOrderBy('p.name');
+        $queryBuilder->setMaxResults($limit);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Playlist[] Returns an array of Playlist objects
 //     */
