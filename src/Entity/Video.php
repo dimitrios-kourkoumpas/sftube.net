@@ -223,7 +223,7 @@ class Video
     #[Groups(['videos:item:get'])]
     private bool $allow_comments = true;
 
-    #[ORM\OneToMany(mappedBy: 'video', targetEntity: Vote::class, orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: Vote::class, orphanRemoval: true, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $votes;
 
     #[ORM\ManyToMany(targetEntity: Playlist::class, mappedBy: 'videos', fetch: 'EXTRA_LAZY')]

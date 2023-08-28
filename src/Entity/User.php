@@ -233,7 +233,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[Groups(['admin:read', 'admin:write'])]
     private bool $blocked = false;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Vote::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Vote::class, orphanRemoval: true, fetch: 'EXTRA_LAZY')]
     private Collection $votes;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'mySubscribers')]
@@ -246,6 +246,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     private Collection $mySubscribers;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default' => null])]
+    #[Groups(['users:collection:get', 'users:item:get'])]
     private ?\DateTimeInterface $lastLogin = null;
 
     public function __construct()

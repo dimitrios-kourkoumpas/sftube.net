@@ -193,21 +193,6 @@ class VideoRepository extends ServiceEntityRepository
      * @param int $limit
      * @return array
      */
-    public function getMostRecentVideos(int $limit): array
-    {
-        $queryBuilder = $this->createQueryBuilder('v');
-
-        $queryBuilder->select(['v.id', 'v.title', 'v.thumbnail', 'v.createdAt']);
-        $queryBuilder->orderBy('v.createdAt', 'DESC');
-        $queryBuilder->setMaxResults($limit);
-
-        return $queryBuilder->getQuery()->getResult();
-    }
-
-    /**
-     * @param int $limit
-     * @return array
-     */
     public function getMostCommentedVideos(int $limit): array
     {
         $queryBuilder = $this->createQueryBuilder('v');

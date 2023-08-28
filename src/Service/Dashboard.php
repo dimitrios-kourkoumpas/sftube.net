@@ -46,7 +46,7 @@ final readonly class Dashboard
      */
     public function getMostRecentVideos(int $limit = 5): array
     {
-        return $this->em->getRepository(Video::class)->getMostRecentVideos($limit);
+        return $this->em->getRepository(Video::class)->findBy([], ['createdAt' => 'DESC'], $limit);
     }
 
     /**
@@ -56,6 +56,7 @@ final readonly class Dashboard
     public function getMostCommentedVideos(int $limit = 5)
     {
         return $this->em->getRepository(Video::class)->getMostCommentedVideos($limit);
+//        return $this->em->getRepository(Video::class)->findBy([], ['COUNT(comments)' => 'DESC'], $limit);
     }
 
     /**
