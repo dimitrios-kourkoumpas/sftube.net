@@ -9,6 +9,7 @@ use App\Entity\Playlist;
 use App\Entity\Video;
 use App\Entity\Vote;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -193,32 +194,25 @@ class VideoRepository extends ServiceEntityRepository
      * @param int $limit
      * @return array
      */
-    public function getMostRecentVideos(int $limit): array
-    {
-        $queryBuilder = $this->createQueryBuilder('v');
-
-        $queryBuilder->select(['v.id', 'v.title', 'v.thumbnail', 'v.createdAt']);
-        $queryBuilder->orderBy('v.createdAt', 'DESC');
-        $queryBuilder->setMaxResults($limit);
-
-        return $queryBuilder->getQuery()->getResult();
-    }
-
-    /**
-     * @param int $limit
-     * @return array
-     */
     public function getMostCommentedVideos(int $limit): array
     {
-        $queryBuilder = $this->createQueryBuilder('v');
-        $queryBuilder->select(['v.id', 'v.title', 'v.thumbnail', 'COUNT(c.id) AS comments']);
-        $queryBuilder->leftJoin('v.comments', 'c');
-        $queryBuilder->groupBy('v.id');
-        $queryBuilder->orderBy('comments', 'DESC');
-        $queryBuilder->addOrderBy('v.title', 'ASC');
-        $queryBuilder->setMaxResults($limit);
+        $sql =  'SELECT `video`.`id`, `video`.`title`, `video`.`thumbnail`, COUNT(`comment`.`id`) AS `comments_count` ';
+        $sql .= 'FROM `video` LEFT JOIN `comment` ON `video`.`id` = `comment`.`video_id` ';
+        $sql .= 'GROUP BY `video`.`id` ';
+        $sql .= 'ORDER BY `comments_count` DESC, `video`.`title` ASC ';
+        $sql .= 'LIMIT ' . $limit;
 
-        return $queryBuilder->getQuery()->getResult();
+        $rsm = new ResultSetMappingBuilder($this->_em);
+
+        $rsm->addRootEntityFromClassMetadata(Video::class, 'v');
+
+        $rsm->addFieldResult('v', 'id', 'id');
+        $rsm->addFieldResult('v', 'title', 'title');
+        $rsm->addFieldResult('v', 'thumbnail', 'thumbnail');
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+
+        return $query->getResult();
     }
 
     /**
@@ -258,18 +252,25 @@ class VideoRepository extends ServiceEntityRepository
      */
     public function getHighestVotedVideos(int $limit): array
     {
-        $sql = 'SELECT `video`.`id`, `video`.`title`, `video`.`thumbnail`,
-((SELECT COUNT(`vote`.`id`) FROM `vote` WHERE `video`.`id` = `vote`.`video_id` AND `vote`.`vote` = \'' . Vote::UP . '\') * 100) / COUNT(`vote`.`id`) AS `percentage`
-FROM `video`
-LEFT JOIN `vote` ON `video`.`id` = `vote`.`video_id`
-GROUP BY `video`.`id`
-ORDER BY `percentage` DESC, `video`.`title` ASC LIMIT ' . $limit;
+        $sql = 'SELECT `video`.`id`, `video`.`title`, `video`.`thumbnail`, ';
+        $sql .= '((SELECT COUNT(`vote`.`id`) ';
+            $sql .= 'FROM `vote` ';
+            $sql .= 'WHERE `video`.`id` = `vote`.`video_id` AND `vote`.`vote` = \'' . Vote::UP . '\') * 100) / COUNT(`vote`.`id`) AS `percentage` ';
+        $sql .= 'FROM `video` ';
+        $sql .= 'LEFT JOIN `vote` ON `video`.`id` = `vote`.`video_id` ';
+        $sql .= 'GROUP BY `video`.`id` ';
+        $sql .= 'ORDER BY `percentage` DESC, `video`.`title` ASC LIMIT ' . $limit;
 
-        $connection = $this->_em->getConnection();
+        $rsm = new ResultSetMappingBuilder($this->_em);
 
-        $statement = $connection->prepare($sql);
+        $rsm->addRootEntityFromClassMetadata(Video::class, 'v');
+        $rsm->addFieldResult('v', 'id', 'id');
+        $rsm->addFieldResult('v', 'title', 'title');
+        $rsm->addFieldResult('v', 'thumbnail', 'thumbnail');
 
-        return $statement->executeQuery()->fetchAllAssociative();
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+
+        return $query->getResult();
     }
 
 

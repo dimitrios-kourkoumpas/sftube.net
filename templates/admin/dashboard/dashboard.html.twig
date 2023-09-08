@@ -131,7 +131,7 @@
                                     {{ video.title }}
                                 </a>
                             </td>
-                            <td class="middle-align text-right">{{ video.percentage|round(0, 'ceil') }}</td>
+                            <td class="middle-align text-right">{{ video.votesPercentage|round(0, 'ceil') }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -162,7 +162,7 @@
                                     {{ video.title }}
                                 </a>
                             </td>
-                            <td class="middle-align text-right">{{ video.comments }}</td>
+                            <td class="middle-align text-right">{{ video.commentsCount }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

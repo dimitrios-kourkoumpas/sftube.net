@@ -1,2 +1,5 @@
 api_platform:
   name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
+  defaults:
+    normalization_context:
+      skip_null_values: false
