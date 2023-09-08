@@ -30,5 +30,4 @@ use App\ApiResource\State\Provider\AdminDashboardProvider;
 )]
 final class Dashboard
 {
-//    public int $foo = 3;
 }

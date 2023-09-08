@@ -53,10 +53,9 @@ final readonly class Dashboard
      * @param int $limit
      * @return Video[]
      */
-    public function getMostCommentedVideos(int $limit = 5)
+    public function getMostCommentedVideos(int $limit = 5): array
     {
         return $this->em->getRepository(Video::class)->getMostCommentedVideos($limit);
-//        return $this->em->getRepository(Video::class)->findBy([], ['COUNT(comments)' => 'DESC'], $limit);
     }
 
     /**

@@ -695,6 +695,7 @@ class Video
     /**
      * @return int
      */
+    #[Groups(['videos:collection:get', 'videos:item:get'])]
     public function getVotesPercentage(): int
     {
         $total = $this->getTotalVotes();
