@@ -9,11 +9,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
- * Class VideWatchEventListener
+ * Class VideoWatchEventListener
  * @package App\EventListener
  */
 #[AsEventListener(event: VideoWatchEvent::class)]
-final readonly class VideWatchEventListener
+final readonly class VideoWatchEventListener
 {
     /**
      * @param EntityManagerInterface $em
