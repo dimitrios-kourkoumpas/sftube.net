@@ -23,7 +23,7 @@ final class PlaylistsController extends BaseController
     /**
      * @return Response
      */
-    #[Route('/playlists', name: 'app.playlists.index', methods: ['GET'])]
+    #[Route('/playlists', name: 'app.playlists.index', methods: [Request::METHOD_GET])]
     public function index(): Response
     {
         $repository = $this->em->getRepository(Playlist::class);
@@ -57,7 +57,7 @@ final class PlaylistsController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/playlists/edit/{id}', name: 'app.playlists.edit', methods: ['GET', 'POST'])]
+    #[Route('/playlists/edit/{id}', name: 'app.playlists.edit', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     #[IsGranted('edit', 'playlist')]
     public function edit(Playlist $playlist, Request $request): Response
     {
@@ -77,7 +77,7 @@ final class PlaylistsController extends BaseController
         ]);
     }
 
-    #[Route('/playlists/delete/{id}', name: 'app.playlists.delete', methods: ['POST'])]
+    #[Route('/playlists/delete/{id}', name: 'app.playlists.delete', methods: [Request::METHOD_POST])]
     #[IsGranted('delete', 'playlist')]
     public function delete(Request $request, Playlist $playlist): Response
     {
@@ -96,7 +96,7 @@ final class PlaylistsController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/playlists/{id}/{slug}', name: 'app.playlists.view', methods: ['GET'])]
+    #[Route('/playlists/{id}/{slug}', name: 'app.playlists.view', methods: [Request::METHOD_GET])]
     public function view(Playlist $playlist, Request $request): Response
     {
         if ($playlist->isPrivate()) {
@@ -134,7 +134,7 @@ final class PlaylistsController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/playlists/create', name: 'app.playlists.create', methods: ['GET', 'POST'])]
+    #[Route('/playlists/create', name: 'app.playlists.create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     #[IsGranted(User::ROLE_USER)]
     public function create(Request $request): Response
     {
@@ -163,7 +163,7 @@ final class PlaylistsController extends BaseController
     /**
      * @return Response
      */
-    #[Route('/my-playlists', name: 'app.playlists.my', methods: ['GET'])]
+    #[Route('/my-playlists', name: 'app.playlists.my', methods: [Request::METHOD_GET])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function my(): Response
     {

@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  */
 final class RegistrationController extends BaseController
 {
-    #[Route('/register', name: 'app.register', methods: ['GET', 'POST'])]
+    #[Route('/register', name: 'app.register', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     #[IsGranted('register')]
     public function register(Request $request, UserRegistration $registration, Security $security): Response
     {

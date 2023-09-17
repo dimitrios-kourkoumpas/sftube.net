@@ -26,7 +26,7 @@ final class VideosController extends BaseController
      * @param Video $video
      * @return Response
      */
-    #[Route('/watch/{id}/{slug}', name: 'app.videos.watch', methods: ['GET'])]
+    #[Route('/watch/{id}/{slug}', name: 'app.videos.watch', methods: [Request::METHOD_GET])]
     public function watch(Video $video): Response
     {
         // increment views
@@ -42,7 +42,7 @@ final class VideosController extends BaseController
      * @param MessageBusInterface $bus
      * @return Response
      */
-    #[Route('/upload', name: 'app.videos.upload', methods: ['GET', 'POST'])]
+    #[Route('/upload', name: 'app.videos.upload', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     #[IsGranted('upload')]
     public function upload(Request $request, MessageBusInterface $bus): Response
     {
@@ -77,7 +77,7 @@ final class VideosController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/edit/{id}', name: 'app.videos.edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app.videos.edit', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function edit(Video $video, Request $request): Response
     {
         $form = $this->createForm(VideoType::class, $video);
@@ -107,7 +107,7 @@ final class VideosController extends BaseController
      * @param Video $video
      * @return Response
      */
-    #[Route('/video/{id}/delete', name: 'app.videos.delete', methods: ['POST'])]
+    #[Route('/video/{id}/delete', name: 'app.videos.delete', methods: [Request::METHOD_POST])]
     #[IsGranted('delete', 'video')]
     public function delete(Request $request, Video $video): Response
     {
@@ -125,7 +125,7 @@ final class VideosController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/my-videos', name: 'app.videos.my', methods: ['GET'])]
+    #[Route('/my-videos', name: 'app.videos.my', methods: [Request::METHOD_GET])]
     #[IsGranted(User::ROLE_USER)]
     public function myVideos(Request $request): Response
     {
