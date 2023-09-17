@@ -50,7 +50,7 @@
 
                 <p class="text-muted font-13 m-b-5">
                     <strong>{{ t('ui.template.videos.watch.text.category')|trans }} :</strong> <span class="m-l-15">
-                        <a href="javascript:void(0);">
+                        <a href="{{ path('app.category.view', {'slug': video.category.slug}) }}">
                             {{ video.category.name }}
                         </a>
                     </span>
@@ -60,7 +60,7 @@
                     <p class="text-muted font-13 m-b-5"><strong>{{ t('ui.template.videos.watch.text.tags')|trans }}: </strong>
                         {% for tag in video.tags %}
                             <span class="m-l-15">
-                                <a href="javascript:void(0);">
+                                <a href="{{ path('app.tags.view', {'slugs': tag.slug}) }}">
                                     {{ tag.name }}
                                 </a>
                             </span>
