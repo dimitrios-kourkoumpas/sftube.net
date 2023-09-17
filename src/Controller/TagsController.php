@@ -18,7 +18,7 @@ final class TagsController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/tags', name: 'app.tags.index', methods: ['GET'])]
+    #[Route('/tags', name: 'app.tags.index', methods: [Request::METHOD_GET])]
     public function index(Request $request): Response
     {
         $page = $request->query->getInt('page', 1);
@@ -48,7 +48,7 @@ final class TagsController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/tags/{slugs}', name: 'app.tags.view', requirements: ['slugs' => '.+'], methods: ['GET'])]
+    #[Route('/tags/{slugs}', name: 'app.tags.view', requirements: ['slugs' => '.+'], methods: [Request::METHOD_GET])]
     public function view(string $slugs, Request $request): Response
     {
         $page = $request->query->getInt('page', 1);

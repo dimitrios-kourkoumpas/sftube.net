@@ -19,7 +19,7 @@ final class HomepageController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/', name: 'app.homepage', methods: ['GET'])]
+    #[Route('/', name: 'app.homepage', methods: [Request::METHOD_GET])]
     public function index(Request $request): Response
     {
         $page = $request->query->getInt('page', 1);

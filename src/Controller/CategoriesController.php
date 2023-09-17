@@ -21,7 +21,7 @@ final class CategoriesController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/category/{slug}', name: 'app.category.view', methods: ['GET'])]
+    #[Route('/category/{slug}', name: 'app.category.view', methods: [Request::METHOD_GET])]
     public function view(Category $category, Request $request): Response
     {
         $page = $request->query->getInt('page', 1);

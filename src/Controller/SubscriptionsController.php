@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -19,7 +20,7 @@ final class SubscriptionsController extends BaseController
     /**
      * @return Response
      */
-    #[Route('/my-subscribers', name: 'app.subscribers.my', methods: ['GET'])]
+    #[Route('/my-subscribers', name: 'app.subscribers.my', methods: [Request::METHOD_GET])]
     public function mySubscribers(): Response
     {
         $user = $this->getUser();
@@ -32,7 +33,7 @@ final class SubscriptionsController extends BaseController
     /**
      * @return Response
      */
-    #[Route('/my-subscriptions', name: 'app.subscriptions.my', methods: ['GET'])]
+    #[Route('/my-subscriptions', name: 'app.subscriptions.my', methods: [Request::METHOD_GET])]
     public function mySubscriptions(): Response
     {
         $user = $this->getUser();

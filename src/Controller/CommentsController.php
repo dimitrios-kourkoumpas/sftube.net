@@ -23,7 +23,7 @@ final class CommentsController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/videos/{id}/comment', name: 'app.videos.comment', methods: ['POST'])]
+    #[Route('/videos/{id}/comment', name: 'app.videos.comment', methods: [Request::METHOD_POST])]
     #[IsGranted('comment', 'video')]
     public function comment(Video $video, Request $request): Response
     {
@@ -54,7 +54,7 @@ final class CommentsController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/videos/{id}/comments', name: 'app.videos.comments', methods: ['GET'])]
+    #[Route('/videos/{id}/comments', name: 'app.videos.comments', methods: [Request::METHOD_GET])]
     public function comments(Video $video, Request $request): Response
     {
         if ($request->isXmlHttpRequest()) {

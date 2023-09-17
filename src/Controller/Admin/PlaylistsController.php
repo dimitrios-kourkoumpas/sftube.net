@@ -40,7 +40,7 @@ final class PlaylistsController extends AdminCRUDController
      * @return Response
      * @throws TransportExceptionInterface
      */
-    #[Route('/datatable', name: 'app.admin.playlists.datatable', methods: ['GET'])]
+    #[Route('/datatable', name: 'app.admin.playlists.datatable', methods: [Request::METHOD_GET])]
     public function datatable(): Response
     {
         $response = $this->getCollection(self::ENTITY);

@@ -22,7 +22,7 @@ final class SearchController extends BaseController
      * @param Request $request
      * @return Response
      */
-    #[Route('/search', name: 'app.search', methods: ['GET'])]
+    #[Route('/search', name: 'app.search', methods: [Request::METHOD_GET])]
     public function search(TransformedFinder $finder, Request $request): Response
     {
         $term = $request->query->get('term');
