@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -14,6 +15,7 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\ApiResource\State\Processor\VideosTagsProcessor;
 use App\Repository\TagRepository;
 use App\Util\Slugger;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -65,6 +67,40 @@ use Symfony\Component\Validator\Constraints as Assert;
             normalizationContext: [
                 'groups' => [
                     'tags:item:get',
+                ],
+            ]
+        ),
+        new Post(
+            read: false,
+            uriTemplate: '/videos/{id}/tags',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Video::class,
+                    toProperty: 'tags'
+                ),
+            ],
+            processor: VideosTagsProcessor::class,
+            normalizationContext: [
+                'groups' => [
+                    'tags:collection:get',
+                ],
+            ]
+        ),
+        new Delete(
+            uriTemplate: '/videos/{id}/tags/{tagId}',
+            uriVariables: [
+                'id' => new Link(
+                    toProperty: 'videos',
+                    fromClass: Video::class
+                ),
+                'tagId' => new Link(
+                    fromClass: Tag::class
+                ),
+            ],
+            processor: VideosTagsProcessor::class,
+            normalizationContext: [
+                'groups' => [
+                    'tags:collection:get',
                 ],
             ]
         ),
