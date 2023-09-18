@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
+use App\ApiResource\State\Processor\VideosCommentsProcessor;
 use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,6 +42,37 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'createdAt' => 'DESC',
             ]
         ),
+        new Post(
+            read: false,
+            uriTemplate: '/videos/{id}/comments',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Video::class,
+                    toProperty: 'comments'
+                ),
+            ],
+            processor: VideosCommentsProcessor::class,
+            security: 'is_granted(\'' . User::ROLE_USER . '\')',
+            normalizationContext: [
+                'groups' => [
+                    'comments:collection:get',
+                ],
+            ]
+        ),
+        new Delete(
+            uriTemplate: '/videos/{id}/comments/{commentId}',
+            uriVariables: [
+                'id' => new Link(
+                    toProperty: 'video',
+                    fromClass: Video::class
+                ),
+                'commentId' => new Link(
+                    fromClass: Comment::class
+                ),
+            ],
+            processor: VideosCommentsProcessor::class,
+            security: 'is_granted(\'' . User::ROLE_USER . '\')'
+        )
     ]
 )]
 class Comment
@@ -149,5 +182,10 @@ class Comment
         $this->video = $video;
 
         return $this;
+    }
+
+    public function isOwner(?User $user): bool
+    {
+        return $user && $this->user->getId() === $user->getId();
     }
 }
