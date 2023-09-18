@@ -9,7 +9,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
-use App\ApiResource\State\Processor\VideosCommentsProcessor;
+use App\ApiResource\State\Processor\VideoCommentsProcessor;
 use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -51,7 +51,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                     toProperty: 'comments'
                 ),
             ],
-            processor: VideosCommentsProcessor::class,
+            processor: VideoCommentsProcessor::class,
             security: 'is_granted(\'' . User::ROLE_USER . '\')',
             normalizationContext: [
                 'groups' => [
@@ -70,7 +70,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                     fromClass: Comment::class
                 ),
             ],
-            processor: VideosCommentsProcessor::class,
+            processor: VideoCommentsProcessor::class,
             security: 'is_granted(\'' . User::ROLE_USER . '\')'
         )
     ]
