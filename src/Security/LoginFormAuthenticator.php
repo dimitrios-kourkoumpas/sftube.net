@@ -71,7 +71,7 @@ final class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         $user = $token->getUser();
 
-        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
+        if ($user->hasRole(User::ROLE_ADMIN)) {
             $request->getSession()->set('jwt', $this->tokenManager->create($user));
 
             $routeName = 'app.admin.dashboard';

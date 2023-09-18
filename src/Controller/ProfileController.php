@@ -22,7 +22,7 @@ final class ProfileController extends BaseController
     #[Route('/profile/{id}', name: 'app.user.profile', methods: [Request::METHOD_GET])]
     public function profile(User $user): Response
     {
-        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
+        if ($user->hasRole(User::ROLE_ADMIN)) {
             $this->addFlash('danger', $this->translator->trans('controller.profile.profile.flash.can-not-access-profile'));
 
             return $this->redirectToRoute('app.homepage');

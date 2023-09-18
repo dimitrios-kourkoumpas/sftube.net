@@ -325,6 +325,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     }
 
     /**
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->roles);
+    }
+
+    /**
      * @see PasswordAuthenticatedUserInterface
      *
      * @return string
