@@ -194,6 +194,10 @@ controller:
         create:
             flash:
                 playlist-created: 'Playlist successfully created'
+    profile:
+        profile:
+            flash:
+                can-not-access-profile: 'You can not access this profile'
 form:
     video:
         label:
