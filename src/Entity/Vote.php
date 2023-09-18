@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
+use App\ApiResource\State\Processor\VideoVotesProcessor;
 use App\Repository\VoteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +17,22 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  */
 #[ORM\Entity(repositoryClass: VoteRepository::class)]
+#[ApiResource(
+    operations: [
+        new Post(
+            read: false,
+            uriTemplate: '/videos/{id}/votes',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Video::class,
+                    toProperty: 'votes'
+                ),
+            ],
+            processor: VideoVotesProcessor::class,
+            security: 'is_granted(\'' . User::ROLE_USER . '\')'
+        ),
+    ]
+)]
 class Vote
 {
     public const UP = 'up';
