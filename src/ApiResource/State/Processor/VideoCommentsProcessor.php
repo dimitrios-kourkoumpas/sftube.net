@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * Class VideosCommentsProcessor
  * @package App\ApiResource\State\Processor
  */
-final readonly class VideosCommentsProcessor implements ProcessorInterface
+final readonly class VideoCommentsProcessor implements ProcessorInterface
 {
     /**
      * @param EntityManagerInterface $em
@@ -42,25 +42,33 @@ final readonly class VideosCommentsProcessor implements ProcessorInterface
         $user = $this->security->getUser();
 
         if ($operation instanceof Post) {
-            $data->setUser($user);
+            if ($user->getCanComment()) {
+                $data->setUser($user);
 
-            $data->setVideo($video);
+                $data->setVideo($video);
 
-            $this->em->persist($data);
-        }
-
-        if ($operation instanceof Delete) {
-            $comment = $this->em->getRepository(Comment::class)->find($uriVariables['commentId']);
-
-            if ($comment->isOwner($user)) {
-                $video->removeComment($comment);
-
-                $this->em->persist($video);
+                $this->em->persist($data);
+                $this->em->flush();
             } else {
                 throw new AccessDeniedException();
             }
         }
 
-        $this->em->flush();
+        if ($operation instanceof Delete) {
+            if ($user->getCanComment()) {
+                $comment = $this->em->getRepository(Comment::class)->find($uriVariables['commentId']);
+
+                if ($comment->isOwner($user)) {
+                    $video->removeComment($comment);
+
+                    $this->em->persist($video);
+                    $this->em->flush();
+                } else {
+                    throw new AccessDeniedException();
+                }
+            } else {
+                throw new AccessDeniedException();
+            }
+        }
     }
 }
