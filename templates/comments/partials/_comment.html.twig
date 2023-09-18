@@ -4,7 +4,7 @@
     <div class="comment-body">
         <div class="comment-text">
             <div class="comment-header">
-                <a href="javascript:void(0);">
+                <a href="{{ path('app.user.profile', {'id': comment.user.id}) }}">
                     {{ comment.user.fullname }}
                 </a>
                 <span>{{ comment.createdAt|timeElapsedSinceNow }}</span>

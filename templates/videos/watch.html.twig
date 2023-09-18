@@ -41,7 +41,7 @@
 
                 <p class="text-muted font-13"><strong>{{ t('ui.template.videos.watch.text.uploader')|trans }} :</strong>
                     <span class="m-l-15">
-                        <a href="javascript:void(0);">{{ video.user.fullname }}</a>
+                        <a href="{{ path('app.user.profile', {'id': video.user.id}) }}">{{ video.user.fullname }}</a>
                     </span>
                 </p>
 
