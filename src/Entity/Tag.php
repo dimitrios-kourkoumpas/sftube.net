@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -17,6 +16,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\ApiResource\State\Processor\VideosTagsProcessor;
 use App\Repository\TagRepository;
+use App\Security\Voter\VideoVoter;
 use App\Util\Slugger;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -80,6 +80,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 ),
             ],
             processor: VideosTagsProcessor::class,
+            security: 'is_granted(\'' . VideoVoter::EDIT . '\')',
             normalizationContext: [
                 'groups' => [
                     'tags:collection:get',
@@ -98,6 +99,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 ),
             ],
             processor: VideosTagsProcessor::class,
+            security: 'is_granted(\'' . VideoVoter::DELETE . '\')',
             normalizationContext: [
                 'groups' => [
                     'tags:collection:get',
