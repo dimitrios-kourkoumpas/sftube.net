@@ -149,13 +149,13 @@ class Video
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups(['videos:collection:get', 'videos:item:get'])]
+    #[Groups(['videos:collection:get', 'videos:item:get', 'comments-with-video:collection:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 5, max: 255)]
-    #[Groups(['videos:collection:get', 'videos:item:get'])]
+    #[Groups(['videos:collection:get', 'videos:item:get', 'comments-with-video:collection:get'])]
     private string $title;
 
     #[ORM\Column(length: 255)]
@@ -166,7 +166,7 @@ class Video
     private ?string $description = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true, options: ['default' => self::NOT_AVAILABLE])]
-    #[Groups(['videos:collection:get', 'videos:item:get'])]
+    #[Groups(['videos:collection:get', 'videos:item:get', 'comments-with-video:collection:get'])]
     private string $thumbnail = self::NOT_AVAILABLE;
 
     #[Vich\UploadableField(mapping: 'videos', fileNameProperty: 'filename')]

@@ -80,16 +80,16 @@ class Comment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups(['comments:collection:get'])]
+    #[Groups(['comments:collection:get', 'comments-with-video:collection:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
-    #[Groups(['comments:collection:get'])]
+    #[Groups(['comments:collection:get', 'comments-with-video:collection:get'])]
     private string $comment;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    #[Groups(['comments:collection:get'])]
+    #[Groups(['comments:collection:get', 'comments-with-video:collection:get'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
@@ -99,6 +99,7 @@ class Comment
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['comments-with-video:collection:get'])]
     private ?Video $video = null;
 
     /**
