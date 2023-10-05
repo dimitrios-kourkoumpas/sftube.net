@@ -65,14 +65,14 @@ class Playlist
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['playlists:item:get', 'playlists:collection:get'])]
+    #[Groups(['playlists:item:get', 'playlists:collection:get', 'playlists-without-user:collection:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     #[ApiFilter(OrderFilter::class, arguments: ['orderParameterName' => 'order'])]
-    #[Groups(['playlists:item:get', 'playlists:collection:get'])]
+    #[Groups(['playlists:item:get', 'playlists:collection:get', 'playlists-without-user:collection:get'])]
     private string $name;
 
     #[ORM\Column(type: Types::STRING, length: 255)]

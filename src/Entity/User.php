@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\ApiResource\State\Processor\UserRegistrationProcessor;
 use App\ApiResource\State\Provider\MeProvider;
+use App\ApiResource\State\Provider\ProfileProvider;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -147,6 +148,60 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 ],
             ]
         ),
+        new Get(
+            uriTemplate: '/profile/{id}',
+            provider: ProfileProvider::class,
+            normalizationContext: [
+                'groups' => [
+                    'users:profile:get',
+                ],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/profile/{id}/videos',
+            provider: ProfileProvider::class,
+            normalizationContext: [
+                'groups' => [
+                    'videos:collection:get',
+                ],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/profile/{id}/comments',
+            provider: ProfileProvider::class,
+            normalizationContext: [
+                'groups' => [
+                    'comments-with-video:collection:get',
+                ],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/profile/{id}/playlists',
+            provider: ProfileProvider::class,
+            normalizationContext: [
+                'groups' => [
+                    'playlists-without-user:collection:get',
+                ],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/profile/{id}/subscribers',
+            provider: ProfileProvider::class,
+            normalizationContext: [
+                'groups' => [
+                    'users:collection:get',
+                ],
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/profile/{id}/subscriptions',
+            provider: ProfileProvider::class,
+            normalizationContext: [
+                'groups' => [
+                    'users:collection:get',
+                ],
+            ]
+        ),
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
@@ -163,14 +218,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'playlists:collection:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'playlists:collection:get', 'users:profile:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Assert\Length(max: 180)]
-    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'users:profile:get'])]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::JSON)]
@@ -202,7 +257,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      * @var string $avatar
      */
     #[ORM\Column(type: Types::STRING, options: ['default' => self::GENERIC_AVATAR])]
-    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'users:profile:get'])]
     private string $avatar = self::GENERIC_AVATAR;
 
     #[Vich\UploadableField(mapping: 'avatars', fileNameProperty: 'avatar')]
@@ -423,7 +478,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     /**
      * @return string
      */
-    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'playlists:collection:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'playlists:collection:get', 'users:profile:get'])]
     public function getFullname(): string
     {
         return $this->firstname . ' ' . $this->lastname;
