@@ -54,8 +54,6 @@ final readonly class ExtractVideoMessageHandler
 
         $this->extractor->extract($video);
 
-        $filters->enable('convertedPublishedFilter');
-
         $host = $this->getFullHost($this->router);
 
         // publish SSE
