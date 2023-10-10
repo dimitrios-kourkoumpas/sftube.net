@@ -43,7 +43,7 @@
                     <span class="m-l-15">
                         <a href="{{ path('app.user.profile', {'id': video.user.id}) }}">{{ video.user.fullname }}</a>
 
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id is not same as(video.user.id) %}
                             {% set _btn_class = video.user.hasSubscriber(app.user) ? 'btn-danger' : 'btn-success' %}
                             {% set _operation = video.user.hasSubscriber(app.user) ? 'remove' : 'add' %}
 
@@ -223,53 +223,54 @@
             })
         });
 
-        $('#addRemoveSubscriber').on('click', function (e) {
-            e.preventDefault();
+        {% if app.user.id is not same as(video.user.id) %}
+            $('#addRemoveSubscriber').on('click', function (e) {
+                e.preventDefault();
 
-            const btn = $(this);
-            const operation = btn.data('operation');
+                const btn = $(this);
+                const operation = btn.data('operation');
 
-            $.ajax({
-                url: '{{ path('app.subscriptions.add-remove-subscriber') }}',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    user_id: {{ video.user.id }},
-                    subscriber_id: {{ app.user.id }},
-                    operation: operation
-                },
-                success: function (response, status, xhr) {
-                    if (response.success) {
-                        const span = btn.children('span');
+                $.ajax({
+                    url: '{{ path('app.subscriptions.add-remove-subscriber') }}',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        subscriber_id: {{ video.user.id }},
+                        operation: operation
+                    },
+                    success: function (response, status, xhr) {
+                        if (response.success) {
+                            const span = btn.children('span');
 
-                        if (operation === 'add') {
-                            toastr.success('{{ t('ui.template.videos.watch.toastr.message.subscription-added')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.toastr.defaults);
+                            if (operation === 'add') {
+                                toastr.success('{{ t('ui.template.videos.watch.toastr.message.subscription-added')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.toastr.defaults);
 
-                            span.removeClass('btn-success').addClass('btn-danger');
-                            btn.data('operation', 'remove');
+                                span.removeClass('btn-success').addClass('btn-danger');
+                                btn.data('operation', 'remove');
+                            } else {
+                                toastr.success('{{ t('ui.template.videos.watch.toastr.message.subscription-removed')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.toastr.defaults);
+
+                                span.removeClass('btn-danger').addClass('btn-success');
+                                btn.data('operation', 'add');
+                            }
                         } else {
-                            toastr.success('{{ t('ui.template.videos.watch.toastr.message.subscription-removed')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.success')|trans }}', SFTube.toastr.defaults);
-
-                            span.removeClass('btn-danger').addClass('btn-success');
-                            btn.data('operation', 'add');
+                            if (operation === 'add') {
+                                toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-adding-subscription')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
+                            } else {
+                                toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-removing-subscription')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
+                            }
                         }
-                    } else {
+                    },
+                    error: function (xhr, status, error) {
                         if (operation === 'add') {
                             toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-adding-subscription')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
                         } else {
                             toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-removing-subscription')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
                         }
                     }
-                },
-                error: function (xhr, status, error) {
-                    if (operation === 'add') {
-                        toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-adding-subscription')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
-                    } else {
-                        toastr.error('{{ t('ui.template.videos.watch.toastr.message.error-removing-subscription')|trans }}', '{{ t('ui.template.videos.watch.toastr.title.error')|trans }}', SFTube.toastr.defaults);
-                    }
-                }
+                });
             });
-        });
+        {% endif %}
 
     {% endif %}
     </script>
