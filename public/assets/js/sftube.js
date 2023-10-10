@@ -1,4 +1,4 @@
-let SFTube = {
+SFTube = {
     constants: {
         HTTP_UNPROCESSABLE_ENTITY: 422
     },

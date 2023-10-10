@@ -91,6 +91,10 @@ ui:
                         vote-submitted: 'Vote submitted'
                         error-getting-votes: 'Error getting votes'
                         error-submitting-vote: 'Error submitting vote'
+                        subscription-added: 'Subscription added'
+                        subscription-removed: 'Subscription removed'
+                        error-adding-subscription: 'Error adding subscription'
+                        error-removing-subscription: 'Error removing subscription'
                     title:
                         success: Success!
                         error: Error!
