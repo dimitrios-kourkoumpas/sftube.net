@@ -52,18 +52,17 @@ final class SubscriptionsController extends BaseController
     public function addRemoveSubscriber(Request $request): JsonResponse
     {
         if ($request->isXmlHttpRequest()) {
-            $repository = $this->em->getRepository(User::class);
+            $user = $this->getUser();
 
-            $user = $repository->find($request->request->get('user_id'));
-            $subscriberUser = $repository->find($request->request->get('subscriber_id'));
+            $targetUser = $this->em->getRepository(User::class)->find($request->request->get('subscriber_id'));
 
             $operation = $request->request->get('operation');
 
             $method = $operation . 'Subscriber';
 
-            $user->$method($subscriberUser);
+            $targetUser->$method($user);
 
-            $this->em->persist($user);
+            $this->em->persist($targetUser);
             $this->em->flush();
 
             return $this->json([
