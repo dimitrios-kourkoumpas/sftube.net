@@ -57,7 +57,7 @@ final readonly class ExtractVideoMessageHandler
         $host = $this->getFullHost($this->router);
 
         // publish SSE
-        $this->hub->publish(new Update('http://localhost/videos/published', json_encode([
+        $this->hub->publish(new Update($this->parameters->get('app.mercure.video.published.topic'), json_encode([
             'title' => $video->getTitle(),
             'thumbnail' => $host . $this->parameters->get('web.images.videos.thumbnails.url_segment') . $video->getThumbnail(),
             'user' => [

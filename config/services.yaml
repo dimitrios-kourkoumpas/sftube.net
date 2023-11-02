@@ -30,6 +30,8 @@ parameters:
     web.videos.previews.url_segment: 'assets/videos/previews/'
     web.images.users.avatars.url_segment: 'assets/images/users/avatars/'
 
+    app.mercure.video.published.topic: 'http://localhost/videos/published'
+
 services:
     # default configuration for services in *this* file
     _defaults:

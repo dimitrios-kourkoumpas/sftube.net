@@ -109,7 +109,7 @@
             <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
             <script>
-                const videoPublishedEventSource = new EventSource("{{ mercure('http://localhost/videos/published')|escape('js') }}");
+                const videoPublishedEventSource = new EventSource("{{ mercure(video_published_topic)|escape('js') }}");
                 videoPublishedEventSource.onmessage = event => {
                     const video = JSON.parse(event.data);
 
