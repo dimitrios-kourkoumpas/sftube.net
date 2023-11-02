@@ -12,6 +12,8 @@ twig:
         previews_url_segment: '%web.videos.previews.url_segment%'
         avatars_url_segment: '%web.images.users.avatars.url_segment%'
 
+        video_published_topic: '%app.mercure.video.published.topic%'
+
         configuration: '@App\Service\Configurations'
 
 when@test:
