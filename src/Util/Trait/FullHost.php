@@ -22,7 +22,7 @@ trait FullHost
         $host = $context->getHost();
         $httpPort = $context->getHttpPort();
 
-        $port = $httpPort === 80 ? '' : ':' . $httpPort;
+        $port = $httpPort === 80 || $httpPort === 443 ? '' : ':' . $httpPort;
 
         return $scheme . '://' . $host . $port . '/';
     }
