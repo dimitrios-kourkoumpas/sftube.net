@@ -3476,25 +3476,25 @@
         },
         {
             "name": "snc/redis-bundle",
-            "version": "4.6.1",
+            "version": "4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/snc/SncRedisBundle.git",
-                "reference": "54ba394d103c801305eafa5d25c3e560ec826f9a"
+                "reference": "ff9c4e6f8a8292f2549f07c5c303d97d8e19374d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/snc/SncRedisBundle/zipball/54ba394d103c801305eafa5d25c3e560ec826f9a",
-                "reference": "54ba394d103c801305eafa5d25c3e560ec826f9a",
+                "url": "https://api.github.com/repos/snc/SncRedisBundle/zipball/ff9c4e6f8a8292f2549f07c5c303d97d8e19374d",
+                "reference": "ff9c4e6f8a8292f2549f07c5c303d97d8e19374d",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0",
                 "symfony/deprecation-contracts": "^2 || ^3",
-                "symfony/framework-bundle": "^4.4 || ^5.3 || ^6.0",
-                "symfony/http-foundation": "^4.4 || ^5.3 || ^6.0",
+                "symfony/framework-bundle": "^4.4 || ^5.3 || ^6.0 || ^7.0",
+                "symfony/http-foundation": "^4.4 || ^5.3 || ^6.0 || ^7.0",
                 "symfony/service-contracts": ">=1.0",
-                "symfony/var-dumper": "^4.4 || ^5.3 || ^6.0"
+                "symfony/var-dumper": "^4.4 || ^5.3 || ^6.0 || ^7.0"
             },
             "conflict": {
                 "ext-redis": "<5.3",
@@ -3509,23 +3509,22 @@
                 "monolog/monolog": "*",
                 "phpunit/phpunit": "^8.5.32 || ^9.5.28",
                 "predis/predis": "^2.0",
-                "symfony/browser-kit": "^4.4 || ^5.3 || ^6.0",
-                "symfony/cache": "^4.4 || ^5.3 || ^6.0",
-                "symfony/console": "^4.4 || ^5.3 || ^6.0",
-                "symfony/dom-crawler": "^4.4 || ^5.3 || ^6.0",
-                "symfony/filesystem": "^4.4 || ^5.3 || ^6.0",
-                "symfony/phpunit-bridge": "^6.0",
+                "symfony/browser-kit": "^4.4 || ^5.3 || ^6.0 || ^7.0",
+                "symfony/cache": "^4.4 || ^5.3 || ^6.0 || ^7.0",
+                "symfony/console": "^4.4 || ^5.3 || ^6.0 || ^7.0",
+                "symfony/dom-crawler": "^4.4 || ^5.3 || ^6.0 || ^7.0",
+                "symfony/filesystem": "^4.4 || ^5.3 || ^6.0 || ^7.0",
+                "symfony/phpunit-bridge": "^6.0 || ^7.0",
                 "symfony/profiler-pack": "^1.0",
-                "symfony/stopwatch": "^4.4 || ^5.3 || ^6.0",
-                "symfony/twig-bundle": "^4.4 || ^5.3 || ^6.0",
-                "symfony/yaml": "^4.4 || ^5.3 || ^6.0",
+                "symfony/stopwatch": "^4.4 || ^5.3 || ^6.0 || ^7.0",
+                "symfony/twig-bundle": "^4.4 || ^5.3 || ^6.0 || ^7.0",
+                "symfony/yaml": "^4.4 || ^5.3 || ^6.0 || ^7.0",
                 "vimeo/psalm": "^5.2"
             },
             "suggest": {
                 "monolog/monolog": "If you want to use the monolog redis handler.",
                 "predis/predis": "If you want to use predis.",
-                "symfony/console": "If you want to use commands to interact with the redis database",
-                "symfony/proxy-manager-bridge": "If you want to lazy-load some services"
+                "symfony/console": "If you want to use commands to interact with the redis database"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -3561,9 +3560,9 @@
             ],
             "support": {
                 "issues": "https://github.com/snc/SncRedisBundle/issues",
-                "source": "https://github.com/snc/SncRedisBundle/tree/4.6.1"
+                "source": "https://github.com/snc/SncRedisBundle/tree/4.7.0"
             },
-            "time": "2023-06-20T15:31:11+00:00"
+            "time": "2023-11-01T14:51:01+00:00"
         },
         {
             "name": "spatie/temporary-directory",
