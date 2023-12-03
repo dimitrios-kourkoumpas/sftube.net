@@ -37,12 +37,10 @@ final class CategoriesController extends BaseController
 
         $pages = (int) ceil($total / $perPage);
 
-        $URLFragment = $request->getPathInfo();
-
         return $this->render('categories/view.html.twig', [
             'category' => $category,
             'videos' => $videos,
-            'pagination' => compact('page', 'pages', 'URLFragment')
+            'pagination' => compact('page', 'pages')
         ]);
     }
 

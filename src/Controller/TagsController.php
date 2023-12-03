@@ -35,11 +35,9 @@ final class TagsController extends BaseController
 
         $pages = (int) ceil($total / $perPage);
 
-        $URLFragment = $request->getPathInfo();
-
         return $this->render('tags/index.html.twig', [
             'tags' => $tags,
-            'pagination' => compact('page', 'pages', 'URLFragment'),
+            'pagination' => compact('page', 'pages'),
         ]);
     }
 

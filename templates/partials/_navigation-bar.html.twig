@@ -14,6 +14,16 @@
             <ul class="nav navbar-nav">
                 <li><a href="{{ path('app.tags.index') }}">{{ t('ui.navbar.menu.item.tags')|trans }}</a></li>
                 <li><a href="{{ path('app.playlists.index') }}">{{ t('ui.navbar.menu.item.playlists')|trans }}</a></li>
+                <li>
+                    <form class="navbar-form" role="form" action="{{ path('app.homepage') }}" method="GET" onchange="this.submit();">
+                        <select name="sort" class="form-control">
+                            <option value="createdAt-desc" {{ app.request.get('sort') is same as('createdAt-desc') ? ' selected' : '' }}>{{ t('ui.navbar.menu.input.sort.newest-descending')|trans }}</option>
+                            <option value="createdAt-asc" {{ app.request.get('sort') is same as('createdAt-asc') ? ' selected' : '' }}>{{ t('ui.navbar.menu.input.sort.newest-ascending')|trans }}</option>
+                            <option value="views-asc" {{ app.request.get('sort') is same as('views-asc') ? ' selected' : '' }}>{{ t('ui.navbar.menu.input.sort.views-ascending')|trans }}</option>
+                            <option value="views-desc" {{ app.request.get('sort') is same as('views-desc') ? ' selected' : '' }}>{{ t('ui.navbar.menu.input.sort.views-descending')|trans }}</option>
+                        </select>
+                    </form>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
