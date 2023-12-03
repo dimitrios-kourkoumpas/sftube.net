@@ -15,6 +15,11 @@ ui:
             input:
                 search:
                     placeholder: 'search {count} videos'
+                sort:
+                    newest-descending: 'Newest'
+                    newest-ascending: 'Oldest'
+                    views-ascending: 'Views ascending'
+                    views-descending: 'Views descending'
     template:
         base:
             heading:
@@ -175,6 +180,10 @@ ui:
                 link:
                     back:
                         caption: Back
+    pagination:
+        navigation: 'Pages navigation'
+        first: 'First'
+        last: 'Last'
 controller:
     registration:
         register:

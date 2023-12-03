@@ -34,13 +34,21 @@ final class HomepageController extends BaseController
 
         $pages = (int) ceil($total / $perPage);
 
-        $URLFragment = $request->getPathInfo();
+        $sort = $request->query->getString('sort', 'createdAt-desc');
 
-        $videos = $repository->findBy([], ['createdAt' => 'DESC'], $perPage, ($page - 1) * $perPage);
+        list($field, $direction) = explode('-', $sort);
+
+        if (!in_array($field, ['createdAt', 'views']) || !in_array($direction, ['asc', 'desc'])) {
+            $field = 'createdAt';
+            $direction = 'desc';
+        }
+
+        // Doctrine Filter takes care of published and converted videos
+        $videos = $repository->findBy([], [$field => $direction], $perPage, ($page - 1) * $perPage);
 
         return $this->render('homepage/index.html.twig', [
             'videos' => $videos,
-            'pagination' => compact('page', 'pages', 'URLFragment'),
+            'pagination' => compact('page', 'pages'),
         ]);
     }
 }

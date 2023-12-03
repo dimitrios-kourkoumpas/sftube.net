@@ -1,18 +1,32 @@
-<nav aria-label="Page navigation">
+{% set _params = app.request.query.all %}
+
+<nav aria-label="{{ t('ui.pagination.navigation')|trans }}">
     <div class="card-box">
         <ul class="pagination pagination-lg">
             <li{{ pagination.page is same as(1) ? ' class="disabled"' : '' }}>
-                <a href="{{ pagination.page is same as(1) ? 'javascript: void(0);' : pagination.URLFragment ~ '?page=1' }}" aria-label="First">
+                {% set _params = _params|merge({'page': 1}) %}
+
+                {% set _queryString = _params|url_encode %}
+
+                <a href="{{ pagination.page is same as(1) ? 'javascript: void(0);' : '?' ~ _queryString }}" aria-label="{{ t('ui.pagination.first')|trans }}">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
             {% for i in 1..pagination.pages %}
-                <li{{ i is same as(pagination.page) ? ' class="active"' : '' }}><a href="{{ pagination.URLFragment ~ '?page=' ~ i }}">{{ i }}</a> </li>
+                {% set _params = _params|merge({'page': i}) %}
+
+                {% set _queryString = _params|url_encode %}
+
+                <li{{ i is same as(pagination.page) ? ' class="active"' : '' }}><a href="?{{ _queryString }}">{{ i }}</a> </li>
             {% endfor %}
 
             <li{{ pagination.page is same as(pagination.pages) ? ' class="disabled"' : '' }}>
-                <a href="{{ pagination.page is same as(pagination.pages) ? 'javacsript: void(0);' : pagination.URLFragment ~ '?page=' ~ (pagination.pages) }}" aria-label="Last">
+                {% set _params = _params|merge({'page': pagination.pages}) %}
+
+                {% set _queryString = _params|url_encode %}
+
+                <a href="{{ pagination.page is same as(pagination.pages) ? 'javacsript: void(0);' : '?' ~ _queryString }}" aria-label="{{ t('ui.pagination.last')|trans }}">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
