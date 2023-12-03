@@ -7,7 +7,6 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use App\Util\FileRenamer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Inflector\Rules\English\Inflectible;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
