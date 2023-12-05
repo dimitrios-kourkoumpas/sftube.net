@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
@@ -80,6 +81,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 ],
             ],
             security: 'is_granted(\'' . User::ROLE_ADMIN . '\') or is_granted(\'' . VideoVoter::EDIT . '\', object)'
+        ),
+        new Delete(
+            security: 'is_granted(\'' . VideoVoter::DELETE . '\', object)'
         ),
         new GetCollection(
             uriTemplate: '/categories/{id}/videos',
