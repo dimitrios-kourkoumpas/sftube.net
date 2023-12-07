@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\ApiResource\State\Processor\VideoUploadProcessor;
+use App\ApiResource\State\Provider\PlaylistVideosProvider;
 use App\ApiResource\State\Provider\VideoWatchProvider;
 use App\Repository\VideoRepository;
 use App\Security\Voter\VideoVoter;
@@ -120,6 +121,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ]
         ),
         new GetCollection(
+            provider: PlaylistVideosProvider::class,
             uriTemplate: '/playlists/{id}/videos',
             uriVariables: [
                 'id' => new Link(

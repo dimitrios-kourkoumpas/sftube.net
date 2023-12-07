@@ -44,7 +44,6 @@ final readonly class MeProvider implements ProviderInterface
             };
         }
 
-
         return null;
     }
 }

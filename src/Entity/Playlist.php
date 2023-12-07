@@ -7,9 +7,16 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\ApiResource\State\Processor\PlaylistsPostProcessor;
+use App\ApiResource\State\Provider\PlaylistsCollectionProvider;
+use App\ApiResource\State\Provider\VideoPlaylistsProvider;
 use App\Repository\PlaylistRepository;
 use App\Util\Slugger;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,6 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     types: ['https://schema.org/Playlist'],
     operations: [
         new GetCollection(
+            provider: PlaylistsCollectionProvider::class,
             normalizationContext: [
                 'groups' => [
                     'playlists:collection:get',
@@ -35,6 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             ]
         ),
         new GetCollection(
+            provider: VideoPlaylistsProvider::class,
             uriTemplate: 'videos/{id}/playlists',
             uriVariables: [
                 'id' => new Link(
@@ -56,7 +65,36 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'groups' => [
                     'playlists:item:get',
                 ],
-            ]
+            ],
+            security: 'object.isPrivate() == false or object.isOwner(user)'
+        ),
+        new Post(
+            security: 'is_granted(\'' . User::ROLE_USER . '\')',
+            processor: PlaylistsPostProcessor::class,
+            normalizationContext: [
+                'groups' => [
+                    'playlists:item:get',
+                ],
+            ],
+        ),
+        new Patch(
+            security: 'is_granted(\'' . User::ROLE_USER . '\') and object.isOwner(user)',
+            normalizationContext: [
+                'groups' => [
+                    'playlists:item:get',
+                ],
+            ],
+        ),
+        new Put(
+            security: 'is_granted(\'' . User::ROLE_USER . '\') and object.isOwner(user)',
+            normalizationContext: [
+                'groups' => [
+                    'playlists:item:get',
+                ],
+            ],
+        ),
+        new Delete(
+            security: 'is_granted(\'' . User::ROLE_USER . '\') and object.isOwner(user)'
         ),
     ]
 )]
