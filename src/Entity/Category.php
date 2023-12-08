@@ -79,7 +79,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ]
 )]
-class Category
+class Category implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

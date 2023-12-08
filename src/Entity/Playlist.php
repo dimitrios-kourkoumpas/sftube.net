@@ -98,7 +98,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ]
 )]
-class Playlist
+class Playlist implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
