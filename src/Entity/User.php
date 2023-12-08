@@ -204,7 +204,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ),
     ]
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable, \Stringable
 {
     public const ROLE_USER = 'ROLE_USER';
 

@@ -120,7 +120,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ]
 )]
-class Tag
+class Tag implements \Stringable
 {
     public const PER_PAGE = 60;
     #[ORM\Id]

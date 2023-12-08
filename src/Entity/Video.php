@@ -140,7 +140,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ),
     ]
 )]
-class Video
+class Video implements \Stringable
 {
     public const SLIDESHOW_EXTRACTION = 'slideshow';
 
