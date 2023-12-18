@@ -53,7 +53,7 @@
         "symfony/yaml": "6.3.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
-        "vich/uploader-bundle": "^2.1"
+        "vich/uploader-bundle": "^2.3"
     },
     "config": {
         "allow-plugins": {
