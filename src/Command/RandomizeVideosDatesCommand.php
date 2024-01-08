@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\Video;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -18,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 #[AsCommand(
     name: 'app:randomize:videos-dates',
-    description: 'Randomize videos upload dates',
+    description: 'Randomize videos upload and comments dates',
 )]
 final class RandomizeVideosDatesCommand extends Command
 {
@@ -55,6 +56,28 @@ final class RandomizeVideosDatesCommand extends Command
             $io->error($e->getMessage());
 
             return Command::FAILURE;
+        }
+
+        $io->success('Done');
+
+        $io->text('Randomize videos comments dates');
+
+        $videos = $this->em->getRepository(Video::class)->findAll();
+
+        foreach ($videos as $video) {
+            $created_at = $video->getCreatedAt()->getTimestamp();
+
+            $sql = 'UPDATE `comment` 
+                    SET `created_at` = FROM_UNIXTIME(FLOOR(' . $created_at . ' + (RAND() * (UNIX_TIMESTAMP(NOW()) - ' . $created_at . ')))) 
+                    WHERE `video_id` = ' . $video->getId();
+
+            try {
+                $conn->executeStatement($sql);
+            } catch (Exception $e) {
+                $io->error($e->getMessage());
+
+                return Command::FAILURE;
+            }
         }
 
         $io->success('Done');
