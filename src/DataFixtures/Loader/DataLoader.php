@@ -10,12 +10,12 @@ use App\DataFixtures\Reader\DataReader;
  * Class DataLoader
  * @package App\DataFixtures\Loader
  */
-final class DataLoader
+final readonly class DataLoader
 {
     /**
      * @param DataReader $reader
      */
-    public function __construct(private readonly DataReader $reader)
+    public function __construct(private DataReader $reader)
     {
     }
 
