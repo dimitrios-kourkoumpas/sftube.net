@@ -41,8 +41,6 @@ final class InitCommand extends Command
         ], [
             'command' => 'app:randomize:videos-dates',
         ], [
-            'command' => 'app:randomize:comments-dates',
-        ], [
             'command' => 'fos:elastica:populate',
         ], [
             'command' => 'lexik:jwt:generate-keypair',
@@ -73,7 +71,7 @@ final class InitCommand extends Command
                 'command' => 'messenger:consume',
                 'arguments' => [
                     'receivers' => [
-                        'async',
+                        'videos',
                     ],
                 ],
             ];
