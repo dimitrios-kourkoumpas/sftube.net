@@ -8,12 +8,12 @@ namespace App\DataFixtures\Reader;
  * Class JSONDataReader
  * @package App\DataFixtures\Reader
  */
-final class JSONDataReader implements DataReader
+final readonly class JSONDataReader implements DataReader
 {
     /**
      * @param string $dataFile
      */
-    public function __construct(private readonly string $dataFile)
+    public function __construct(private string $dataFile)
     {
     }
 
