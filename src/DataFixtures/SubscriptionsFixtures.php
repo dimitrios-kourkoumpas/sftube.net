@@ -16,13 +16,13 @@ final class SubscriptionsFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        $repository = $manager->getRepository(User::class);
+
+        $users = $repository->findRegularUsers();
+
+        $usersCount = count($users);
+
         for ($i = 1; $i < UsersFixtures::MAX_USERS; $i++) {
-            $repository = $manager->getRepository(User::class);
-
-            $users = $repository->findRegularUsers();
-
-            $usersCount = count($users);
-
             for ($i = 0; $i < $usersCount; $i++) {
                 $user = $users[$i];
 
