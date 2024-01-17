@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
 use App\Service\UserRegistration;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 /**
  * Class UserRegistrationProcessor
@@ -17,8 +18,9 @@ final readonly class UserRegistrationProcessor implements ProcessorInterface
 {
     /**
      * @param UserRegistration $registration
+     * @param JWTTokenManagerInterface $JWTTokenManager
      */
-    public function __construct(private UserRegistration $registration)
+    public function __construct(private UserRegistration $registration, private JWTTokenManagerInterface $JWTTokenManager)
     {
     }
 
@@ -33,6 +35,10 @@ final readonly class UserRegistrationProcessor implements ProcessorInterface
     {
         if ($data instanceof User) {
             $this->registration->register($data);
+
+            $token = $this->JWTTokenManager->create($data);
+
+            $data->setToken($token);
 
             return $data;
         }
