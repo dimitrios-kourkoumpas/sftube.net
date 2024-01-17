@@ -67,7 +67,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             processor: UserRegistrationProcessor::class,
             normalizationContext: [
                 'groups' => [
-                    'users:item:get',
+                    'users:register',
                 ],
             ]
         ),
@@ -218,14 +218,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'playlists:collection:get', 'users:profile:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'playlists:collection:get', 'users:profile:get', 'users:register'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Assert\Length(max: 180)]
-    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'users:profile:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'users:profile:get', 'users:register'])]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::JSON)]
@@ -257,7 +257,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      * @var string $avatar
      */
     #[ORM\Column(type: Types::STRING, options: ['default' => self::GENERIC_AVATAR])]
-    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'users:profile:get'])]
+    #[Groups(['users:item:get', 'users:collection:get', 'comments:collection:get', 'users:profile:get', 'users:register'])]
     private string $avatar = self::GENERIC_AVATAR;
 
     #[Vich\UploadableField(mapping: 'avatars', fileNameProperty: 'avatar')]
@@ -303,6 +303,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default' => null])]
     #[Groups(['users:collection:get', 'users:item:get'])]
     private ?\DateTimeInterface $lastLogin = null;
+
+    #[Groups(['users:register'])]
+    private ?string $token = null;
 
     public function __construct()
     {
@@ -837,5 +840,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     public function getVideosCount(): int
     {
         return $this->videos->count();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param string|null $token
+     * @return void
+     */
+    public function setToken(?string $token): void
+    {
+        $this->token = $token;
     }
 }
