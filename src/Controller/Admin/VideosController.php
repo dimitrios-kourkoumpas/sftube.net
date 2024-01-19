@@ -47,7 +47,7 @@ final class VideosController extends AdminCRUDController
         $response = $this->getCollection(self::ENTITY);
 
         // TODO: hacky - improve this!!!
-        return new Response(str_replace('webserver', 'localhost', $response['content']), $response['status']);
+        return new Response(str_replace('webserver', 'localhost', $response['content']));
     }
 
     /**
@@ -61,7 +61,7 @@ final class VideosController extends AdminCRUDController
     {
         $response = $this->patch($id, $request, self::ENTITY);
 
-        return new Response($response['content'], $response['status']);
+        return new Response($response['content']);
     }
 
     /**
