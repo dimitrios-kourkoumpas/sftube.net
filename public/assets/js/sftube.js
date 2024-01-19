@@ -1,5 +1,8 @@
 SFTube = {
     constants: {
+        HTTP_OK: 200,
+        HTTP_CREATED: 201,
+        HTTP_NO_CONTENT: 204,
         HTTP_UNPROCESSABLE_ENTITY: 422
     },
     toastr: {
@@ -37,15 +40,17 @@ SFTube = {
             dataType: 'json',
             data: JSON.stringify(options.fields),
             success: function (data, status, xhr) {
-                if (options.reloadDataTable) {
-                    $('#' + options.meta.slug + '-datatable').DataTable().ajax.reload();
-                }
+                if (xhr.status === SFTube.constants.HTTP_CREATED) {
+                    if (options.reloadDataTable) {
+                        $('#' + options.meta.slug + '-datatable').DataTable().ajax.reload();
+                    }
 
-                if (options.showNotification) {
-                    toastr.success(options.meta.entitySingular + ' saved', SFTube.toastr.success);
-                }
+                    if (options.showNotification) {
+                        toastr.success(options.meta.entitySingular + ' saved', SFTube.toastr.success);
+                    }
 
-                SFTube.hideModal(options.meta.modal);
+                    SFTube.hideModal(options.meta.modal);
+                }
             },
             error: function (xhr, status, error) {
                 toastr.error(error, SFTube.toastr.error);
@@ -63,16 +68,18 @@ SFTube = {
             data: JSON.stringify(options.fields),
             dataType: 'json',
             success: function (data, status, xhr) {
-                if (options.reloadDataTable) {
-                    $('#' + options.meta.slug + '-datatable').DataTable().ajax.reload();
-                }
+                if (xhr.status === SFTube.constants.HTTP_OK) {
+                    if (options.reloadDataTable) {
+                        $('#' + options.meta.slug + '-datatable').DataTable().ajax.reload();
+                    }
 
-                if (options.showNotification) {
-                    toastr.success(options.meta.entitySingular + ' saved', SFTube.toastr.success);
-                }
+                    if (options.showNotification) {
+                        toastr.success(options.meta.entitySingular + ' saved', SFTube.toastr.success);
+                    }
 
-                if (options.meta.modal !== undefined) {
-                    SFTube.hideModal(options.meta.modal);
+                    if (options.meta.modal !== undefined) {
+                        SFTube.hideModal(options.meta.modal);
+                    }
                 }
             },
             error: function (xhr, status, error) {
@@ -90,12 +97,14 @@ SFTube = {
             method: 'DELETE',
             dataType: 'json',
             success: function (data, status, xhr) {
-                if (options.reloadDataTable) {
-                    $('#' + options.meta.slug + '-datatable').DataTable().ajax.reload();
-                }
+                if (xhr.status === SFTube.constants.HTTP_NO_CONTENT) {
+                    if (options.reloadDataTable) {
+                        $('#' + options.meta.slug + '-datatable').DataTable().ajax.reload();
+                    }
 
-                if (options.showNotification) {
-                    toastr.success(options.meta.entitySingular + ' deleted', SFTube.toastr.success);
+                    if (options.showNotification) {
+                        toastr.success(options.meta.entitySingular + ' deleted', SFTube.toastr.success);
+                    }
                 }
             },
             error: function (xhr, status, error) {
