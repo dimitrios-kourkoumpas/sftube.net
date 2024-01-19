@@ -45,7 +45,7 @@ final class TagsController extends AdminCRUDController
     {
         $response = $this->getCollection(self::ENTITY);
 
-        return new Response($response['content'], $response['status']);
+        return new Response($response['content']);
     }
 
     /**
@@ -58,7 +58,7 @@ final class TagsController extends AdminCRUDController
     {
         $response = $this->getItem($id, self::ENTITY);
 
-        return new Response($response['content'], $response['status']);
+        return new Response($response['content']);
     }
 
     /**
@@ -85,7 +85,7 @@ final class TagsController extends AdminCRUDController
     {
         $response = $this->patch($id, $request, self::ENTITY);
 
-        return new Response($response['content'], $response['status']);
+        return new Response($response['content']);
     }
 
     /**

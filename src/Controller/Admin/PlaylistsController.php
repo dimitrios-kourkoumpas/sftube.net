@@ -45,7 +45,7 @@ final class PlaylistsController extends AdminCRUDController
     {
         $response = $this->getCollection(self::ENTITY);
 
-        return new Response($response['content'], $response['status']);
+        return new Response($response['content']);
     }
 
     /**
