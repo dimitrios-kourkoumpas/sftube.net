@@ -8,7 +8,7 @@ It showcases a simple website where users can upload short videos, comment, vote
 
 It also features an administration panel and a REST API for all of the above.
 
-Videos are processed after upload with the help of the [PHP-FFMpeg](https://github.com/PHP-FFMpeg/PHP-FFMpeg) library and presented in the homepage grid
+Videos are processed asynchronously after upload with the help of the [PHP-FFMpeg](https://github.com/PHP-FFMpeg/PHP-FFMpeg) library and presented in the homepage grid
 with their respective thumbnails.
 
 There are two strategies for [processing the videos](https://github.com/dimitrios-kourkoumpas/sftube.net/tree/development/src/Service/VideoExtractor)
