@@ -1,5 +1,7 @@
 # SFTube
 
+![Screenshot](https://github.com/dimitrios-kourkoumpas/sftube.net/blob/development/docs/screenshots/1%20-%20website/1%20-%20homepage.png)
+
 This is a personal project built for demonstration purposes.
 
 It showcases a simple website where users can upload short videos, comment, vote and search.
