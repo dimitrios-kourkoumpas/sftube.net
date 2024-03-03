@@ -43,10 +43,11 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
 
     /**
      * @param $data
-     * @param $format
+     * @param null $format
+     * @param array $context
      * @return bool
      */
-    public function supportsNormalization($data, $format = null): bool
+    public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $this->decorated->supportsNormalization($data, $format);
     }
@@ -94,10 +95,11 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     /**
      * @param $data
      * @param $type
-     * @param $format
+     * @param null $format
+     * @param array $context
      * @return bool
      */
-    public function supportsDenormalization($data, $type, $format = null): bool
+    public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
         return $this->decorated->supportsDenormalization($data, $type, $format);
     }
@@ -124,5 +126,14 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
         if($this->decorated instanceof SerializerAwareInterface) {
             $this->decorated->setSerializer($serializer);
         }
+    }
+
+    /**
+     * @param string|null $format
+     * @return string[]
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return ['*'];
     }
 }
