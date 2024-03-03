@@ -22,7 +22,7 @@ There are two strategies for [processing the videos](https://github.com/dimitrio
 ### Technologies used
 
 * PHP 8.2
-* Symfony 6.3
+* Symfony 6.4
   * API Platform
   * Mercure
 * MariaDB
