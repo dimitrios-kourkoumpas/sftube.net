@@ -72,7 +72,7 @@ final class PreviewVideoExtractor implements VideoExtractorInterface
         }
 
         $videoFile->concat($previewClips)
-            ->saveFromSameCodecs($this->paths['app.filesystem.videos.previews.path'] . DIRECTORY_SEPARATOR . $video->getFilename(), true);
+            ->saveFromSameCodecs($this->paths['app.filesystem.videos.previews.path'] . DIRECTORY_SEPARATOR . $video->getFilename());
 
         // cleanup
         foreach ($previewClips as $previewClip) {

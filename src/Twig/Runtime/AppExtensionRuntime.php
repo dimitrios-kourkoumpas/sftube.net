@@ -21,7 +21,7 @@ final readonly class AppExtensionRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * @param \DateTime $datetime
+     * @param \DateTimeImmutable $datetime
      * @param bool $full
      * @return string
      */
