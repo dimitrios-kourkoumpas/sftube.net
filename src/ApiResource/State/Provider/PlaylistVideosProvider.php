@@ -33,7 +33,7 @@ final readonly class PlaylistVideosProvider implements ProviderInterface
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         $playlist = $this->em->getRepository(Playlist::class)->find($uriVariables['id']);
 
