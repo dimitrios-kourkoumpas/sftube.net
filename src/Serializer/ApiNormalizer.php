@@ -49,7 +49,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
      */
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
-        return $this->decorated->supportsNormalization($data, $format);
+        return $this->decorated->supportsNormalization($data, $format, $context);
     }
 
     /**
@@ -134,6 +134,8 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
      */
     public function getSupportedTypes(?string $format): array
     {
-        return ['*'];
+        return [
+            'object' => true,
+        ];
     }
 }
