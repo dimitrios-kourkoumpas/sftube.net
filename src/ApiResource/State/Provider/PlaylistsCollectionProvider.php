@@ -33,7 +33,7 @@ final readonly class PlaylistsCollectionProvider implements ProviderInterface
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if (null !== $user) {
             if ($user->hasRole(User::ROLE_ADMIN)) {
@@ -57,7 +57,7 @@ final readonly class PlaylistsCollectionProvider implements ProviderInterface
 
         } else {
             // return only the public playlists
-            $playlists = $this->em->getRepository(Playlist::class)->findBy(['private' => false, ['name' => 'ASC']]);
+            $playlists = $this->em->getRepository(Playlist::class)->findBy(['private' => false], ['name' => 'ASC']);
         }
 
         return $playlists;
