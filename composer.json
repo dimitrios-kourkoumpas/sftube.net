@@ -1,4 +1,6 @@
 {
+    "name": "dimitrios-kourkoumpas/sftube.net",
+    "description": "Personal demo project",
     "type": "project",
     "license": "MIT",
     "minimum-stability": "stable",
@@ -92,6 +94,24 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "test": [
+            "@php vendor/bin/phpunit"
+        ],
+        "check": [
+            "@php bin/console lint:yaml config --parse-tags",
+            "@php bin/console lint:twig templates --env=prod",
+            "@php bin/console lint:xliff translations",
+            "@php bin/console lint:container --no-debug",
+            "@php bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction",
+            "@php composer validate --strict"
+        ],
+        "ci": [
+            "@composer validate --no-check-all --strict",
+            "@composer install --no-progress --no-interaction",
+            "@php bin/console cache:warmup --env=test",
+            "@check",
+            "@test"
         ]
     },
     "conflict": {
