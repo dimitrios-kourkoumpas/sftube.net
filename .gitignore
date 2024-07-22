@@ -18,11 +18,6 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
-
 ###> videos, thumbnails, frames and avatars ###
 /uploads/
 /public/assets/images/videos
