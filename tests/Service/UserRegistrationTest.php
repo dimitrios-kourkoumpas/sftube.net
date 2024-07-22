@@ -14,26 +14,17 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class UserRegistrationTest extends TestCase
 {
-    private MockObject $entityManager;
-    private MockObject $passwordHasher;
-    private UserRegistration $userRegistration;
-
-    /**
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
-
-        $this->userRegistration = new UserRegistration($this->entityManager, $this->passwordHasher);
-    }
 
     /**
      * @throws Exception
      */
     public function testRegister(): void
     {
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
+
+        $userRegistration = new UserRegistration($entityManager, $passwordHasher);
+
         $user = $this->createMock(User::class);
 
         $plainPassword = 'plain_password';
@@ -43,7 +34,7 @@ class UserRegistrationTest extends TestCase
             ->method('getPassword')
             ->willReturn($plainPassword);
 
-        $this->passwordHasher
+        $passwordHasher
             ->expects($this->once())
             ->method('hashPassword')
             ->with($user, $plainPassword)
@@ -57,15 +48,15 @@ class UserRegistrationTest extends TestCase
             ->method('setRoles')
             ->with([User::ROLE_USER]);
 
-        $this->entityManager
+        $entityManager
             ->expects($this->once())
             ->method('persist')
             ->with($user);
 
-        $this->entityManager
+        $entityManager
             ->expects($this->once())
             ->method('flush');
 
-        $this->userRegistration->register($user);
+        $userRegistration->register($user);
     }
 }
